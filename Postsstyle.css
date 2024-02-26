@@ -16,6 +16,11 @@
     transition: all 0.3s;
 }
 
+.opportunity img{
+    display: block;
+    margin: 0 auto;
+}
+
 .opportunity p{
     height: 200px;
     text-align: center;
