@@ -1,0 +1,138 @@
+/*Homepage*/
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
+}
+.banner{
+    width: 100%;
+    height: 100vh;
+    background-image: linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url(hands.jpg) ;
+    background-size: cover;
+    background-position: center;
+}
+.navbar{
+    width: 100%;
+    margin: auto;
+    padding: 15px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,1);
+}
+.logo{
+    width: 150px;
+    cursor: pointer;
+}
+.navbar button .fa-solid{
+    width: 25px;
+    color: #333;
+    font-size: 22;
+    cursor: pointer;
+}
+.navbar ul li{
+    list-style: none;
+    display: inline-block;
+    margin: 0 10px;
+    position: relative;
+}
+.navbar ul li a{
+    text-decoration: none;
+    color: black;
+    text-transform: uppercase; 
+}
+.navbar ul li::after{
+    content: '';
+    height: 3px;
+    width: 0%;
+    background: black;
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+    transition: 0.5s
+}
+.navbar ul li:hover::after{
+    width: 100%
+}
+.search-container{
+    display: none;
+    align-items: center;
+    position: relative;
+    width: 550px;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 0 10px;
+}
+.search-container input{
+    flex: 1;
+    width: 85%;
+    padding: 8px 10px;
+    border: none;
+    outline: none;
+}
+.search-container .close-btn{
+    background: transparent;
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    padding: 10px;
+    position: absolute;
+    right: 10px;
+}
+.search-container .close-btn i{
+    color: #333;
+    font-size: 18px;
+}
+.content{
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: center;
+    color:#fff;
+}
+.content h1{
+    font-size: 70px;
+    margin-top: 80px;
+}
+.content p{
+    margin: 20px auto;
+    font-weight: 100;
+    line-height: 25px;
+}
+.search-box{
+    width: 600px;
+    background: #fff;
+    margin: 10px auto 0;
+    border-radius: 5px;
+}
+.row{
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+}
+input{
+    flex: 1;
+    height: 40px;
+    background: transparent;
+    border: 0;
+    outline: 0;
+    font-size: 18px;
+    color: #333;
+}
+button{
+    background: transparent;
+    border: 0;
+    outline: 0;
+}
+button .fa-solid{
+    width: 25px;
+    color: #333;
+    font-size: 22;
+    cursor: pointer;
+}
+::placeholder{
+    color: #333;
+} 
