@@ -1,0 +1,73 @@
+.opportunity {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.opportunity h2 {
+    margin-top: 0;
+    color: rgb(0, 0, 0);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-family: 'Poopins';
+    transition: all 0.3s;
+}
+
+.opportunity img{
+    display: block;
+    margin: 0 auto;
+}
+
+.opportunity p{
+    text-align: center;
+    font-family: 'Poopins';
+}
+
+.buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.apply-button{
+    background-color: #005cce;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Poopins';
+}
+.view-button {
+    background-color: white;
+    color: #005cce;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Poopins';
+}
+
+.apply-button:hover{
+    background-color: white;
+    color: #005cce;
+}
+.view-button:hover {
+    background-color: #005cce;
+    color: white;
+}
+
+.view-button {
+    margin-left: 10px;
+}
+
+.additional-info {
+    display: none;
+}
+
+.opportunity.expanded .additional-info {
+    display: block;
+}
