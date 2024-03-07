@@ -10,8 +10,8 @@
     scroll-behavior: smooth;
 }
 :root{
-    --text-color: #fff;
-    --bg-color: #000;
+    --text-color: #000;
+    --bg-color: #fff;
     --main-color: #2686f5;
 
     --h1-font: 6rem;
@@ -74,7 +74,7 @@ header{
     font-size: inherit;
 }
 .h-right span{
-    color: #fff;
+    color: #000;
 }
 .h-right a:hover{
     color:var(--main-color);
@@ -105,14 +105,14 @@ section{
     font-size: var(--h1-font);
     font-weight: 800;
     line-height: 1.2;
-    color:#fff;
+    color:#000;
     margin-bottom: 15px;
 }
 .home-text p{
     font-size: var(--p-font);
     font-weight: 400;
     line-height: 30px;
-    color: #fff;
+    color: #000;
     margin-bottom: 30px; 
 }
 .btn{
@@ -200,7 +200,7 @@ header.sticky{
     font-size: var(--p-font);
     font-weight: 500;
     line-height: 30px;
-    color: #ffffffab;
+    color: #636060bd;
     margin-bottom: 35px;
 }
 .center-text{
@@ -225,13 +225,13 @@ header.sticky{
     height: 100%;
     object-fit: cover;
     border-radius: 10px;
-    filter: brightness(70%);
+    filter: brightness(90%);
     transition: all 0.30s cubic-bezier(.499,.05,.55,.95);
     will-change: filter;
     display: block ;
 }
 .box img:hover{
-    filter: brightness(90%) hue-rotate(10deg);
+    filter: brightness(100%) hue-rotate(10deg);
     transform: scale(1.04);
     cursor: pointer;
 }
@@ -268,7 +268,7 @@ header.sticky{
     font-size: var(--p-font);
     font-weight: 500;
     line-height: 30px;
-    color: #ffffffab;
+    color: #636060bd;
     margin-bottom: 35px;
 }
 .footer{
@@ -288,7 +288,7 @@ header.sticky{
     margin-bottom: 15px;
 }
 .footer-box a{
-    color: #979797;
+    color: #6b6868;
     margin-bottom: 0.8rem;
     transition: all 0.50s ease;
 }
@@ -303,7 +303,7 @@ header.sticky{
     justify-content: center;
     height: 45px;
     width: 45px;
-    background: #202020;
+    background: #dbdada;
     color: var(--text-color);
     font-size: 20px;
     border-radius: 50%;
@@ -375,7 +375,7 @@ header.sticky{
     }
     .navbar a{
         display: block;
-        color: #979797;
+        color: #dbdada;
         padding: 0;
         margin: 0px 0px 40px 0px;
         font-size: 2.2rem;
