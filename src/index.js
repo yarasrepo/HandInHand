@@ -25,7 +25,7 @@ app.get('/signup', (req, res) => {
 })
 
 app.get('/', (req, res) => {
-    res.render('login')
+    res.render('homepage')
 })
 
 app.get('/login', (req, res) => {
@@ -52,7 +52,7 @@ app.post('/signup', async (req, res) => {
             res.send("User details already exist");
         } else {
             await LogInCollection.create(data);
-            res.status(201).render("home", {
+            res.status(201).render("homepage", {
                 naming: req.body.name
             });
         }
@@ -71,7 +71,7 @@ app.post('/login', async (req, res) => {
 
         if (check && check.password === req.body.password) {
             //if user is found and passwords match 
-            res.status(201).render("home", { 
+            res.status(201).render("homepage", { 
                 name: check.name
             });
         } else {
