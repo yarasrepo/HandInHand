@@ -198,6 +198,10 @@ header .navbar ul li a:hover{
 
     }
 
+    .prevvolunteer .box-container .box{
+        width:100%;
+    }
+
 }
 
 .About{
@@ -320,4 +324,54 @@ header .navbar ul li a:hover{
     bottom: 7.5rem; right: 2rem;
     z-index: 100;
     display: none;
+}
+
+.prevvolunteer .box-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 1rem 0;
+    padding-left: 3rem;
+}
+
+.prevvolunteer .box-container .box{
+    width: 27rem;
+    margin: 4rem 1rem;
+    padding-left: 4rem;
+    border-left: .2rem solid #1a1a1a;
+    position: relative;
+}
+
+.prevvolunteer .box-container .box span{
+    font-size: 1.3rem;
+    background: #222;
+    color: #fff;
+    border-radius: 5rem;
+    padding: .5rem 2.5rem;
+}
+
+.prevvolunteer .box-container .box h3{
+    font-size: 2rem;
+    color: #1a1a1a;
+    padding-top: 1.5rem;
+}
+
+.prevvolunteer .box-container .box p{
+    font-size: 1.4rem;
+    color: #1a1a1a;
+    padding: 1rem 0;
+}
+
+.prevvolunteer .box-container .box i{
+    position: absolute;
+    top: -1.5rem; left: -2.5rem;
+    height: 5rem;
+    width: 5rem;
+    border-radius: 50%;
+    line-height: 5rem;
+    text-align: center;
+    font-size: 2rem;
+    color: #fff;
+    background: var(--blue);
 }
