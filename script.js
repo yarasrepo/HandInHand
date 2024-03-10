@@ -6,6 +6,9 @@ const jobs = [
       "KAFA (enough) Violence & Exploitation is a Lebanese civil, non-governmental, non-profit, feminist, and secular organization seeking to create a society that is free of social, economic, and legal patriarchal structures that discriminate against women.",
     openPositions: 2,
     link: "#",
+    location: "Beirut",
+    requiredHours: "Full-time",
+    requiredSkills: "Communication, Teamwork",
   },
   {
     title: "Red Cross",
@@ -14,6 +17,9 @@ const jobs = [
       "The Lebanese Red Cross (LRC) is a humanitarian organization and an auxiliary team to the medical service of the Lebanese Army",
     openPositions: 3,
     link: "#",
+    location: "Tripoli",
+    requiredHours: "Part-time",
+    requiredSkills: "First Aid, Emergency Response",
   },
   {
     title: "Bassma",
@@ -22,6 +28,9 @@ const jobs = [
       "A non-profit association for Social Development, founded by a group of dynamic volunteers. They decided to fight poverty and work for a better society by creating a humanitarian organization that rallies citizens for the social Lebanese cause.",
     openPositions: 1,
     link: "#",
+    location: "Sidon",
+    requiredHours: "Full-time",
+    requiredSkills: "Social Work, Empathy",
   },
 ];
 
@@ -61,10 +70,18 @@ const createJobListingCards = () => {
       details.innerHTML = job.details;
       details.classList.add("details");
 
-      let detailsBtn = document.createElement("a");
-      detailsBtn.href = job.link;
+      let detailsBtn = document.createElement("button");
       detailsBtn.innerHTML = "More Details";
       detailsBtn.classList.add("details-btn");
+      detailsBtn.addEventListener("click", () => {
+        // Toggle visibility of additional details
+        const additionalDetails = jobCard.querySelector(".additional-details");
+        if (additionalDetails.style.display === "none") {
+          additionalDetails.style.display = "block";
+        } else {
+          additionalDetails.style.display = "none";
+        }
+      });
 
       let openPositions = document.createElement("span");
       openPositions.classList.add("open-positions");
@@ -86,7 +103,16 @@ const createJobListingCards = () => {
         updateJobCounter();
       });
 
-      
+      // Additional details section (initially hidden)
+      let additionalDetails = document.createElement("div");
+      additionalDetails.classList.add("additional-details");
+      additionalDetails.style.display = "none";
+      additionalDetails.innerHTML = `
+        <p><strong>Location:</strong> ${job.location}</p>
+        <p><strong>Required Hours:</strong> ${job.requiredHours}</p>
+        <p><strong>Required Skills:</strong> ${job.requiredSkills}</p>
+      `;
+
       jobCard.appendChild(image);
       jobCard.appendChild(title);
       jobCard.appendChild(details);
@@ -94,6 +120,7 @@ const createJobListingCards = () => {
       jobCard.appendChild(openPositions);
       jobCard.appendChild(applyBtn);
       jobCard.appendChild(deleteBtn);
+      jobCard.appendChild(additionalDetails);
 
       jobsContainer.appendChild(jobCard);
     }
@@ -107,18 +134,24 @@ const submitJob = (event) => {
   const jobName = document.getElementById("job_name").value;
   const description = document.getElementById("description").value;
   const openPositions = parseInt(document.getElementById("open_positions").value);
+  const location = document.getElementById("location").value; // New field: Location
+  const requiredHours = document.getElementById("required_hours").value; // New field: Required Hours
+  const requiredSkills = document.getElementById("required_skills").value; // New field: Required Skills
   let imageLink = document.getElementById("image_link").value;
 
-    if (!imageLink) {
-        imageLink = "images/logonowords.png"; // Replace with your default image link
-    }
+  if (!imageLink) {
+    imageLink = "images/logonowords.png"; // Replace with your default image link
+  }
 
-  if (jobName && description && !isNaN(openPositions) && openPositions > 0) {
+  if (jobName && description && !isNaN(openPositions) && openPositions > 0 && location && requiredHours && requiredSkills) {
     jobs.push({
       title: jobName,
       image: "images/logonowords.png", // Set default image or adjust as needed
       details: description,
       openPositions: openPositions,
+      location: location,
+      requiredHours: requiredHours,
+      requiredSkills: requiredSkills, // Include required skills
       link: "#", // Update as needed
     });
 
