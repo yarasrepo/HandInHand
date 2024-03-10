@@ -99,10 +99,11 @@ header .logo {
     left: 0;
     margin: 10px;
 }
+
 header .logo img {
     width: 50px; 
     height: auto; 
-    display: block; 
+    display:block;
 }
 
 header .user img{
