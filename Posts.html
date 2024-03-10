@@ -1,25 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Volunteering Opportunities</title>
-    <link rel="stylesheet" href="Postsstyle.css">
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="Postsstyle.css" />
 </head>
 <body>
-    <div class="opportunity">
-        <h2>Lebanese Red Cross</h2>
-        <p>The Lebanese Red Cross Society is led by volunteers, whose mission is to provide relief to victims of natural and human made disasters, and help people prevent, prepare for and respond to emergencies, and to mitigate the suffering of the most vulnerable.</p>
-        <img src="what-it-costs.jpg" alt="Lebanese Red Cross">
-        <div class="buttons">
-            <button class="apply-button">Apply Now</button>
-            <button class="view-button" onclick="expandOpportunity(this)">View More</button>
-        </div>
-        <div class="additional-info">
-            <p>The LRC consists of the president, the General Assembly, where the ultimate authority rests, the central committee composed of 42 volunteers members, the Executive Committee composed of 9 member heads of the active departments at the LRC (in addition to the President, the Vice-president and the treasurer).</p>
-        </div>
-    </div>
+  <div class="background-image">
+    <div class="jobs-list-container">
+      <h2>5 opportunities</h2>
 
-    <script src="script.js"></script>
+      <input class="job-search" type="text" placeholder="Search here..." />
+
+      <div class="jobs"></div>
+      
+      <form id="jobForm" class="job-form">
+        <h3>Submit a Job</h3>
+        <label for="job_name">Job Name:</label><br>
+        <input type="text" id="job_name" name="job_name"><br>
+        <label for="description">Description:</label><br>
+        <textarea id="description" name="description"></textarea><br>
+        <label for="open_positions">Open Positions:</label><br>
+        <input type="number" id="open_positions" name="open_positions"><br>
+        <label for="image_link">Image Link:</label><br>
+        <input type="url" id="image_link" name="image_link"><br>
+        <input type="submit" value="Submit">
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
