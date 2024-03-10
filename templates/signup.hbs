@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign up</title>
     <link rel="stylesheet" href="loginsignup.css">
-    <script src ="https://kit.fontawesome.com/c4254e24a8.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/c4254e24a8.js" crossorigin="anonymous"></script>
     <link rel="icon" type="image/png" href="https://i.imgur.com/MoSHBZX.png">
 </head>
 <body>
@@ -12,7 +12,7 @@
     <img src="https://i.imgur.com/20GuioV.png" alt="Your Logo" class="tiny-logo">
     <div class="form-box">
         <h1 id="title">Sign Up</h1>
-        <form action="/signup" method="POST">
+        <form action="/signup" method="POST" id="signupForm" onsubmit="return validatePassword()">
             <div class="input-group">
                 <div class="input-field" id="nameField">
                     <input type="text" placeholder="Name" name="name">
@@ -21,7 +21,7 @@
                     <input type="email" placeholder="Email" name="email">
                 </div>
                 <div class="input-field">
-                    <input type="password" placeholder="Password" name="password">
+                    <input type="password" id="password" placeholder="Password" name="password">
                 </div>
                 <div class="input-field">
                     <label for="volunteer">Volunteer</label>
@@ -29,26 +29,43 @@
                     <label for="organization">Organization</label>
                     <input type="radio" name="role" id="organization" value="organization">
                 </div>
-                {{!-- <p>Forgot Password <a href="forgotpassword.html">Click Here!</a></p> --}}
+                <div class="input-field">
+                    <p id="passwordFeedback"></p>
+                </div>
                 <button type="submit">Submit</button>
-
             </div>
             <div class="btn-field">
                 <button type="button" id="signupBtn" class="disable">Sign up</button>
                 <button type="button" id="loginBtn" onclick="window.location.href='/login'">Log in</button>
-
             </div>
         </form>
     </div>
 </div>
 
 <script>
-    let signupBtn = document.getElementById("signupBtn");
-    let loginBtn = document.getElementById("loginBtn");
-    let nameField = document.getElementById("nameField");
-    let title = document.getElementById("title");
+    function validatePassword() {
+        let passwordInput = document.getElementById("password");
+        let password = passwordInput.value;
 
+        // Define your password criteria
+        let criteria = [
+            { regex: /^(?=.*[a-z])/, message: "At least one lowercase letter (a-z)" },
+            { regex: /^(?=.*[A-Z])/, message: "At least one uppercase letter (A-Z)" },
+            { regex: /^(?=.*[0-9])/, message: "At least one digit (0-9)" },
+            { regex: /^(?=.*[!@#\$%\^&\*])/, message: "At least one special character" },
+            { regex: /^(?=.{8,})/, message: "At least 8 characters long" }
+        ];
 
+        // Check if the password meets all criteria
+        for (let i = 0; i < criteria.length; i++) {
+            if (!criteria[i].regex.test(password)) {
+                // Display error message
+                alert("Password must meet the following criteria:\n" + criteria[i].message);
+                return false; // Prevent form submission
+            }
+        }
+        return true; // Allow form submission
+    }
 </script>
 </body>
 </html>
