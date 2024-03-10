@@ -93,6 +93,18 @@ header{
 
 }
 
+header .logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 10px;
+}
+header .logo img {
+    width: 50px; 
+    height: auto; 
+    display: block; 
+}
+
 header .user img{
     height: 17rem;
     width: 17rem;
