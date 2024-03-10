@@ -7,7 +7,7 @@ const jobs = [
     openPositions: 2,
     link: "#",
     location: "Beirut",
-    requiredHours: "Full-time",
+    requiredHours: "24",
     requiredSkills: "Communication, Teamwork",
   },
   {
@@ -18,7 +18,7 @@ const jobs = [
     openPositions: 3,
     link: "#",
     location: "Tripoli",
-    requiredHours: "Part-time",
+    requiredHours: "12",
     requiredSkills: "First Aid, Emergency Response",
   },
   {
@@ -29,7 +29,7 @@ const jobs = [
     openPositions: 1,
     link: "#",
     location: "Sidon",
-    requiredHours: "Full-time",
+    requiredHours: "24",
     requiredSkills: "Social Work, Empathy",
   },
 ];
