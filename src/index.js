@@ -32,6 +32,11 @@ app.get('/login', (req, res) => {
     res.render('login')
 })
 
+app.get('/Posts', (req, res) => {
+    res.render('Posts')
+})
+
+
 
 // app.get('/home', (req, res) => {
 //     res.render('home')
