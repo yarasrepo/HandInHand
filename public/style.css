@@ -36,7 +36,7 @@ header{
     transition: all .50s ease;
 }
 .logo{
-    width: 150px;
+    width: 50px;
     cursor: pointer;
 }
 .navbar{
@@ -105,7 +105,7 @@ section{
     font-size: var(--h1-font);
     font-weight: 800;
     line-height: 1.2;
-    color:#000;
+    color:#000000;
     margin-bottom: 15px;
 }
 .home-text p{
