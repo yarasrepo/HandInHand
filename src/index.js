@@ -73,13 +73,36 @@ app.get('/Posts', (req, res) => {
 })
 
 
-app.get('/userprofile', (req,res) => {
-    res.render("userprofile")
-})
+app.get('/userprofile', (req, res) => {
+    try {
+        // Check if the user is logged in
+        if (req.session.user) {
+            const userName = req.session.user.name; // Retrieve the name of the logged-in user
+            res.render("userprofile", { userName }); // Pass the user's name to the view
+        } else {
+            // Handle the case where the user is not logged in
+            res.redirect('/login'); // Redirect to the login page or handle appropriately
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 
 app.get('/orgprofile', (req,res) => {
-    res.render("orgprofile")
-})
+    try {
+        if(req.session.user) {
+            const orgName = req.session.user.name;
+            res.render("orgprofile", {orgName});
+        } else {
+            res.redirect('/login');
+        }
+    } catch (err) {
+         console.error(err);
+         res.status(500).send('Internal Server Error');
+    }
+});
 
 
 
