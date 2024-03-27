@@ -143,6 +143,17 @@ header .navbar ul li a{
     font-size: 2rem;
     border-radius: 5rem;
 }
+.navbar li a[href="editable.html"] {
+    /* Styles for the Edit link */
+    background-color: var(--blue); /*Background color*/
+    color: white; /* Text color */
+    display: block;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    font-size: 2rem;
+    border-radius: 5rem;
+    margin-top: 20rem;
+}
 
 header .navbar ul li a:hover{
     background: var(--blue);
