@@ -105,6 +105,10 @@ app.get('/orgprofile', (req,res) => {
 });
 
 
+app.get('/reset-pass', (req, res) => {
+    res.render('reset-pass');
+});
+
 
  app.get('/home', (req, res) => {
      res.render('homepage')
