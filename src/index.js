@@ -1,6 +1,9 @@
 const express = require("express")
 const session = require("express-session");
 const path = require("path")
+require('dotenv').config();
+const nodemailer = require("nodemailer");
+const jwt = require("jsonwebtoken");
 const app = express()
 const hbs = require("hbs")
 const LogInCollection = require("./mongodb")
@@ -105,18 +108,15 @@ app.get('/orgprofile', (req,res) => {
 });
 
 
-app.get('/reset-pass', (req, res) => {
-    res.render('reset-pass');
-});
 
 
- app.get('/home', (req, res) => {
+app.get('/home', (req, res) => {
      res.render('homepage')
- })
-
-app.post('/signup', async (req, res) => {
-    const data = {
-        name: req.body.name,
+    })
+    
+    app.post('/signup', async (req, res) => {
+        const data = {
+            name: req.body.name,
         email: req.body.email,
         password: req.body.password,
         role: req.body.role
@@ -163,6 +163,120 @@ app.post('/login', async (req, res) => {
         res.status(500).send("An error occurred during login");
     }
 });
+
+
+app.get('/forgot-password', (req, res) => {
+    res.render('forgot-password');
+});
+
+app.get('/reset-password', (req, res) => {
+    res.render('reset-password')
+});
+
+
+app.post('/forgot-password', async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const user = await LogInCollection.findOne({ email });
+
+        if (!user) {
+            return res.send('User not registered');
+        }
+
+        const secret = process.env.JWT_SECRET || 'your_jwt_secret';
+        const payload = {
+            email: user.email,
+            id: user.id
+        };
+        const token = jwt.sign(payload, secret, { expiresIn: '5m' });
+        // Maybe change link later when we want to host 
+        const resetLink = `http://localhost:3000/reset-password/${user.id}/${token}`;
+
+        const transporter = nodemailer.createTransport({
+            service: process.env.EMAIL_SERVICE || 'Gmail',
+            auth: {
+                user: process.env.EMAIL_USER || 'your_email@example.com',
+                pass: process.env.EMAIL_PASS || 'your_email_password'
+            }
+        });
+
+        const mailOptions = {
+            from: process.env.EMAIL_USER || 'your_email@example.com',
+            to: user.email,
+            subject: 'Password Reset Link',
+            text: `Click the following link to reset your password: ${resetLink}`
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Error sending email:', error);
+                res.status(500).send('Error sending email');
+            } else {
+                console.log('Email sent:', info.response);
+                res.send('Password reset link has been sent to your email');
+            }
+        });
+    } catch (error) {
+        console.error('Error in forgot-password endpoint:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
+app.get('/reset-password/:userId/:token', async (req, res) => {
+    const { userId, token } = req.params;
+
+    try {
+        const user = await LogInCollection.findById(userId);
+
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        const secret = process.env.JWT_SECRET || 'your_jwt_secret';
+        jwt.verify(token, secret, async (err, decoded) => {
+            if (err) {
+                return res.status(400).send('Invalid or expired token');
+            }
+
+            res.render('reset-password', { userId, token });
+        });
+    } catch (error) {
+        console.error('Error in reset-password route:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.post('/reset-password/:userId/:token', async (req, res) => {
+    const { userId, token } = req.params;
+    const { newPassword } = req.body;
+
+    try {
+        const user = await LogInCollection.findById(userId);
+
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        const secret = process.env.JWT_SECRET || 'your_jwt_secret';
+        jwt.verify(token, secret, async (err, decoded) => {
+            if (err) {
+                return res.status(400).send('Invalid or expired token');
+            }
+
+            // Update user's password
+            user.password = newPassword;
+            await user.save();
+
+            res.send('Password reset successful');
+        });
+    } catch (error) {
+        console.error('Error in reset-password route:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 
 
 app.listen(port, () => {
