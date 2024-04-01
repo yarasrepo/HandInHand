@@ -43,7 +43,8 @@ app.get('/signup', (req, res) => {
 app.get('/', (req, res) => {
     try {
         // Check if the user is logged in
-        if (req.session.user) {
+        const signedIn = !!req.session.user;
+        if (signedIn) {
             const userRole = req.session.user.role;
             let profileLink;
 
@@ -52,18 +53,15 @@ app.get('/', (req, res) => {
             } else if (userRole === 'organization') {
                 profileLink = '/orgprofile';
             }
-            res.render('homepage', { profileLink });
+            res.render('homepage', { profileLink, signedIn });
         } else {
-            res.render('homepage', { profileLink: null });
+            res.render('homepage', { profileLink: null, signedIn });
         }
     } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
     }
 });
-
-
-
 
 
 
@@ -165,6 +163,12 @@ app.post('/login', async (req, res) => {
 });
 
 
+app.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.redirect('/');
+});
+
+
 app.get('/forgot-password', (req, res) => {
     res.render('forgot-password');
 });
@@ -202,7 +206,7 @@ app.post('/forgot-password', async (req, res) => {
         });
 
         const mailOptions = {
-            from: process.env.EMAIL_USER || 'your_email@example.com',
+            from: process.env.EMAIL_USER,
             to: user.email,
             subject: 'Password Reset Link',
             text: `Click the following link to reset your password: ${resetLink}`
@@ -211,15 +215,15 @@ app.post('/forgot-password', async (req, res) => {
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.error('Error sending email:', error);
-                res.status(500).send('Error sending email');
+                return res.status(500).send('Error sending email');
             } else {
                 console.log('Email sent:', info.response);
-                res.send('Password reset link has been sent to your email');
+                return res.send('Password reset link has been sent to your email');
             }
         });
     } catch (error) {
         console.error('Error in forgot-password endpoint:', error);
-        res.status(500).send('Internal Server Error');
+        return res.status(500).send('Internal Server Error');
     }
 });
 
@@ -234,7 +238,7 @@ app.get('/reset-password/:userId/:token', async (req, res) => {
             return res.status(404).send('User not found');
         }
 
-        const secret = process.env.JWT_SECRET || 'your_jwt_secret';
+        const secret = process.env.JWT_SECRET; 
         jwt.verify(token, secret, async (err, decoded) => {
             if (err) {
                 return res.status(400).send('Invalid or expired token');

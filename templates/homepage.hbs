@@ -24,8 +24,12 @@
 
         </ul>
         <div class = "h-right">
+            {{#if signedIn}}
+             <a href="/logout">Logout</a>
+             {{else}}
             <li><a href="/signup">Register</a>|<a href="/login">Login</a></li>
             <div class = "bx bx-menu" id = "menu-icon"></div>
+            {{/if}}
         </div>   
     </header>
     <!---home section design-->
