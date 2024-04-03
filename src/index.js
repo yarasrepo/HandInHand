@@ -173,11 +173,6 @@ app.get('/forgot-password', (req, res) => {
     res.render('forgot-password');
 });
 
-app.get('/reset-password', (req, res) => {
-    res.render('reset-password')
-});
-
-
 app.post('/forgot-password', async (req, res) => {
     const { email } = req.body;
 
@@ -188,99 +183,49 @@ app.post('/forgot-password', async (req, res) => {
             return res.send('User not registered');
         }
 
-        const secret = process.env.JWT_SECRET || 'your_jwt_secret';
-        const payload = {
-            email: user.email,
-            id: user.id
-        };
-        const token = jwt.sign(payload, secret, { expiresIn: '5m' });
-        // Maybe change link later when we want to host 
-        const resetLink = `http://localhost:3000/reset-password/${user.id}/${token}`;
+        const resetToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '5m' });
+        
+        // change after hosting the website
+        const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
 
-        const transporter = nodemailer.createTransport({
-            service: process.env.EMAIL_SERVICE || 'Gmail',
-            auth: {
-                user: process.env.EMAIL_USER || 'your_email@example.com',
-                pass: process.env.EMAIL_PASS || 'your_email_password'
-            }
-        });
-
-        const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: user.email,
-            subject: 'Password Reset Link',
-            text: `Click the following link to reset your password: ${resetLink}`
-        };
-
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.error('Error sending email:', error);
-                return res.status(500).send('Error sending email');
-            } else {
-                console.log('Email sent:', info.response);
-                return res.send('Password reset link has been sent to your email');
-            }
-        });
+        return res.send('Password reset link has been sent to your email');
     } catch (error) {
         console.error('Error in forgot-password endpoint:', error);
         return res.status(500).send('Internal Server Error');
     }
 });
 
-
-app.get('/reset-password/:userId/:token', async (req, res) => {
-    const { userId, token } = req.params;
+app.get('/reset-password', async (req, res) => {
+    const { token } = req.query;
 
     try {
-        const user = await LogInCollection.findById(userId);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        return res.render('reset-password', { token });
+    } catch (error) {
+        console.error('Error in reset-password route:', error);
+        return res.status(400).send('Invalid or expired token');
+    }
+});
 
+app.post('/reset-password', async (req, res) => {
+    const { token, newPassword } = req.body;
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await LogInCollection.findById(decoded.userId);
         if (!user) {
             return res.status(404).send('User not found');
         }
 
-        const secret = process.env.JWT_SECRET; 
-        jwt.verify(token, secret, async (err, decoded) => {
-            if (err) {
-                return res.status(400).send('Invalid or expired token');
-            }
+        user.password = newPassword;
+        await user.save();
 
-            res.render('reset-password', { userId, token });
-        });
+        return res.send('Password reset successful');
     } catch (error) {
         console.error('Error in reset-password route:', error);
-        res.status(500).send('Internal Server Error');
+        return res.status(400).send('Invalid or expired token');
     }
 });
-
-app.post('/reset-password/:userId/:token', async (req, res) => {
-    const { userId, token } = req.params;
-    const { newPassword } = req.body;
-
-    try {
-        const user = await LogInCollection.findById(userId);
-
-        if (!user) {
-            return res.status(404).send('User not found');
-        }
-
-        const secret = process.env.JWT_SECRET || 'your_jwt_secret';
-        jwt.verify(token, secret, async (err, decoded) => {
-            if (err) {
-                return res.status(400).send('Invalid or expired token');
-            }
-
-            // Update user's password
-            user.password = newPassword;
-            await user.save();
-
-            res.send('Password reset successful');
-        });
-    } catch (error) {
-        console.error('Error in reset-password route:', error);
-        res.status(500).send('Internal Server Error');
-    }
-});
-
 
 
 app.listen(port, () => {
