@@ -12,12 +12,7 @@
     <link rel = "stylesheet" href = "orgprofilestyle.css">
 </head>
 <body>
-    <!--jquery cdn link-->
-    <script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" ></script>
-
-    <!--custom js file link-->
-    <script src = "orgprofilescript.js"></script>
-
+    
     <!---Header section design-->
     <header>
         <div class="logo">
@@ -47,15 +42,15 @@
     <section class="about" id = "about">
         <h3>HELLO!</h3>
         <h1>WE'RE <span>{{orgName}}</span></h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio deserunt aspernatur
-            fugiat minus enim ullam repundiandae sint sed magnam tenetur!</p>
+        <p id="aboutText">!</p>
         <a href = "#current"><button class = "btn">Current Opportunities <i class="fa-solid fa-calendar-week"></i></button></a>
     </section>
 
     <!--Current Opportunities design-->
     <section class = "current" id = "current">
         <h1 class = "heading"><span>Current</span> Opportunities</h1>
-        <div class = "box-container">
+        <div id="currentOpps"></div>
+        <!-- <div class = "box-container">
             <div class = "box">
                 <i class = "fa-solid fa-calendar-week"></i>
                 <span>DAY</span>
@@ -109,13 +104,15 @@
                 fugiat minus enim ullam repundiandae sint sed magnam tenetur!</p>
                 <button class = "btn1">Read More</button>
             </div>
-        </div>
+        </div> -->
     </section>
 
     <!--Previous Opportunities design-->
     <section class = "previous" id = "previous">
         <h1 class = "heading"><span>Previous</span> Opportunities</h1>
-        <div class = "box-container">
+        <div id="PreviousOpps"></div>
+        
+        <!-- <div class = "box-container">
             <div class = "box">
                 <img src = "https://www.parents.com/thmb/TKfsiYM0mOsnTtYnrOoug95R1fA=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/GettyImages-626891352-99af025cafaf4e69a76cb8af44140201.jpg" alt = "">
                 <button class = "btn1">Read More</button>
@@ -140,13 +137,14 @@
                 <img src = "https://www.torontopubliclibrary.ca/content/support-us/volunteering/images/volunteer-programs-hero.jpg" alt = "">
                 <button class = "btn1">Read More</button>
             </div>
-        </div>
+        </div> -->
     </section>
 
     <!--Photos design-->
     <section class = "photos" id = "photos">
         <h1 class = "heading"><span>Photos</span></h1>
-        <div class = "box-container">
+        <div id="photos"></div>
+     <!-- <div class = "box-container">
             <div class = "box">
                 <img src = "https://foodforthepoor.org/wp-content/uploads/volunteers-heart-giving-blog-1.jpg" alt = "">
             </div>
@@ -165,14 +163,14 @@
             <div class = "box">
                 <img src = "https://aginginplace.org/wp-content/uploads/Senior-Volunteer.jpg" alt = "">
             </div>
-        </div>
+        </div> -->
     </section>
 
     <!--Contact Information Design-->
     <section class = "contact" id = "contact">
         <h1 class = "heading"><span>Contact</span> Us</h1>
         <div class = "row">
-            <div class = "content">
+        <!-- <div class = "content">
                 <h3 class = "title">contact information</h3>
                 <div class = "info">
                     <h3><i class="fas fa-envelope"></i>  username@organization.com</h3>
@@ -180,7 +178,7 @@
                     <h3><i class="fas fa-phone"></i>  +111-222-3333</h3>
                     <h3><i class="fas fa-map-marker-alt"></i>  Beirut, Lebanon - 0000</h3>
                 </div>
-            </div>
+            </div> -->
             <form action = "">
                 <input type = "text" placeholder = "name" class = "box">
                 <input type = "email" placeholder = "email" class = "box">
@@ -190,32 +188,14 @@
             </form>
         </div>
     </section>
-    <script>
-          $(document).ready(function(){
+    
+    <!-- scroll top -->
+    <a href="About" class="top"></a>
+    
+    <!--jquery cdn link-->
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" ></script>
 
-    $('#menu').click(function(){
-        $(this).toggleClass('fa-times');
-        $('header').toggleClass('toggle');
-    });
-
-    $(window).on('scroll load', function(){
-        $('#menu').removeClass('fa-times');
-        $('header').removeClass('toggle');
-    });
-
-    //smooth scrolling
-    $('a[href*="#"]').on('click',function(e){
-        e.preventDefault();
-        $('html, body').animate({
-            scrollTop : $($(this).attr('href')).offset().top,
-
-        }, 
-            500,
-            'linear'
-        );
-    });
-
-  });
-    </script>
+    <!--custom js file link-->
+    <script src = "orgprofilescript.js"></script>
 </body>
 </html>
