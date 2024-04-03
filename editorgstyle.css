@@ -1,0 +1,132 @@
+:root{
+    --blue:#2686f5;
+    --green:#5ad673;
+}
+
+*{
+    font-family: 'Poppins', sans-serif;
+    margin: 0; padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    outline: none; border: none;
+    text-transform: capitalize;
+    transition: all .2s linear;
+}
+
+
+
+.input-container input[type="text"],
+.input-container input[type="number"],
+.input-container input[type="date"] {
+    background-color: #b7b7b7; /* Change background color */
+    color: #333; /* Change text color */
+    border: 1px solid #333; /* Change border color */
+    padding: 0 15rem; /* Adjust padding as needed */
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    justify-content: center;
+    flex-flow: column;
+    
+}
+
+.input-container label {
+    white-space: nowrap;
+}
+
+html{
+    font-size: 62.5%;
+    overflow-x: hidden;
+}
+
+
+body{
+    background: #fff;
+    overflow-x: hidden;
+    padding-left: 35rem;
+}
+
+
+header{
+    position: fixed;
+    top:0; left: 0;
+    z-index: 1000;
+    height: 100%;
+    width: 35rem;
+    background: #b7b7b7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column;
+    text-align: center;
+
+}
+
+form[name="Info"] {
+
+    padding: 5rem 0; 
+    position: absolute;
+    height: 5rem;
+    width: 5rem;
+    border-radius: 50%;
+    line-height: 5rem;
+    text-align: center;
+    font-size: 2rem;
+    color: #333;
+}
+
+.input-container{
+    font-size: 2rem;
+    color: #333;
+    /* display: flex; */
+    /* justify-content: space-between; */
+    align-items: center;
+    margin-bottom: 10px;
+
+}
+
+.navbar li a {
+    background-color: var(--blue); /* Use the same background color as your buttons */
+    color: #333; /* Text color */
+    padding: 10px 20px; /* Padding for the link */
+    border-radius: 5px; /* Rounded corners */
+    text-decoration: none; /* Remove underline */
+    display: inline-block; /* Display as block element */
+    margin-top: 10px;
+}
+
+.navbar li a:hover {
+    background-color: var(--blue); /* Change background color on hover */
+}
+
+
+
+form[name="Info"] input[type="button"] {
+    background-color:  #b7b7b7;
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+form[name="Info"] input[type="submit"]{
+    background-color: var(--blue);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+form[name="Info"] input[type="submit"]:hover {
+    background-color: var(--green);
+}
+
+form[name="Info"] input[type="button"]:hover {
+    background-color: var(--blue);
+}

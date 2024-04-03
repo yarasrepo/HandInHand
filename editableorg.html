@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+    <head>
+        <title>Edit Organization Profile</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        <link rel="stylesheet" href="editorgstyle.css">
+        <link rel = "shortcut icon" type = "x-icon" href="logonowords.png">
+
+
+        <nav class="navbar">
+            <ul>
+                <li><a href="orgprofile.html">Discard</a></li>
+                <!--Other Navigation link here-->
+            </ul>
+        </nav>
+
+        <script>
+            function addInputBox(){
+                var form = document.forms[0];
+                var inputCount = form.querySelectorAll('.input-container').length;
+                var newInputCount = inputCount + 1;
+
+                var newDiv = document.createElement('div');
+                newDiv.classList.add('input-container');
+
+                // Opportunity Input
+                var oppLabel = document.createElement('label');
+                oppLabel.setAttribute('for', 'Opportunity' + newInputCount);
+                oppLabel.textContent = 'Opportunity:';
+                newDiv.appendChild(oppLabel);
+
+                var oppInput = document.createElement('input');
+                oppInput.setAttribute('type', 'text');
+                oppInput.setAttribute('id', 'Opportunity' + newInputCount);
+                oppInput.setAttribute('name', 'Opportunity' + newInputCount);
+                newDiv.appendChild(oppInput);
+
+                // Start Date Input
+                var startDateLabel = document.createElement('label');
+                startDateLabel.setAttribute('for', 'StartDate' + newInputCount);
+                startDateLabel.textContent = 'Start Date:';
+                newDiv.appendChild(startDateLabel);
+
+                var startDateInput = document.createElement('input');
+                startDateInput.setAttribute('type', 'date');
+                startDateInput.setAttribute('id', 'StartDate' + newInputCount);
+                startDateInput.setAttribute('name', 'StartDate' + newInputCount);
+                newDiv.appendChild(startDateInput);
+
+                // End Date Input
+                var endDateLabel = document.createElement('label');
+                endDateLabel.setAttribute('for', 'EndDate' + newInputCount);
+                endDateLabel.textContent = 'End Date:';
+                newDiv.appendChild(endDateLabel);
+
+                var endDateInput = document.createElement('input');
+                endDateInput.setAttribute('type', 'date');
+                endDateInput.setAttribute('id', 'EndDate' + newInputCount);
+                endDateInput.setAttribute('name', 'EndDate' + newInputCount);
+                newDiv.appendChild(endDateInput);
+
+                // Description Input
+                var descriptionLabel = document.createElement('label');
+                descriptionLabel.setAttribute('for', 'Description' + newInputCount);
+                descriptionLabel.textContent = 'Description:';
+                newDiv.appendChild(descriptionLabel);
+
+                var descriptionInput = document.createElement('input');
+                descriptionInput.setAttribute('type', 'text');
+                descriptionInput.setAttribute('id', 'Description' + newInputCount);
+                descriptionInput.setAttribute('name', 'Description' + newInputCount);
+                newDiv.appendChild(descriptionInput);
+
+                form.insertBefore(newDiv, form.querySelector('[name=Submit]'));
+
+                var currentOppContent = document.querySelector('#currentOpps');
+                var newBox = document.createElement('div');
+                newBox.classList.add('box');
+                newBox.innerHTML = `
+                    <i class = "fa-solid fa-calendar-week"></i>
+                    <span>Date - Date</span>
+                    <h3>${oppInput.value}</h3>
+                    <p>Description: ${descriptionInput.value}</p>
+                    <button class = "btn1">Read More</button>
+                `;
+                currentOppContent.appendChild(newBox);
+
+            }
+
+         
+            var previousOppContent = document.querySelector('#PreviousOpps');
+            var newPrevBox = document.createElement('div');
+            newPrevBox.classList.add('box');
+
+            newPrevBox.innerHTML = `
+                <label for="previousOppotunity">Previous Opportunity:</label>
+                <input type="file" id="previousOpportunity" name="previousOpportunity" accept="image/*">
+                <button class = "btn1">Read More</button>
+                `;
+
+            previousOppContent.appendChild(newPrevBox);
+            
+            
+            var photosContent = document.querySelector('#photos');
+
+            var newPhotoBox = document.createElement('div');
+            newPhotoBox.classList.add('input-container');
+
+            newPhotoBox.innerHTML = `                    
+                <label for="photo">Photo:</label>
+                <input type="file" id="photo" name="photo" accept="image/*">
+            `;
+
+            photosContent.appendChild(newPhotoBox);
+
+        </script>
+    </head>
+
+    <body>
+        <form name="Info">
+            <div class="input-container">
+                <label for="Description">Description:</label>
+                <input type="text" id="Description" name="Description" value="Description"><br>
+            </div>
+            <div class="input-container">
+                <label for="PhoneNum">Phone Number: </label>
+                <input type="number" id="PhoneNum" name="PhoneNum" value=PhoneNum><br>
+            </div>
+            <div class="input-container">
+                <label for="Location">Location: </label>
+                <input type="text" id="Location" name="Location" value=Location><br>
+            </div>
+            <div class="input-container">
+                <label for="ProfilePic">Profile Picture:</label>
+                <input type="file" id="ProfilePic" name="ProfilePic" accept="image/*"><br>
+            </div>
+            <div class="input-container">
+                <label for="CurrentOps">Current Opportunities: </label>
+                <input type="button" id="CurrentOps" onclick="addInputBox()" value="Add Input Box">
+            </div>
+            <div class="input-container">
+                <label for="PreviousOpps">Previous Opportunitues:</label>
+                <input type="file" id="PreviousOpps" name="PreviousOpps" accept="image/*"><br>
+            </div>
+            <div class="input-container">
+                <label for="Photos">Photos:</label>
+                <input type="file" id="Photos" name="Photos" accept="image/*"><br>
+            </div>
+
+
+            <input type="submit" name="Submit" value="Submit Button" >
+
+        </form>
+    </body>
+</html>
