@@ -12,15 +12,15 @@
 <body>
 
 <header>
-    <!-- <div class = “logo”>
-        <a href = “templates/homepage.hbs”>
-               <img src = “logonowords.png” alt = “logo”>
+    <div class = “logo”>
+        <a href = “/home”>
+        {{!-- logo img!! --}}
         </a>
-    </div> -->
+    </div>
  
     <div class="user">
-        <img src="images/profpic.jpg" atl="">
-        <h3 class="name">UserName</h3>
+        <img src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR11lMafo-ZYohC2qYI1BJN80gzcC-7IpohIeUQT1RT0WgBttaZX7J1yEea92wMCcTXa9A&usqp=CAU" alt = "">
+        <h3 class="name">{{userName}}</h3>
         <p class="post">volunteer</p>
     </div>
 
@@ -40,8 +40,8 @@
 
 <section class="About" id="About">
     <h3>HELLO!</h3>
-    <h1>I'm <span>UserName</span></h1>
-    <p id="Desc">!</p>
+    <h1>I'm <span>{{userName}}</span></h1>
+    <p>I'm passionate about helping others!</p>
     <a href="#prevvolunteer"><button class="btn">Previous Volunteering Experience <i class="fa-solid fa-hand-holding-hand"></i></button></a>
 
 </section>
@@ -56,7 +56,7 @@
 
     <div id="userPrevVolExp"></div>
 
-    <!-- <div class="box-container">
+<!--     <div class="box-container">
 
         <div class="box">
             <i class="fa-solid fa-utensils"></i>
@@ -89,7 +89,7 @@
             <p>Collected clothing donations for the poor and homeless</p>
             <p>25 hours</p>
         </div> -->
-    <!-- </div> -->
+<!--     </div> -->
 
 </section>
 
@@ -100,11 +100,9 @@
 <section class="contact" id="contact">
 
     <h1 class="heading"> my <span>contact</span> info </h1>
-
     <div id="userContactInfo"></div>
-
     <div class="row">
-        <!-- <div class="content">
+        <div class="content">
             <h3 class="title">contact info</h3>
             <div class="info">
                 <h3> <i class="fas fa-evelope"></i> email@gmail.com</h3>
@@ -112,7 +110,7 @@
                 <h3><i class="fas fa-map-marker-alt"></i> Beirut, Lebanon </h3>
 
             </div>
-        </div> -->
+        </div>
 
         <form action="">
 
@@ -134,7 +132,43 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-<script src="userprofilescript.js"></script>
+<script>
+    $(document).ready(function(){
+    $('#menu').click(function(){
+        $(this).toggleClass('fa-times');
+        $('header').toggleClass('toggle');
+    });
+
+    $(window).on('scroll load', function(){
+        $('#menu').removeClass('fa-times');
+        $('header').removeClass('toggle');
+
+        if($(window).scrollTop() > 0){
+            $('.top').show();
+        }else{
+            $('.top').hide();
+
+        }
+    });
+
+    // smooth scrolling
+
+    $('a[href*="#"]').on('click', function(e){
+
+        e.preventDefault();
+
+        $('html, body').animate({
+            scrollTop : $($(this).attr('href')).offset().top,
+        },
+            500,
+            'linear'
+
+        );
+
+    });
+
+});
+</script>
 
 </body>
 </html>
