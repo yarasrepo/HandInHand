@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+    
+<head>
+    <title>Edit User Profile</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" href="editablestyle.css">
+
+    <nav class="navbar">
+        <ul>
+            <li><a href="userprofile.html">Discard</a></li>
+            <!-- Other navigation links here -->
+        </ul>
+    </nav>
+
+    <script>
+
+        function addInputBox() {
+            var form = document.forms[0];
+            var inputCount = form.querySelectorAll('.input-container').length;
+            var newInputCount = inputCount + 1;
+
+            var newDiv = document.createElement('div');
+            newDiv.classList.add('input-container');
+
+            // Company Input
+            var companyLabel = document.createElement('label');
+            companyLabel.setAttribute('for', 'Company' + newInputCount);
+            companyLabel.textContent = 'Company:';
+            newDiv.appendChild(companyLabel);
+
+            var companyInput = document.createElement('input');
+            companyInput.setAttribute('type', 'text');
+            companyInput.setAttribute('id', 'Company' + newInputCount);
+            companyInput.setAttribute('name', 'Company' + newInputCount);
+            newDiv.appendChild(companyInput);
+
+            // Start Date Input
+            var startDateLabel = document.createElement('label');
+            startDateLabel.setAttribute('for', 'StartDate' + newInputCount);
+            startDateLabel.textContent = 'Start Date:';
+            newDiv.appendChild(startDateLabel);
+
+            var startDateInput = document.createElement('input');
+            startDateInput.setAttribute('type', 'date');
+            startDateInput.setAttribute('id', 'StartDate' + newInputCount);
+            startDateInput.setAttribute('name', 'StartDate' + newInputCount);
+            newDiv.appendChild(startDateInput);
+
+            // End Date Input
+            var endDateLabel = document.createElement('label');
+            endDateLabel.setAttribute('for', 'EndDate' + newInputCount);
+            endDateLabel.textContent = 'End Date:';
+            newDiv.appendChild(endDateLabel);
+
+            var endDateInput = document.createElement('input');
+            endDateInput.setAttribute('type', 'date');
+            endDateInput.setAttribute('id', 'EndDate' + newInputCount);
+            endDateInput.setAttribute('name', 'EndDate' + newInputCount);
+            newDiv.appendChild(endDateInput);
+
+            // Description Input
+            var descriptionLabel = document.createElement('label');
+            descriptionLabel.setAttribute('for', 'Description' + newInputCount);
+            descriptionLabel.textContent = 'Description:';
+            newDiv.appendChild(descriptionLabel);
+
+            var descriptionInput = document.createElement('input');
+            descriptionInput.setAttribute('type', 'text');
+            descriptionInput.setAttribute('id', 'Description' + newInputCount);
+            descriptionInput.setAttribute('name', 'Description' + newInputCount);
+            newDiv.appendChild(descriptionInput);
+
+            // Hours Worked Input
+            var hoursWorkedLabel = document.createElement('label');
+            hoursWorkedLabel.setAttribute('for', 'HoursWorked' + newInputCount);
+            hoursWorkedLabel.textContent = 'Hours Worked:';
+            newDiv.appendChild(hoursWorkedLabel);
+
+            var hoursWorkedInput = document.createElement('input');
+            hoursWorkedInput.setAttribute('type', 'number');
+            hoursWorkedInput.setAttribute('id', 'HoursWorked' + newInputCount);
+            hoursWorkedInput.setAttribute('name', 'HoursWorked' + newInputCount);
+            newDiv.appendChild(hoursWorkedInput);
+
+            form.insertBefore(newDiv, form.querySelector('[name=Submit]'));
+
+        var prevVolExpContent = document.querySelector('#userPrevVolExp');
+    var newBox = document.createElement('div');
+    newBox.classList.add('box');
+    newBox.innerHTML = `
+        <i class="fa-solid fa-utensils"></i>
+        <span>Date - Date</span>
+        <h3>${companyInput.value}</h3>
+        <p>Description: ${descriptionInput.value}</p>
+        <p>Hours Worked: ${hoursWorkedInput.value}</p>
+    `;
+    prevVolExpContent.appendChild(newBox);
+        }
+    </script>
+</head>
+
+<body >
+    <!-- //input-field is input-container
+    //form signupfrom is from Info -->
+<div class="container">
+    <!-- <img src="https://i.imgur.com/MoSHBZX.png" class="logo" alt="HandinHand"> -->
+    <div class="form-box">
+    <form name="Info">
+        <div class="input-container">
+            <label for="Description">Description:</label>
+            <input type="text" id="Description" name="Description" value=Description><br>
+        </div>
+        <div class="input-container">
+            <label for="PhoneNum">Phone Number: </label>
+            <input type="number" id="PhoneNum" name="PhoneNum" value=PhoneNum><br>
+        </div>
+        <div class="input-container">
+            <label for="Location">Location: </label>
+            <input type="text" id="Location" name="Location" value=Location><br>
+        </div>
+                <div class="input-container">
+            <label for="ProfilePic">Profile Picture:</label>
+            <input type="file" id="ProfilePic" name="ProfilePic" accept="image/*"><br>
+        </div>
+        <div class="input-container">
+            <label for="PrevOps">Previous Opportunities: </label>
+            <input type="button" id="PrevOps" onclick="addInputBox()" value="Add Input Box">
+        </div>
+
+        <input type="submit" name="Submit" value="Submit Button" >
+    </form>
+</body>
+
+</html>
