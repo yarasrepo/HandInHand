@@ -11,7 +11,8 @@ mongoose.connect("mongodb://localhost:27017/HandInHand")
 const LogInSchema = new mongoose.Schema({
     name:{
         type:String,
-        required:true
+        required:true,
+        unique: true
     },
     email:{
         type:String,
@@ -29,4 +30,47 @@ const LogInSchema = new mongoose.Schema({
 
 const collection = new mongoose.model("HandInHandcollection", LogInSchema)
 
-module.exports = collection
+const userProfile= new mongoose.Schema({
+    loginId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'LogInSchema',
+        required: true
+    },
+    Description: {
+        type: String,
+    },
+    PhoneNum: {
+        type: Number,
+    },
+    Location: {
+        type: String,
+    },
+    ProfilePic: {
+        type: String // Assuming you store the file path or URL
+    },
+    PrevOpps: [
+        {
+            company: {
+                type: String
+            },
+            startDate: {
+                type: Date
+            },
+            endDate: {
+                type: Date
+            },
+            OppDescription: {
+                type: String
+            },
+            hoursWorked: {
+                type: Number
+            }
+        }
+    ]
+})
+const userProfCollection= new mongoose.model("userProfCollection", userProfile)
+
+module.exports = {
+    collection,
+    userProfCollection
+}

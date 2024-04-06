@@ -227,6 +227,29 @@ app.post('/reset-password', async (req, res) => {
     }
 });
 
+app.get('/editable', async(req,res)=>{
+    res.render('editable');
+})
+
+app.post('/edituserprof', async(req,res)=>{
+    const data= {
+     userName : req.session.user.name,
+     desc: req.body.Description,
+     phone : req.body.PhoneNum,
+     loc: req.body.Location,
+     profpic: req.body.ProfilePic,
+     prevop: req.body.PrevOps
+    }
+
+    await userProfCollection.insertMany(data)
+    res.send("sent")
+})
+
+// app.post('/sendMsg', async(req,res) =>{
+//     const msg = req.body.msg
+//     await collection.insertMany([{msg}])
+//     res.send("sent")
+// })
 
 app.listen(port, () => {
     console.log('port connected');
