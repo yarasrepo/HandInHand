@@ -11,7 +11,8 @@ mongoose.connect("mongodb://localhost:27017/HandInHand")
 const LogInSchema = new mongoose.Schema({
     name:{
         type:String,
-        required:true
+        required:true,
+        unique:true
     },
     email:{
         type:String,
@@ -29,4 +30,4 @@ const LogInSchema = new mongoose.Schema({
 
 const collection = new mongoose.model("HandInHandcollection", LogInSchema)
 
-module.exports = collection
+module.exports = LogInSchema
