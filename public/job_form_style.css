@@ -1,0 +1,32 @@
+.background-image {
+    background-image: linear-gradient(to left, rgba(0,0,0,0.6), rgba(0,0,0,0.3)), url(https://img.freepik.com/free-photo/group-buddies-relaxing-park_23-2148219102.jpg?size=626&ext=jpg);
+    background-size: cover;
+    background-position: bottom center;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.job-form {
+    padding: 12px 24px;
+    border: 1px solid #333;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    background: #fff;
+}
+
+#jobForm input[type="submit"] {
+    text-decoration: none;
+    border: 1px solid #023047;
+    color: #000;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-align: center;
+    margin-top: 20px;
+    transition: all 400ms ease;
+}
+  
+#jobForm input[type="submit"]:hover {
+    background: #023047;
+    color: #fff;
+}

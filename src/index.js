@@ -74,6 +74,12 @@ app.get('/Posts', (req, res) => {
 })
 
 
+app.get('/job_submission_form', (req, res) => {
+    res.render('job_submission_form');
+})
+
+
+
 app.get('/userprofile', (req, res) => {
     try {
         // Check if the user is logged in

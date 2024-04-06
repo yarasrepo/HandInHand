@@ -94,7 +94,8 @@ section{
     position: relative;
     height: 100vh;
     width: 100%;
-    background-image: linear-gradient(to left, rgba(0,0,0,0.4), rgba(0,0,0,0.2)), url(https://cdn.poz.com/75560_hands.jpg_514a52b3-627e-4a22-90af-fa505edd64b0.jpeg);
+    /* background-color: #bec0c2; */
+    background-image: linear-gradient(to left, rgba(0,0,0,0.4), rgba(0,0,0,0.2)), url(https://cdn.poz.com/75560_hands.jpg_514a52b3-627e-4a22-90af-fa505edd64b0.jpeg); 
     background-size: cover;
     background-position: bottom center;
     display: flex;

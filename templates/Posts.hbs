@@ -1,228 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap"
-    rel="stylesheet"
-  />
-  <link rel="stylesheet" href="Postsstyle.css" >
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opportunities - HandInHand</title>
+    <link rel="stylesheet" href="poststyle.css">
+    {{!-- <link rel="stylesheet" href="style.css"> --}}
 </head>
 <body>
-  <div class="background-image">
-    <div class="jobs-list-container">
-      <h2>5 opportunities</h2>
+    <header>
+        <img src="https://i.imgur.com/MoSHBZX.png" class="logo" alt="HandinHand">
+        <ul class="navbar">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="/Posts">Opportunities</a></li>
+            <li><a href="{{#if profileLink}}{{ profileLink }}{{else}}/signup{{/if}}">Profile</a></li>
+        </ul>
+        <div class="h-right">
+            {{#if signedIn}}
+            <a href="/logout">Logout</a>
+            {{else}}
+            <li><a href="/signup">Register</a>|<a href="/login">Login</a></li>
+            <div class="bx bx-menu" id="menu-icon"></div>
+            {{/if}}
+        </div>
+    </header>
 
-      <input class="job-search" type="text" placeholder="Search here..." />
-
-      <div class="jobs"></div>
-      
-      <form id="jobForm" class="job-form">
-        <h3>Submit a Job</h3>
-        <label for="job_name">Job Name:</label><br>
-        <input type="text" id="job_name" name="job_name"><br>
-        <label for="description">Description:</label><br>
-        <textarea id="description" name="description"></textarea><br>
-        <label for="open_positions">Open Positions:</label><br>
-        <input type="number" id="open_positions" name="open_positions"><br>
-        <label for="location">Location:</label><br>
-        <input type="text" id="location" name="location" required><br>
-        <label for="required_hours">Required Hours:</label><br>
-        <input type="text" id="required_hours" name="required_hours" required><br>
-        <label for="required_skills">Required Skills:</label><br>
-        <input type="text" id="required_skills" name="required_skills" required><br>
-        <label for="image_link">Image Link:</label><br>
-        <input type="url" id="image_link" name="image_link"><br>
-        <input type="submit" value="Submit">
-      </form>
+    <div class="search-bar">
+        <input type="text" class="search-input" placeholder="Search...">
+        <button class="search-button">Search</button>
     </div>
-  </div>
 
-  <script>
-    const jobs = [
-  {
-    title: "Kafa",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy2OZWgV07yR3XYdur5RoIqHXyQ03vWkNrhv_2aCO1JA&s",
-    details:
-      "KAFA (enough) Violence & Exploitation is a Lebanese civil, non-governmental, non-profit, feminist, and secular organization seeking to create a society that is free of social, economic, and legal patriarchal structures that discriminate against women.",
-    openPositions: 2,
-    link: "#",
-    location: "Beirut",
-    requiredHours: "Full-time",
-    requiredSkills: "Communication, Teamwork",
-  },
-  {
-    title: "Red Cross",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrdgSGx1IuCEogYAeHtOgmqUrUQVDWBCZkS-VuCt1lWw&s",
-    details:
-      "The Lebanese Red Cross (LRC) is a humanitarian organization and an auxiliary team to the medical service of the Lebanese Army",
-    openPositions: 3,
-    link: "#",
-    location: "Tripoli",
-    requiredHours: "Part-time",
-    requiredSkills: "First Aid, Emergency Response",
-  },
-  {
-    title: "Bassma",
-    image: "https://lebanonkidsguide.com/wp-content/uploads/2015/12/BASSMA.jpg",
-    details:
-      "A non-profit association for Social Development, founded by a group of dynamic volunteers. They decided to fight poverty and work for a better society by creating a humanitarian organization that rallies citizens for the social Lebanese cause.",
-    openPositions: 1,
-    link: "#",
-    location: "Sidon",
-    requiredHours: "Full-time",
-    requiredSkills: "Social Work, Empathy",
-  },
-];
+    <div class="container">
+        <aside class="sidebar">
+            <h2>Filter By</h2>
+            <div class="filter-category">
+                <h3>Popular Filters</h3>
+                <ul>
+                    <li><input type="checkbox" id="Reemo"> <label for="Reemo">Reemo</label></li>
+                    <li><input type="checkbox" id="Ramroumi"> <label for="Ramroumi">ramroum</label></li>
+                    <li><input type="checkbox" id="Ramroum"> <label for="Ramroum">ramroumi</label></li>
+                </ul>
+            </div>
+        </aside>
 
-const jobsHeading = document.querySelector(".jobs-list-container h2");
-const jobsContainer = document.querySelector(".jobs-list-container .jobs");
-const jobSearch = document.querySelector(".jobs-list-container .job-search");
-const jobForm = document.getElementById("jobForm");
+        <main class="main-content">
+            <section class="opportunities-page">
+                <div class="opportunities-container" id="opportunitiesContainer">
+                </div>
+            </section>
+        </main>
+    </div>
+    <script>
+    const header = document.querySelector("header");
 
-let searchTerm = "";
-
-// Function to update the job counter
-const updateJobCounter = () => {
-  if (jobs.length == 1) {
-    jobsHeading.innerHTML = `${jobs.length} Opportunity`;
-  } else {
-    jobsHeading.innerHTML = `${jobs.length} Opportunities`;
-  }
-};
-
-// Function to create job listing cards
-const createJobListingCards = () => {
-  jobsContainer.innerHTML = "";
-
-  jobs.forEach((job, index) => {
-    if (job.title.toLowerCase().includes(searchTerm.toLowerCase())) {
-      let jobCard = document.createElement("div");
-      jobCard.classList.add("job");
-
-      let image = document.createElement("img");
-      image.src = job.image;
-
-      let title = document.createElement("h3");
-      title.innerHTML = job.title;
-      title.classList.add("job-title");
-
-      let details = document.createElement("div");
-      details.innerHTML = job.details;
-      details.classList.add("details");
-
-      let detailsBtn = document.createElement("button");
-      detailsBtn.innerHTML = "More Details";
-      detailsBtn.classList.add("details-btn");
-      detailsBtn.addEventListener("click", () => {
-        // Toggle visibility of additional details
-        const additionalDetails = jobCard.querySelector(".additional-details");
-        if (additionalDetails.style.display === "none") {
-          additionalDetails.style.display = "block";
-        } else {
-          additionalDetails.style.display = "none";
-        }
-      });
-
-      let openPositions = document.createElement("span");
-      openPositions.classList.add("open-positions");
-      openPositions.innerHTML = `${job.openPositions} open positions`;
-
-      let applyBtn = document.createElement("button");
-      applyBtn.innerHTML = "Apply Now";
-      applyBtn.classList.add("apply-btn");
-      applyBtn.addEventListener("click", () => {
-        alert("Thank you! Your application for " + job.title + " has been sent and is waiting acceptance, please be patient!");
-      });
-
-      let deleteBtn = document.createElement("button");
-      deleteBtn.innerHTML = "Delete";
-      deleteBtn.classList.add("delete-btn");
-      deleteBtn.addEventListener("click", () => {
-        jobs.splice(index, 1);
-        createJobListingCards();
-        updateJobCounter();
-      });
-
-      // Additional details section (initially hidden)
-      let additionalDetails = document.createElement("div");
-      additionalDetails.classList.add("additional-details");
-      additionalDetails.style.display = "none";
-      additionalDetails.innerHTML = `
-        <p><strong>Location:</strong> ${job.location}</p>
-        <p><strong>Required Hours:</strong> ${job.requiredHours}</p>
-        <p><strong>Required Skills:</strong> ${job.requiredSkills}</p>
-      `;
-
-      jobCard.appendChild(image);
-      jobCard.appendChild(title);
-      jobCard.appendChild(details);
-      jobCard.appendChild(detailsBtn);
-      jobCard.appendChild(openPositions);
-      jobCard.appendChild(applyBtn);
-      jobCard.appendChild(deleteBtn);
-      jobCard.appendChild(additionalDetails);
-
-      jobsContainer.appendChild(jobCard);
-    }
-  });
-};
-
-// Function to handle job submission
-const submitJob = (event) => {
-  event.preventDefault();
-
-  const jobName = document.getElementById("job_name").value;
-  const description = document.getElementById("description").value;
-  const openPositions = parseInt(document.getElementById("open_positions").value);
-  const location = document.getElementById("location").value; // New field: Location
-  const requiredHours = document.getElementById("required_hours").value; // New field: Required Hours
-  const requiredSkills = document.getElementById("required_skills").value; // New field: Required Skills
-  let imageLink = document.getElementById("image_link").value;
-
-  if (!imageLink) {
-    imageLink = "images/logonowords.png"; // Replace with your default image link
-  }
-
-  if (jobName && description && !isNaN(openPositions) && openPositions > 0 && location && requiredHours && requiredSkills) {
-    jobs.push({
-      title: jobName,
-      image: "images/logonowords.png", // Set default image or adjust as needed
-      details: description,
-      openPositions: openPositions,
-      location: location,
-      requiredHours: requiredHours,
-      requiredSkills: requiredSkills, // Include required skills
-      link: "#", // Update as needed
-    });
-
-    createJobListingCards();
-    updateJobCounter();
-
-    // Clear form fields after submission
-    jobForm.reset();
-  } else {
-    alert("Please fill in all fields correctly.");
-  }
-};
-
-// Initial setup
-updateJobCounter();
-createJobListingCards();
-
-// Event listeners
-jobSearch.addEventListener("input", (e) => {
-  searchTerm = e.target.value;
-  createJobListingCards();
+window.addEventListener("scroll", function(){
+    header.classList.toggle("sticky", window.scrollY > 60)
 });
 
-jobForm.addEventListener("submit", submitJob);
+let menu = document.querySelector('#menu-icon');
+let navbar = document.querySelector('.navbar');
 
-  </script>
+menu.onclick = () => {
+    menu.classList.toggle('bx-x');
+    navbar.classList.toggle('open');
+};
+    </script>
+
+    <script>
+       const addOpportunity = (title, description, seatsAvailable) => {
+            const opportunitiesContainer = document.getElementById("opportunitiesContainer");
+
+            const opportunityCard = document.createElement("div");
+            opportunityCard.classList.add("opportunity-card");
+
+            const titleElement = document.createElement("h3");
+            titleElement.textContent = title;
+
+            const descriptionElement = document.createElement("p");
+            descriptionElement.textContent = description;
+
+            const seatsLeftElement = document.createElement("span");
+            seatsLeftElement.classList.add("seats-left");
+            seatsLeftElement.textContent = `Seats Left: ${seatsAvailable}`;
+
+            const bookButton = document.createElement("button");
+            bookButton.classList.add("book-button");
+            bookButton.textContent = "Book Now";
+
+            opportunityCard.appendChild(titleElement);
+            opportunityCard.appendChild(descriptionElement);
+            opportunityCard.appendChild(seatsLeftElement);
+            opportunityCard.appendChild(bookButton);
+
+            opportunitiesContainer.appendChild(opportunityCard);
+        };
+
+       const populateOpportunities = () => {
+            const jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+            console.log("Number of jobs retrieved:", jobs.length);
+            jobs.forEach(job => {
+                console.log("Adding opportunity for job:", job.title);
+                addOpportunity(job.title, job.details, job.openPositions);
+            });
+        };
+
+     //   localStorage.clear();
+
+        document.addEventListener("DOMContentLoaded", populateOpportunities);
+    </script>
 </body>
 </html>
