@@ -244,9 +244,22 @@ app.post('/reset-password', async (req, res) => {
     }
 });
 
-app.get('/editable', async(req,res)=>{
-    res.render('editable');
-})
+app.get('/editable', async (req, res) => {
+    try {
+        // Assuming you have access to the user's ID in the session
+        const userProf = await userProfCollection.findOne({ loginId: req.session.user._id });
+
+        if (userProf) {
+            res.render('editable', { userProf });
+        } else {
+            res.status(404).send('User profile not found');
+        }
+    } catch (error) {
+        console.error('Error in /editable route:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 
 app.post('/edituserprof', async(req,res)=>{
     const data= {
