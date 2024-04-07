@@ -47,26 +47,7 @@ const userProfile= new mongoose.Schema({
     },
     ProfilePic: {
         type: String // Assuming you store the file path or URL
-    },
-    PrevOpps: [
-        {
-            company: {
-                type: String
-            },
-            startDate: {
-                type: Date
-            },
-            endDate: {
-                type: Date
-            },
-            OppDescription: {
-                type: String
-            },
-            hoursWorked: {
-                type: Number
-            }
-        }
-    ]
+    }
 })
 const userProfCollection= new mongoose.model("userProfCollection", userProfile)
 
