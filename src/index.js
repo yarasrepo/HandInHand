@@ -71,16 +71,23 @@ app.get('/login', (req, res) => {
 
 app.get('/Posts', (req, res) => {
     try {
+        const signedIn = !!req.session.user;
         let userRole;
-        if (req.session.user && req.session.user.role) {
+        let isOrganization;
+        if (signedIn) {
             userRole = req.session.user.role;
+            if (userRole === 'organization') {
+                isOrganization = true;
+            }
         }
-        res.render('Posts', { userRole });
+        res.render('Posts', { signedIn, userRole, isOrganization });
     } catch (error) {
         console.error('Error in /Posts route:', error);
         res.status(500).send('Internal Server Error');
     }
 });
+
+
 
 
 
