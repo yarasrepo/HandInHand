@@ -6,7 +6,8 @@ const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
 const app = express()
 const hbs = require("hbs")
-const LogInCollection = require("./mongodb")
+// const LogInCollection = require("./mongodb")
+const { collection: LogInCollection } = require("./mongodb");
 const port = process.env.PORT || 3000
 app.use(express.json())
 
