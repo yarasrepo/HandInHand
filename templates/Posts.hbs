@@ -29,6 +29,11 @@
     <div class="search-bar">
     <input type="text" class="search-input" placeholder="Search..." id="searchInput">
         <button class="search-button">Search</button>
+       {{#if signedIn}}
+    {{#if userRole '===' 'organization'}}
+        <a href="/job_submission_form" class="post-button">Post an Opportunity</a>
+    {{/if}}
+{{/if}}
     </div>
 
     <div class="container">
@@ -51,6 +56,16 @@
             </section>
         </main>
     </div>
+
+
+
+
+
+
+
+
+
+{{!-- seperate scripts later --}}
     <script>
     const header = document.querySelector("header");
 
@@ -109,7 +124,6 @@ menu.onclick = () => {
 
         document.addEventListener("DOMContentLoaded", populateOpportunities);
     </script>
-
     <script>
         const searchInput = document.getElementById("searchInput");
 

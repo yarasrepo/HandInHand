@@ -70,8 +70,19 @@ app.get('/login', (req, res) => {
 })
 
 app.get('/Posts', (req, res) => {
-    res.render('Posts')
-})
+    try {
+        let userRole;
+        if (req.session.user && req.session.user.role) {
+            userRole = req.session.user.role;
+        }
+        res.render('Posts', { userRole });
+    } catch (error) {
+        console.error('Error in /Posts route:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
 
 
 app.get('/job_submission_form', (req, res) => {

@@ -30,4 +30,4 @@ const LogInSchema = new mongoose.Schema({
 
 const collection = new mongoose.model("HandInHandcollection", LogInSchema)
 
-module.exports = LogInSchema
+module.exports = collection
