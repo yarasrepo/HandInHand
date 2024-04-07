@@ -27,7 +27,7 @@
     </header>
 
     <div class="search-bar">
-        <input type="text" class="search-input" placeholder="Search...">
+    <input type="text" class="search-input" placeholder="Search..." id="searchInput">
         <button class="search-button">Search</button>
     </div>
 
@@ -108,6 +108,27 @@ menu.onclick = () => {
      //   localStorage.clear();
 
         document.addEventListener("DOMContentLoaded", populateOpportunities);
+    </script>
+
+    <script>
+        const searchInput = document.getElementById("searchInput");
+
+    searchInput.addEventListener("input", function() {
+    const searchText = searchInput.value.toLowerCase();
+    const opportunityCards = document.querySelectorAll(".opportunity-card");
+
+    opportunityCards.forEach(card => {
+        const title = card.querySelector("h3").textContent.toLowerCase();
+        const description = card.querySelector("p").textContent.toLowerCase();
+
+        if (title.includes(searchText) || description.includes(searchText)) {
+            card.style.display = "block";
+        } else {
+            card.style.display = "none";
+        }
+    });
+});
+
     </script>
 </body>
 </html>

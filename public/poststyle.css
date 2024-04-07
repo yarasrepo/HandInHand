@@ -255,3 +255,86 @@ header {
     background : transparent;
     backdrop-filter: blur(35px);
 }
+
+@media screen and (min-width: 768px) {
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+    }
+
+    .navbar li {
+        list-style-type: none;
+    }
+
+    .navbar a {
+        text-decoration: none;
+        color: var(--text-color);
+        font-size: var(--p-font);
+        font-weight: 500;
+        margin-right: 20px;
+        transition: all .50s ease;
+    }
+
+    .h-right {
+        display: flex;
+        align-items: center;
+    }
+
+    .h-right a:first-child {
+        color: var(--text-color);
+        font-size: var(--p-font);
+        margin-right: 20px;
+    }
+
+    .h-right li {
+        font-size: var(--p-font);
+        display: flex;
+        align-items: center;
+    }
+
+    .h-right a {
+        color: var(--text-color);
+        margin-right: 18px;
+        margin-left: 5px;
+        transition: all .50s ease;
+        font-size: inherit;
+    }
+
+    .h-right span {
+        color: #000;
+    }
+
+    .h-right a:hover {
+        color: var(--main-color);
+        transform: translateY(-3px);
+    }
+
+    #menu-icon {
+        color: var(--text-color);
+        font-size: 30px;
+        cursor: pointer;
+        z-index: 10001;
+        display: none;
+    }
+
+    .sticky {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        background: transparent;
+        backdrop-filter: blur(35px);
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .navbar {
+        display: none;
+    }
+
+    #menu-icon {
+        display: block;
+    }
+}
