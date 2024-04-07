@@ -1,32 +1,45 @@
-.background-image {
-    background-image: linear-gradient(to left, rgba(0,0,0,0.6), rgba(0,0,0,0.3)), url(https://img.freepik.com/free-photo/group-buddies-relaxing-park_23-2148219102.jpg?size=626&ext=jpg);
-    background-size: cover;
-    background-position: bottom center;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 .job-form {
-    padding: 12px 24px;
-    border: 1px solid #333;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    background: #fff;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
 }
 
-#jobForm input[type="submit"] {
-    text-decoration: none;
-    border: 1px solid #023047;
-    color: #000;
-    padding: 8px 16px;
-    border-radius: 8px;
-    text-align: center;
-    margin-top: 20px;
-    transition: all 400ms ease;
+.form-group {
+    margin-bottom: 20px;
 }
-  
-#jobForm input[type="submit"]:hover {
-    background: #023047;
-    color: #fff;
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="url"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+input[type="submit"],
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover,
+button:hover {
+    background-color: #0056b3;
 }
