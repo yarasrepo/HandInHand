@@ -73,19 +73,22 @@ app.get('/Posts', (req, res) => {
     try {
         const signedIn = !!req.session.user;
         let userRole;
-        let isOrganization;
+        let profileLink;
         if (signedIn) {
             userRole = req.session.user.role;
-            if (userRole === 'organization') {
-                isOrganization = true;
+            if (userRole === 'volunteer') {
+                profileLink = '/userprofile';
+            } else if (userRole === 'organization') {
+                profileLink = '/orgprofile';
             }
         }
-        res.render('Posts', { signedIn, userRole, isOrganization });
+        res.render('Posts', { signedIn, userRole, profileLink });
     } catch (error) {
         console.error('Error in /Posts route:', error);
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 
 
@@ -130,11 +133,9 @@ app.get('/orgprofile', (req,res) => {
 });
 
 
-
-
-app.get('/home', (req, res) => {
-     res.render('homepage')
-    })
+// app.get('/home', (req, res) => {
+//      res.render('homepage')
+//     })
     
     app.post('/signup', async (req, res) => {
         const data = {
