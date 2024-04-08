@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 const app = express()
 const hbs = require("hbs")
 // const LogInCollection = require("./mongodb")
-const { collection: LogInCollection } = require("./mongodb");
+const { collection: LogInCollection, userProfCollection } = require("./mongodb");
 const port = process.env.PORT || 3000
 app.use(express.json())
 
@@ -247,8 +247,10 @@ app.post('/reset-password', async (req, res) => {
 
 app.get('/editable', async (req, res) => {
     try {
-        // Assuming you have access to the user's ID in the session
+        console.log('Session user ID:', req.session.user._id); // Log the user ID from the session
         const userProf = await userProfCollection.findOne({ loginId: req.session.user._id });
+
+        console.log('User Profile Data:', userProf); // Log the user profile data fetched from the database
 
         if (userProf) {
             res.render('editable', { userProf });
@@ -260,6 +262,8 @@ app.get('/editable', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
+
 
 
 app.post('/edituserprof', async(req,res)=>{
@@ -275,12 +279,6 @@ app.post('/edituserprof', async(req,res)=>{
     await userProfCollection.insertMany(data)
     res.send("sent")
 })
-
-// app.post('/sendMsg', async(req,res) =>{
-//     const msg = req.body.msg
-//     await collection.insertMany([{msg}])
-//     res.send("sent")
-// })
 
 app.listen(port, () => {
     console.log('port connected');

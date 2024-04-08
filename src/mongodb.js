@@ -49,7 +49,7 @@ const userProfile= new mongoose.Schema({
         type: String // Assuming you store the file path or URL
     }
 })
-const userProfCollection= new mongoose.model("userProfCollection", userProfile)
+const userProfCollection= mongoose.model("userProfCollection", userProfile)
 
 module.exports = {
     collection,
