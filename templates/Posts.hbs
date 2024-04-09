@@ -18,7 +18,10 @@
         </ul>
         <div class="h-right">
             {{#if signedIn}}
-            <a href="/logout">Logout</a>
+            <a href="/logout">Logout</a> 
+            {{#if isOrganization }}
+            <a href="/job_submission_form" class="post-button">Post an Opportunity</a>
+            {{/if}}
             {{else}}
             <li><a href="/signup">Register</a>|<a href="/login">Login</a></li>
             {{/if}}
@@ -29,11 +32,6 @@
     <div class="search-bar">
     <input type="text" class="search-input" placeholder="Search..." id="searchInput">
         <button class="search-button">Search</button>
-     {{#if signedIn}}
-    {{#if isOrganization }}
-        <a href="/job_submission_form" class="post-button">Post an Opportunity</a>
-    {{/if}}
-{{/if}}
     </div>
 
     <div class="container">
