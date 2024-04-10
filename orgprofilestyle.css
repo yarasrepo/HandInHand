@@ -221,7 +221,6 @@ header .navbar ul li a:hover{
     color: #000;
     background: var(--blue);
 }
-
 .previous .box-container{
     display: flex;
     align-items: center;
