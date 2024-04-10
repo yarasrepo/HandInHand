@@ -168,6 +168,15 @@ header .navbar ul li a:hover{
     color: #575757;
     padding: 1rem 0;
 }
+.btn-edit{
+    padding: .7rem 3rem;
+    background: #b7b7b7;
+    color: #000;
+    cursor: pointer;
+    margin-top: 1rem;
+    font-size: 2rem;
+    border-radius: 50rem;
+}
 .current .box-container{
     display: flex;
     align-items: center;
