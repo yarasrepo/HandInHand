@@ -92,16 +92,36 @@ app.get('/job_submission_form', (req, res) => {
 
 
 
-app.get('/userprofile', (req, res) => {
+app.get('/userprofile', async (req, res) => {
     try {
         // Check if the user is logged in
         if (req.session.user) {
-            const userName = req.session.user.name; // Retrieve the name of the logged-in user
-            res.render("userprofile", { userName }); // Pass the user's name to the view
+            const userName = req.session.user.name;
+            console.log('Session user name:', req.session.user.name);
+            const userProf = await userProfCollection.findOne({ name: req.session.user.name });
+
+            if (userProf) {
+                // Render the profile page if userProf is found
+                res.render('userprofile', { userName });
+            } else {
+                // Create the user profile if not found
+                const data = {
+                    name: req.session.user.name,
+                    Description: "I love helping others",
+                    PhoneNum: 0,
+                    Location: "Beirut",
+                    ProfilePic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR11lMafo-ZYohC2qYI1BJN80gzcC-7IpohIeUQT1RT0WgBttaZX7J1yEea92wMCcTXa9A&usqp=CAU",
+                };
+                await userProfCollection.create(data);
+                
+                // Redirect to the profile page after creating the profile
+                res.redirect('/userprofile');
+            }
         } else {
             // Handle the case where the user is not logged in
             res.redirect('/login'); // Redirect to the login page or handle appropriately
         }
+
     } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
@@ -245,40 +265,47 @@ app.post('/reset-password', async (req, res) => {
     }
 });
 
+
 app.get('/editable', async (req, res) => {
     try {
-        console.log('Session user ID:', req.session.user._id); // Log the user ID from the session
-        const userProf = await userProfCollection.findOne({ loginId: req.session.user._id });
+        console.log('Session user ID:', req.session.user.name);
 
-        console.log('User Profile Data:', userProf); // Log the user profile data fetched from the database
+        const userProf = await userProfCollection.findOne({ name: req.session.user.name });
 
-        if (userProf) {
-            res.render('editable', { userProf });
-        } else {
-            res.status(404).send('User profile not found');
-        }
+        res.render('editable', { userProf });
+
     } catch (error) {
-        console.error('Error in /editable route:', error);
+        console.error('Error fetching user profile:', error);
         res.status(500).send('Internal Server Error');
     }
 });
 
 
+app.post('/edituserprof', async (req, res) => {
+    const query = { name: req.session.user.name }; // Query to find the existing user profile
+    const update = {
+        $set: {
+            Description: req.body.Description,
+            PhoneNum: req.body.PhoneNum,
+            Location: req.body.Location,
+            ProfilePic: req.body.ProfilePic,
+        }
+    };
 
+    try {
+        const updatedProfile = await userProfCollection.findOneAndUpdate(query, update, { new: true });
 
-app.post('/edituserprof', async(req,res)=>{
-    const data= {
-     userName : req.session.user.name,
-     desc: req.body.Description,
-     phone : req.body.PhoneNum,
-     loc: req.body.Location,
-     profpic: req.body.ProfilePic,
-     prevop: req.body.PrevOps
+        if (updatedProfile) {
+            res.redirect('/userprofile'); // Redirect after updating the profile
+        } else {
+            res.status(404).send('User profile not found');
+        }
+    } catch (error) {
+        console.error('Error updating user profile:', error);
+        res.status(500).send('Internal Server Error');
     }
+});
 
-    await userProfCollection.insertMany(data)
-    res.send("sent")
-})
 
 app.listen(port, () => {
     console.log('port connected');

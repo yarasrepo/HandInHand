@@ -31,8 +31,8 @@ const LogInSchema = new mongoose.Schema({
 const collection = new mongoose.model("HandInHandcollection", LogInSchema)
 
 const userProfile= new mongoose.Schema({
-    loginId: {
-        type: mongoose.Schema.Types.ObjectId,
+    name: {
+        type: String,
         ref: 'LogInSchema',
         required: true
     },
