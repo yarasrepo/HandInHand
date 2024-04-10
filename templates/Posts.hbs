@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opportunities - HandInHand</title>
+    <link rel="stylesheet" href="poststyle.css">
+    <!-- Include any necessary stylesheets -->
+</head>
+<body>
+    <header>
+        <img src="https://i.imgur.com/MoSHBZX.png" class="logo" alt="HandinHand">
+        <ul class="navbar">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="/Posts">Opportunities</a></li>
+            <li><a href="{{#if profileLink}}{{ profileLink }}{{else}}/signup{{/if}}">Profile</a></li>
+        </ul>
+        <div class="h-right">
+            {{#if signedIn}}
+            <a href="/logout">Logout</a> 
+            {{#if isOrganization }}
+            <a href="/job_submission_form" class="post-button">Post an Opportunity</a>
+            {{/if}}
+            {{else}}
+            <li><a href="/signup">Register</a>|<a href="/login">Login</a></li>
+            {{/if}}
+            <div class="bx bx-menu" id="menu-icon"></div>
+        </div>
+    </header>
+
+    <div class="search-bar">
+        <input type="text" class="search-input" placeholder="Search..." id="searchInput">
+        <button class="search-button">Search</button>
+    </div>
+
+    <div class="container">
+        <aside class="sidebar">
+            <h2>Filter By</h2>
+            <div class="filter-category">
+                <h3>Popular Filters</h3>
+                <ul>
+                    <li><input type="checkbox" id="Reemo"> <label for="Reemo">Reemo</label></li>
+                    <li><input type="checkbox" id="Ramroumi"> <label for="Ramroumi">ramroum</label></li>
+                    <li><input type="checkbox" id="Ramroum"> <label for="Ramroum">ramroumi</label></li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <section class="opportunities-page">
+                <div class="opportunities-container" id="opportunitiesContainer">
+                </div>
+            </section>
+        </main>
+    </div>
+
+{{!-- change to databse later on maybe --}}
+    <script>
+        const header = document.querySelector("header");
+        window.addEventListener("scroll", function(){
+            header.classList.toggle("sticky", window.scrollY > 60)
+        });
+
+        let menu = document.querySelector('#menu-icon');
+        let navbar = document.querySelector('.navbar');
+
+        menu.onclick = () => {
+            menu.classList.toggle('bx-x');
+            navbar.classList.toggle('open');
+        };
+
+const addOpportunity = (job) => {
+    const opportunitiesContainer = document.getElementById("opportunitiesContainer");
+
+    const opportunityCard = document.createElement("div");
+    opportunityCard.classList.add("opportunity-card");
+
+    const titleElement = document.createElement("h3");
+    titleElement.textContent = job.title || ""; 
+
+    const descriptionElement = document.createElement("p");
+    descriptionElement.textContent = job.details || ""; 
+
+    const seatsLeftElement = document.createElement("span");
+    seatsLeftElement.classList.add("seats-left");
+    seatsLeftElement.textContent = `Seats Left: ${job.openPositions || 0}`;
+
+    const moreDetailsElement = document.createElement("div");
+    moreDetailsElement.classList.add("more-details");
+    moreDetailsElement.style.display = "none"; 
+
+    try {
+        moreDetailsElement.innerHTML = `
+            <p><strong>Location:</strong> ${job.location || ""}</p>
+            <p><strong>Required Hours:</strong> ${job.requiredHours || ""}</p>
+            <p><strong>Required Skills:</strong> ${job.requiredSkills || ""}</p>
+        `;
+    } catch (error) {
+        console.error('Error while setting more details content:', error);
+    }
+
+    const bookButton = document.createElement("button");
+    bookButton.classList.add("book-button");
+    bookButton.textContent = "Book Now";
+
+    opportunityCard.appendChild(titleElement);
+    opportunityCard.appendChild(descriptionElement);
+    opportunityCard.appendChild(seatsLeftElement);
+    opportunityCard.appendChild(bookButton); 
+
+    opportunityCard.appendChild(moreDetailsElement);
+
+    opportunitiesContainer.appendChild(opportunityCard);
+
+    opportunityCard.addEventListener("click", function() {
+        const moreDetailsElement = this.querySelector(".more-details");
+        if (moreDetailsElement.style.display === "none") {
+            moreDetailsElement.style.display = "block";
+        } else {
+            moreDetailsElement.style.display = "none";
+        }
+    });
+};
+
+
+
+      const populateOpportunities = () => {
+    const jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+    console.log("Number of jobs retrieved:", jobs.length);
+    jobs.forEach(job => {
+        console.log("Adding opportunity for job:", job.title);
+        addOpportunity(job); 
+    });
+};
+
+
+        document.addEventListener("DOMContentLoaded", populateOpportunities);
+
+        const searchInput = document.getElementById("searchInput");
+
+        searchInput.addEventListener("input", function() {
+            const searchText = searchInput.value.toLowerCase();
+            const opportunityCards = document.querySelectorAll(".opportunity-card");
+
+            opportunityCards.forEach(card => {
+                const title = card.querySelector("h3").textContent.toLowerCase();
+                const description = card.querySelector("p").textContent.toLowerCase();
+                const moreDetailsContent = card.querySelector(".more-details").textContent.toLowerCase();
+
+                if (title.includes(searchText) || description.includes(searchText) || moreDetailsContent.includes(searchText)) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        });
+    </script>
+</body>
+</html>

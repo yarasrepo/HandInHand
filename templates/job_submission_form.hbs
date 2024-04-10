@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Submission Form</title>
+    <link rel="stylesheet" href="job_form_style.css"/>
+</head>
+<body>
+    <div class="container">
+        <h1>Job Submission Form</h1>
+        <form id="jobForm" class="job-form">
+            <h3>Submit a Job</h3>
+            <div class="form-group">
+                <label for="job_name">Job Name:</label>
+                <input type="text" id="job_name" name="job_name">
+            </div>
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea id="description" name="description"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="open_positions">Open Positions:</label>
+                <input type="number" id="open_positions" name="open_positions">
+            </div>
+            <div class="form-group">
+                <label for="location">Location:</label>
+                <input type="text" id="location" name="location" required>
+            </div>
+            <div class="form-group">
+                <label for="required_hours">Required Hours:</label>
+                <input type="number" id="required_hours" name="required_hours" required>
+            </div>
+            <div class="form-group">
+                <label for="required_skills">Required Skills:</label>
+                <input type="text" id="required_skills" name="required_skills" required>
+            </div>
+            <div class="form-group">
+                <label for="image_link">Image Link:</label>
+                <input type="url" id="image_link" name="image_link">
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Submit">
+            </div>
+        </form>
+    </div>
+
+    <section class="opportunities-page">
+        <div class="opportunities-container" id="opportunitiesContainer">
+
+        </div>
+    </section>
+
+    <script>
+
+        const addOpportunity = (job) => {
+            const opportunitiesContainer = document.getElementById("opportunitiesContainer");
+
+            const opportunityCard = document.createElement("div");
+            opportunityCard.classList.add("opportunity-card");
+
+            const titleElement = document.createElement("h3");
+            titleElement.textContent = job.title;
+
+            const descriptionElement = document.createElement("p");
+            descriptionElement.textContent = job.details;
+
+            const seatsLeftElement = document.createElement("span");
+            seatsLeftElement.classList.add("seats-left");
+            seatsLeftElement.textContent = `Seats Left: ${job.openPositions}`;
+
+            const bookButton = document.createElement("button");
+            bookButton.classList.add("book-button");
+            bookButton.textContent = "Book Now";
+
+            opportunityCard.appendChild(titleElement);
+            opportunityCard.appendChild(descriptionElement);
+            opportunityCard.appendChild(seatsLeftElement);
+            opportunityCard.appendChild(bookButton);
+
+            opportunitiesContainer.appendChild(opportunityCard);
+        };
+
+        const submitJob = (event) => {
+            event.preventDefault();
+            let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+
+            const jobName = document.getElementById("job_name").value;
+            const description = document.getElementById("description").value;
+            const openPositions = parseInt(document.getElementById("open_positions").value);
+            const location = document.getElementById("location").value;
+            const requiredHours = document.getElementById("required_hours").value;
+            const requiredSkills = document.getElementById("required_skills").value;
+            let imageLink = document.getElementById("image_link").value;
+
+            if (!imageLink) {
+                imageLink = "https://i.imgur.com/MoSHBZX.png";
+            }
+
+            if (jobName && description && !isNaN(openPositions) && openPositions > 0 && location && requiredHours && requiredSkills) {
+                const newJob = {
+                    title: jobName,
+                    image: imageLink,
+                    details: description,
+                    openPositions: openPositions,
+                    location: location,
+                    requiredHours: requiredHours,
+                    requiredSkills: requiredSkills,
+                    link: "#",
+                };
+
+                jobs.push(newJob);
+                localStorage.setItem("jobs", JSON.stringify(jobs));
+
+                document.getElementById("jobForm").reset();
+
+                populateOpportunities();
+            } else {
+                alert("Please fill in all fields correctly.");
+            }
+        };
+        document.getElementById("jobForm").addEventListener("submit", submitJob);
+    </script>
+</body>
+</html>
