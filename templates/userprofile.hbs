@@ -19,8 +19,8 @@
     </div>
  
     <div class="user">
-        <img src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR11lMafo-ZYohC2qYI1BJN80gzcC-7IpohIeUQT1RT0WgBttaZX7J1yEea92wMCcTXa9A&usqp=CAU" alt = "">
-        <h3 class="name">{{userName}}</h3>
+        <img src = {{userProf.ProfilePic}} alt = "">
+        <h3 class="name">{{userProf.name}}</h3>
         <p class="post">volunteer</p>
     </div>
 
@@ -41,8 +41,8 @@
 
 <section class="About" id="About">
     <h3>HELLO!</h3>
-    <h1>I'm <span>{{userName}}</span></h1>
-    <p>I'm passionate about helping others!</p>
+    <h1>I'm <span>{{userProf.name}}</span></h1>
+    <p>{{userProf.Description}}</p>
     <a href="#prevvolunteer"><button class="btn">Previous Volunteering Experience <i class="fa-solid fa-hand-holding-hand"></i></button></a>
 
 </section>
@@ -106,9 +106,9 @@
         <div class="content">
             <h3 class="title">contact info</h3>
             <div class="info">
-                <h3> <i class="fas fa-evelope"></i> {{email}}</h3>
-                <h3><i class="fas fa-phone"></i> {{PhoneNum}}</h3>
-                <h3><i class="fas fa-map-marker-alt"></i> {{Location}} </h3>
+                <h3> <i class="fas fa-evelope"></i> {{userProf.email}}</h3>
+                <h3><i class="fas fa-phone"></i> {{userProf.PhoneNum}}</h3>
+                <h3><i class="fas fa-map-marker-alt"></i> {{UserProf.Location}} </h3>
 
             </div>
         </div>

@@ -102,11 +102,14 @@ app.get('/userprofile', async (req, res) => {
 
             if (userProf) {
                 // Render the profile page if userProf is found
-                res.render('userprofile', { userName });
+                res.render('userprofile', { userProf });
             } else {
                 // Create the user profile if not found
+                const existingUser = await LogInCollection.findOne({ name: req.session.user.name });
+                if (existingUser){
                 const data = {
                     name: req.session.user.name,
+                    email: existingUser.email,
                     Description: "I love helping others",
                     PhoneNum: 0,
                     Location: "Beirut",
@@ -116,7 +119,11 @@ app.get('/userprofile', async (req, res) => {
                 
                 // Redirect to the profile page after creating the profile
                 res.redirect('/userprofile');
+            }else{
+                console.log('user not found in LogInCollection');
+                res.status(404).send('User not found');
             }
+        }
         } else {
             // Handle the case where the user is not logged in
             res.redirect('/login'); // Redirect to the login page or handle appropriately

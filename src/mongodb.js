@@ -36,6 +36,11 @@ const userProfile= new mongoose.Schema({
         ref: 'LogInSchema',
         required: true
     },
+    email: {
+        type: String,
+        ref: 'LogInSchema',
+        required: true
+    },
     Description: {
         type: String,
     },
@@ -46,7 +51,8 @@ const userProfile= new mongoose.Schema({
         type: String,
     },
     ProfilePic: {
-        type: String // Assuming you store the file path or URL
+        type: String, // Corrected to directly specify String as the type
+        maxlength: 1000 // Assuming you store the file path or URL
     }
 })
 const userProfCollection= mongoose.model("userProfCollection", userProfile)
