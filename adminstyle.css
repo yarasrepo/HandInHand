@@ -14,7 +14,7 @@
     font-family: 'Poppins', sans-serif;
 }
 .sidebar{
-    width: 345px;
+    width: 300px;
     position: fixed;
     left: 0;
     top: 0;
@@ -23,7 +23,7 @@
     z-index: 100;
 }
 .sidebar-brand img{
-    width: 280px;
+    width: 245px;
     height: auto;
     padding: 1rem 0rem 1rem 2rem;
     margin-bottom: 2rem;
@@ -54,7 +54,7 @@
     padding-right: 1rem;
 }
 .main-content{
-    margin-left: 345px;
+    margin-left: 300px;
 }
 header{
     display: flex;
@@ -62,8 +62,8 @@ header{
     padding: 1rem 1.5rem;
     box-shadow: 2px 2px 5px rgba(0,0,0,.2);
     position: fixed;
-    left: 345px;
-    width: calc(100% - 345px);
+    left: 300px;
+    width: calc(100% - 300px);
     top: 0;
     z-index: 100;
 }
@@ -133,4 +133,52 @@ main{
 }
 .card-single:last-child{
     background: var(--blue);
+}
+.card-single:last-child h1,
+.card-single:last-child div:first-child span,
+.card-single:last-child div:last-child span{
+    color: #FFF;
+}
+.recent-grid{
+    margin-top: 3.5rem;
+    display: grid;
+    grid-gap: 2rem;
+    grid-template-columns: 67% auto;
+}
+.card{
+    background: #fff;
+    border-radius: 5px;
+}
+.card-header,
+.card-body{
+    padding: 1rem;
+}
+.card-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #F0F0F0;
+}
+.card-header button{
+    background: var(--blue);
+    border-radius: 10px;
+    color: #fff;
+    font-size: .8rem;
+    padding: .5rem 1rem;
+    border: 1px solid var(--blue);
+}
+table{
+    border-collapse: collapse;
+} 
+thead tr{
+    border-top: 1px solid #F0F0F0;
+    border-bottom: 2px solid #F0F0F0;
+}
+thead td{
+    font-weight: 700;
+}
+td{
+    padding: .5rem 1rem;
+    font-size: .9rem;
+    color: #222;
 }
