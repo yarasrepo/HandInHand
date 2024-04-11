@@ -1,9 +1,10 @@
-.navbar {
+<<<<<<< HEAD
+#forgotPasswordLink {
     margin-top: 0px;
     text-align: center;
 }
 
-.navbar a {
+#forgotPasswordLink a {
     text-decoration: none;
     color: #005cce;
     display: inline-block;
@@ -18,10 +19,11 @@
     box-sizing: border-box;
 }
 
+
 .container {
     width: 100%;
     height: 100vh;
-    background-image: linear-gradient(rgba(13, 73, 157, 0.4), rgba(13, 73, 157, 0.4)), url(https://getwallpapers.com/wallpaper/full/f/2/8/119686.jpg);
+    background-image: linear-gradient(rgba(13, 73, 157, 0.4), rgba(13, 73, 157, 0.4)), url(https://tolko.com/wp-content/uploads/2019/04/Volunteering_banner1-small.jpg);
     background-position: center;
     background-size: cover;
     position: relative;
@@ -29,9 +31,17 @@
 }
 
 
+.logo {
+    width: 50px; /* Adjust the width to make it tiny */
+    height: auto; /* Maintain aspect ratio */
+    position: absolute; /* Position the logo absolutely */
+    top: 10px; /* Adjust the top position */
+    left: 10px; /* Adjust the left position */
+}
+
 .form-box{
     width:90%;
-    max-width: 500px;
+    max-width: 450px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -60,19 +70,15 @@
     transform: translatex(-50%);
 }
 
-.input-container{
+.input-field{
     background: #eaeaea;
-    margin: 15px 10px;
+    margin: 15px 0;
     border-radius: 3px;
     display: flex;
     align-items: center;
     max-height: 65px;
     transition: max-height 0.5s;
     overflow: hidden;
-}
-
-.input-container label{
-    margin-left: 2px;
 }
 
 input{
@@ -121,19 +127,41 @@ form p a{
     height: 230px;
 
 }
+
+.btn-field button.disable{
+    background: #eaeaea;
+    color: #555;
+}
+
+/* CSS Styles for radio buttons */
+.input-field label {
+    margin-right: 10px;
+    display: inline-block;
+    font-size: 16px; /* Add space between labels and radio buttons */
+}
+
+.input-field input[type="radio"] {
+    vertical-align: middle; /* Align radio buttons vertically */
+    margin-right: 5px; /* Add space between radio buttons */
+}
+
+/* Example styling for labels */
 .input-field label {
     color: #333;
 }
+
 .form-box p {
     /* margin-top: 20px;  */
     /* Add space above the 'Forgot Password' link */
     font-size: 14px; /* Adjust font size as needed */
 }
+
 .form-box p a {
     text-decoration: none;
     color: #005cce;
 }
 
+/* Style for the submit button */
 button[type="submit"] {
     background-color: #007c6b; /* Green background color */
     color: white; /* White text color */
@@ -145,10 +173,12 @@ button[type="submit"] {
     transition: background-color 0.3s ease; /* Smooth transition for background color */
 }
 
+/* Hover effect for the submit button */
 button[type="submit"]:hover {
     background-color: #024234; /* Darker green background color on hover */
 }
 
+<<<<<<<< HEAD:public/editablestyle.css
 .btn-field button.Discard {
     background-color: #2686f5; 
     color: white; /* White text color */
@@ -163,3 +193,141 @@ button[type="submit"]:hover {
 .btn-field button.Discard:hover {
     background-color: #053771; /* Darker green background color on hover */
 }
+========
+>>>>>>>> parent of f54a96d (Merge pull request #11 from Staleee/Editable-OrgProfile):public/loginsignup.css
+=======
+:root{
+    --blue:#0045a0;
+    --green:#5ad673;
+}
+
+*{
+    font-family: 'Poppins', sans-serif;
+    margin: 0; padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    outline: none; border: none;
+    text-transform: capitalize;
+    transition: all .2s linear;
+}
+
+
+
+.input-container input[type="text"],
+.input-container input[type="number"],
+.input-container input[type="date"] {
+    background-color: #f4f4f4; /* Change background color */
+    color: #333; /* Change text color */
+    border: 1px solid #ccc; /* Change border color */
+    padding: 0 15rem; /* Adjust padding as needed */
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    justify-content: center;
+    flex-flow: column;
+    
+}
+
+.input-container label {
+    white-space: nowrap;
+}
+
+html{
+    font-size: 62.5%;
+    overflow-x: hidden;
+}
+
+
+body{
+    background: #eee;
+    overflow-x: hidden;
+    padding-left: 35rem;
+}
+
+
+header{
+    position: fixed;
+    top:0; left: 0;
+    z-index: 1000;
+    height: 100%;
+    width: 35rem;
+    background: #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column;
+    text-align: center;
+
+}
+
+form[name="Info"] {
+
+    padding: 5rem 0; 
+    position: absolute;
+    height: 5rem;
+    width: 5rem;
+    border-radius: 50%;
+    line-height: 5rem;
+    text-align: center;
+    font-size: 2rem;
+    color: #1a1a1a;
+}
+
+.input-container{
+    font-size: 2rem;
+    color: #1a1a1a;
+    /* display: flex; */
+    /* justify-content: space-between; */
+    align-items: center;
+    margin-bottom: 10px;
+
+}
+
+.navbar li a {
+    background-color: var(--blue); /* Use the same background color as your buttons */
+    color: white; /* Text color */
+    padding: 10px 20px; /* Padding for the link */
+    border-radius: 5px; /* Rounded corners */
+    text-decoration: none; /* Remove underline */
+    display: inline-block; /* Display as block element */
+    margin-top: 10px;
+}
+
+.navbar li a:hover {
+    background-color: #333; /* Change background color on hover */
+}
+
+
+
+form[name="Info"] input[type="button"] {
+    background-color:  #333;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+form[name="Info"] input[type="submit"]{
+    background-color: var(--blue);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+form[name="Info"] input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+form[name="Info"] input[type="button"]:hover {
+    background-color: var(--blue);
+}
+
+
+>>>>>>> parent of f54a96d (Merge pull request #11 from Staleee/Editable-OrgProfile)

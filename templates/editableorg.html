@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+    <head>
+        <title>Edit Organization Profile</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        <link rel="stylesheet" href="editorgstyle.css">
+        <link rel = "shortcut icon" type = "x-icon" href="logonowords.png">
+
+    <body>
+        <div class="container">
+            <div class="form-box">
+                <h1 id="title">Edit Organization Info</h1>
+                <form action="/edituserprof" method="POST" name="Info">
+                    <div class="input-group">
+                        <div class="input-container">
+                            <label for="Description">Description:</label>
+                            <input type="text" name="Description" id="Description" placeholder="Helping Others" value="{{userProf.Description}}"><br>
+                        </div>
+                        <div class="input-container">
+                            <label for="PhoneNum">Phone Number:</label>
+                            <input type="number" id="PhoneNum" placeholder="PhoneNum" value="{{userProf.PhoneNum}}"><br>                    
+                        </div>
+                        <div class="input-container">
+                            <label for="Location">Location:</label>
+                            <input type="text" id="Location" placeholder="Location" value="{{userProf.Location}}"><br>
+                        </div>
+                        <div class="input-container">
+                            <label for="ProfilePic">Profile Picture:</label>
+                            <input type="file" id="ProfilePic" name="ProfilePic" accept="image/*"><br>
+                        </div>
+                        <div class="input-container">
+                            <label for="Photos">Photos:</label>
+                            <input type="file" name="Photos" id="Photos" accept="image/*"><br>
+                        </div>
+                    </div>
+                    <div class="btn-field">
+                        <button type="button" id="DiscardBtn" class="Discard" onclick="window.location.href='/userprofile'">Discard</button>
+                        <button type="submit" name="Submit" value="Submit Button">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
