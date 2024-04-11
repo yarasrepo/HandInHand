@@ -1,6 +1,8 @@
 const express = require("express")
 const session = require("express-session");
+const multer = require('multer');
 const path = require("path")
+const fs = require("fs");
 require('dotenv').config();
 const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
@@ -20,8 +22,7 @@ console.log(publicPath);
 app.set('view engine', 'hbs')
 app.set('views', templatePath)
 app.use(express.static(publicPath))
-
-
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use(session({
     secret: 'your_secret_key',
@@ -30,6 +31,21 @@ app.use(session({
 }));
 
 // hbs.registerPartials(partialPath)
+
+// Set up Multer storage for file uploads
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, path.join(__dirname, '../uploads')); // Save uploaded files to the uploads directory
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const extension = path.extname(file.originalname);
+        cb(null, uniqueSuffix + extension); // Save file with unique name
+    }
+});
+
+// Initialize Multer with the storage configuration
+const upload = multer({ storage: storage });
 
 
 app.get('/signup', (req, res) => {
@@ -319,14 +335,14 @@ app.get('/editable', async (req, res) => {
 });
 
 
-app.post('/edituserprof', async (req, res) => {
+app.post('/edituserprof', upload.single('ProfilePic'), async (req, res) => {
     const query = { name: req.session.user.name }; // Query to find the existing user profile
     const update = {
         $set: {
             Description: req.body.Description,
             PhoneNum: req.body.PhoneNum,
             Location: req.body.Location,
-            ProfilePic: req.body.ProfilePic,
+            ProfilePic: req.file ? '/uploads/' + req.file.filename : '',
         }
     };
 

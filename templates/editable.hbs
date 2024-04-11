@@ -15,7 +15,7 @@
     <div class="container">
         <div class="form-box">
             <h1 id="title">Edit User Info</h1>
-            <form action="/edituserprof" method="POST" name="Info">
+            <form action="/edituserprof" method="POST" name="Info" enctype="multipart/form-data">
                 <div class="input-group">
                     <div class="input-container">
                         <label for="Description">Description:</label>
@@ -31,7 +31,7 @@
                     </div>
                     <div class="input-container">
                         <label for="ProfilePic">Profile Picture:</label>
-                        <input type="file" id="ProfilePic" name="ProfilePic" accept="image/*"><br>
+                        <input type="file" id="ProfilePic" name="ProfilePic" accept="image/*"> <br>
                     </div>
                 </div>
                 <div class="btn-field">

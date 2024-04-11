@@ -4,7 +4,7 @@
 <head>
     <meta charset="UFT-8">
     <meta name="viewport" content="width=device-width" , initial-scale="1.0">
-    <link rel = "shortcut icon" type = "x-icon" href="logonowords.png">
+    <link rel="shortcut icon" type="x-icon" href="logonowords.png">
     <title>user profile</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -23,21 +23,11 @@
         </div>
 
         <div class="user">
-            <img src="" id="profilePic" alt="">
+            <img src="{{userProf.ProfilePic}}" id="profilePic" alt="Profile Picture">
+
             <h3 class="name">{{ userProf.name }}</h3>
             <p class="post">volunteer</p>
         </div>
-
-        <script>
-            // Assume userProf.ProfilePic contains the URL
-            var profilePicUrl = '{{ userProf.ProfilePic }}'; // Replace with actual URL
-
-            // Wait for the DOM to be fully loaded
-            document.addEventListener('DOMContentLoaded', function () {
-                document.getElementById('profilePic').src = profilePicUrl;
-            });
-        </script>
-
 
         <nav class="navbar">
             <ul>
@@ -122,9 +112,9 @@
             <div class="content">
                 <h3 class="title">contact info</h3>
                 <div class="info">
-                    <h3> <i class="fas fa-evelope"></i> {{userProf.email}}</h3>
+                    <h3> <i class="fas fa-envelope"></i> {{userProf.email}}</h3>
                     <h3><i class="fas fa-phone"></i> {{userProf.PhoneNum}}</h3>
-                    <h3><i class="fas fa-map-marker-alt"></i> {{UserProf.Location}} </h3>
+                    <h3><i class="fas fa-map-marker-alt"></i> {{userProf.Location}} </h3>
 
                 </div>
             </div>
