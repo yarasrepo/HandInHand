@@ -48,6 +48,18 @@
     position: relative;
 }
 
+.form-box h2 {
+    font-size: 20px;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.form-box h3 {
+    font-size: 15px;
+    margin-bottom: 0px;
+    position: relative;
+}
+
 .form-box h1::after{
     content: '';
     width: 30px;
@@ -162,4 +174,15 @@ button[type="submit"]:hover {
 
 .btn-field button.Discard:hover {
     background-color: #053771; /* Darker green background color on hover */
+}
+
+.deletebtn-field button.Delete {
+    background-color: #a50000; 
+    color: white; /* White text color */
+    padding: 10px 50px; /* Padding */
+    border: none; /* No border */
+    border-radius: 500px; /* Rounded corners */
+    cursor: pointer; /* Cursor style */
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
 }

@@ -52,6 +52,9 @@ app.get('/signup', (req, res) => {
     res.render('signup')
 })
 
+app.get('/deletepage', (req, res) => {
+    res.render('deletepage')
+})
 //  app.get('/', (req, res) => {
 //      res.render('homepage')
 //  })
