@@ -52,9 +52,7 @@ app.get('/signup', (req, res) => {
     res.render('signup')
 })
 
-app.get('/deletepage', (req, res) => {
-    res.render('deletepage')
-})
+
 //  app.get('/', (req, res) => {
 //      res.render('homepage')
 //  })
@@ -363,6 +361,35 @@ app.post('/edituserprof', upload.single('ProfilePic'), async (req, res) => {
     }
 });
 
+app.get('/deletepage', (req, res) => {
+    res.render('deletepage')
+})
+
+app.post('/deleteaccount', async (req, res) => {
+    try {
+        // Get the username from the session or request body (adjust based on your setup)
+        const username = req.session.user.name
+
+        // Delete user from LogInCollection
+        const deleteLogIn = await LogInCollection.deleteOne({ name: username });
+
+        // Delete user from userProfCollection
+        const deleteUserProf = await userProfCollection.deleteOne({ name: username });
+
+        // Check if deletion was successful in both collections
+        if (deleteLogIn.deletedCount && deleteUserProf.deletedCount) {
+            // Redirect or send success response
+            req.session.destroy(() => {
+                res.json({ success: true }); 
+            });
+        } else {
+            res.status(404).send('User account not found');
+        }
+    } catch (error) {
+        console.error('Error deleting account:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
 
 app.listen(port, () => {
     console.log('port connected');

@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Edit User Profile</title>
+    <title>Delete Account</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
@@ -15,18 +15,48 @@
     <div class="container">
         <div class="form-box">
             <h1 id="title">Delete Account</h1>
-            <form action="/edituserprof" method="POST" name="Info" enctype="multipart/form-data">
+            <form id="deleteForm" action="/deleteaccount" method="POST" name="DeleteAccountForm">
                 <h2>Are you sure you want to delete your account?</h2> 
                 <h3>This action is permanent and cannot be reversed!</h3>
                 <div class="btn-field">
                     <button type="button" id="DiscardBtn" class="Discard" onclick="window.location.href='/userprofile'">Discard</button>
                 </div>                
                 <div class="deletebtn-field">
-                    <button type="button" id="Deletebtn" class="Delete" onclick="window.location.href='/deletepage'">Delete Account</button>
+                    <button type="submit" id="Deletebtn" class="Delete">Delete Account</button>
                 </div>
             </form>
         </div>
     </div>
+
+    <script>
+        // Add event listener for form submission
+        document.getElementById('deleteForm').addEventListener('submit', async function (event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+
+            try {
+                const response = await fetch('/deleteaccount', {
+                    method: 'POST',
+                    body: new FormData(this)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Display popup message
+                    alert('Account deleted successfully');
+                    // Redirect to home page
+                    window.location.href = '/';
+                } else {
+                    // Display error message
+                    alert(data.message);
+                }
+            } catch (error) {
+                console.error('Error deleting account:', error);
+                // Display error message
+                alert('An error occurred. Please try again later.');
+            }
+        });
+    </script>
 
 </body>
 
