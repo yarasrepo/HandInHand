@@ -18,6 +18,18 @@
     color:#000;
 }
 
+header .logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 10px;
+}
+header .logo img {
+    width: 50px; 
+    height: auto; 
+    display: block; 
+}
+
 html{
     font-size: 62.5%;
     overflow-x: hidden;

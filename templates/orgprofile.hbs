@@ -32,6 +32,8 @@
                 <li><a href = "#previous">Previous Opportunities</a></li>
                 <li><a href = "#photos">Photos</a></li>
                 <li><a href = "#contact">Contact Us</a></li>
+                <li><a href="/editable">Edit</a></li>
+
             </ul>
         </nav>
     </header>
@@ -41,8 +43,8 @@
     <!---About section design-->
     <section class="about" id = "about">
         <h3>HELLO!</h3>
-        <h1>WE'RE <span>{{orgName}}</span></h1>
-        <p id="aboutText">!</p>
+        <h1>WE'RE <span>{{userProf.name}}</span></h1>
+        <p id="aboutText">{{userProf.Description}}</p>
         <a href = "#current"><button class = "btn">Current Opportunities <i class="fa-solid fa-calendar-week"></i></button></a>
     </section>
 
@@ -170,15 +172,14 @@
     <section class = "contact" id = "contact">
         <h1 class = "heading"><span>Contact</span> Us</h1>
         <div class = "row">
-        <!-- <div class = "content">
+         <div class = "content">
                 <h3 class = "title">contact information</h3>
                 <div class = "info">
-                    <h3><i class="fas fa-envelope"></i>  username@organization.com</h3>
-                    <h3><i class="fas fa-phone"></i>  +123-456-7890</h3>
-                    <h3><i class="fas fa-phone"></i>  +111-222-3333</h3>
-                    <h3><i class="fas fa-map-marker-alt"></i>  Beirut, Lebanon - 0000</h3>
+                    <h3><i class="fas fa-envelope"></i> {{userProf.email}} </h3>
+                    <h3><i class="fas fa-phone"></i>   {{userProf.PhoneNum}}</h3>
+                    <h3><i class="fas fa-map-marker-alt"></i>  {{UserProf.Location}}</h3>
                 </div>
-            </div> -->
+            </div> 
             <form action = "">
                 <input type = "text" placeholder = "name" class = "box">
                 <input type = "email" placeholder = "email" class = "box">
@@ -196,6 +197,42 @@
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" ></script>
 
     <!--custom js file link-->
-    <script src = "orgprofilescript.js"></script>
+    <script>
+    $(document).ready(function(){
+    $('#menu').click(function(){
+        $(this).toggleClass('fa-times');
+        $('header').toggleClass('toggle');
+    });
+
+    $(window).on('scroll load', function(){
+        $('#menu').removeClass('fa-times');
+        $('header').removeClass('toggle');
+
+        if($(window).scrollTop() > 0){
+            $('.top').show();
+        }else{
+            $('.top').hide();
+
+        }
+    });
+
+    // smooth scrolling
+
+    $('a[href*="#"]').on('click', function(e){
+
+        e.preventDefault();
+
+        $('html, body').animate({
+            scrollTop : $($(this).attr('href')).offset().top,
+        },
+            500,
+            'linear'
+
+        );
+
+    });
+
+});
+</script>
 </body>
 </html>

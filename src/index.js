@@ -93,17 +93,9 @@ app.get('/Posts', (req, res) => {
     }
 });
 
-
-
-
-
-
-
 app.get('/job_submission_form', (req, res) => {
     res.render('job_submission_form');
 })
-
-
 
 app.get('/userprofile', async (req, res) => {
     try {
@@ -149,11 +141,37 @@ app.get('/userprofile', async (req, res) => {
 });
 
 
-app.get('/orgprofile', (req,res) => {
+app.get('/orgprofile', async (req,res) => {
     try {
         if(req.session.user) {
             const orgName = req.session.user.name;
-            res.render("orgprofile", {orgName});
+            // res.render("orgprofile", {orgName});
+            const userProf = await userProfCollection.findOne({ name: req.session.user.name });
+
+            if (userProf) {
+                // Render the profile page if userProf is found
+                res.render('orgprofile', { userProf });
+            } else {
+                // Create the user profile if not found
+                const existingUser = await LogInCollection.findOne({ name: req.session.user.name });
+                if (existingUser){
+                const data = {
+                    name: req.session.user.name,
+                    email: existingUser.email,
+                    Description: "I love helping others",
+                    PhoneNum: 0,
+                    Location: "Beirut",
+                    ProfilePic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR11lMafo-ZYohC2qYI1BJN80gzcC-7IpohIeUQT1RT0WgBttaZX7J1yEea92wMCcTXa9A&usqp=CAU",
+                };
+                await userProfCollection.create(data);
+                
+                // Redirect to the profile page after creating the profile
+                res.redirect('/orgprofile');
+            }else{
+                console.log('user not found in LogInCollection');
+                res.status(404).send('User not found');
+            }
+        }
         } else {
             res.redirect('/login');
         }
