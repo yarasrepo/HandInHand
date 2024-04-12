@@ -9,6 +9,7 @@
         <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     </head>
     <body>
+       
         <div class="sidebar">
             <div class="sidebar-brand">
                 <img src="https://i.imgur.com/x42wRvf.png" class = "logo" alt="HandinHand"> 
@@ -31,18 +32,15 @@
                         <a href=""><span class="fa-solid fa-calendar-days"></span>
                         <span>Opportunities</span></a>
                     </li>
+                    <li>
+                        <a href="/homepage"><span class="fa-solid fa-house"></span>
+                        <span>Homepage</span></a>
+                    </li>
                 </ul>
             </div>
         </div>
         <div class="main-content">
             <header>
-                <h2>
-                    <label for="">
-                        <span class="fa-solid fa-bars"></span>
-                    </label>
-
-                    Dashboard
-                </h2>
                 <div class="search-wrapper">
                     <span class="fa-solid fa-magnifying-glass"></span>
                     <input type="search" placeholder="Search here"/>
@@ -94,36 +92,62 @@
                                 </span></button>
                             </div>
                             <div class="card-body">
-                                <table width="100%">
-                                    <thead>
-                                        <tr>
-                                            <td>Volunteer Name</td>
-                                            <td>Email Address</td>
-                                            <td>Phone Number</td>
-                                            <td>Location</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Sally Smith</td>
-                                            <td>s.smith@gmail.com</td>
-                                            <td>+1(213)555-3890</td>
-                                            <td>California, USA</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Ahmad Khan</td>
-                                            <td>khan.ahmad@yahoo.com</td>
-                                            <td>+92-345-6789012</td>
-                                            <td>Lahore, Pakistan</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Caroline Will</td>
-                                            <td>carolwill03@outlook.com</td>
-                                            <td>+61-478-876-900</td>
-                                            <td>Sydney, Australia</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <div class="table-responsive">
+                                    <table width="100%">
+                                        <thead>
+                                            <tr>
+                                                <td>Volunteer Name</td>
+                                                <td>Email Address</td>
+                                                <td>Phone Number</td>
+                                                <td>Location</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Sally Smith</td>
+                                                <td>s.smith@gmail.com</td>
+                                                <td>+1(213)555-3890</td>
+                                                <td>California, USA</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Ahmad Khan</td>
+                                                <td>khan.ahmad@yahoo.com</td>
+                                                <td>+92-345-6789012</td>
+                                                <td>Lahore, Pakistan</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Caroline Will</td>
+                                                <td>carolwill03@outlook.com</td>
+                                                <td>+61-478-876-900</td>
+                                                <td>Sydney, Australia</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Layan Tariq</td>
+                                                <td>tariq12layan@outlook.com</td>
+                                                <td>+961 3 123 124</td>
+                                                <td>Tripoli, Lebanon</td>
+                                            </tr> 
+                                            <tr>
+                                                <td>Ahmad Mohamad</td>
+                                                <td>ahmadmoh1987@yahoo.com</td>
+                                                <td>+971 58 1111113</td>
+                                                <td>Dubai, UAE</td>
+                                            </tr> 
+                                            <tr>
+                                                <td>Lindsay Walton</td>
+                                                <td>walton.lindsay@outlook.com</td>
+                                                <td>N/A</td>
+                                                <td>London, UK</td>
+                                            </tr> 
+                                            <tr>
+                                                <td>Zhang Wei</td>
+                                                <td>zhang.wei@gmail.com</td>
+                                                <td>+966 54 456 6164</td>
+                                                <td>Jeddah, KSA</td>
+                                            </tr>  
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -136,7 +160,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="organization">
-                                    <div>
+                                    <div class="info">
                                         <img src="https://i0.wp.com/www.redcross.org.lb/wp-content/uploads/2019/04/logo.png?fit=404%2C404&ssl=1" width="40px" 
                                         height="40px" alt="">
                                         <div>
@@ -144,7 +168,7 @@
                                             <small>Beirut, Lebanon</small>
                                         </div>
                                     </div>
-                                    <div>
+                                    <div class="contact">
                                         <span class="fa-solid fa-circle-user"></span>
                                         <span class="fa-solid fa-comment"></span>
                                         <span class="fa-solid fa-phone"></span>
@@ -152,15 +176,15 @@
                                 </div>
 
                                 <div class="organization">
-                                    <div>
+                                    <div class="info">
                                         <img src="https://www.healthynewbornnetwork.org/hnn-content/uploads/SC_USA_Logo_RedBlack_Stacked-003.jpg" width="40px" 
                                         height="40px" alt="">
                                         <div>
                                             <h4>Save the Children</h4>
-                                            <small>Texas, USA</small>
+                                            <small>Lahore, Pakistan</small>
                                         </div>
                                     </div>
-                                    <div>
+                                    <div class="contact">
                                         <span class="fa-solid fa-circle-user"></span>
                                         <span class="fa-solid fa-comment"></span>
                                         <span class="fa-solid fa-phone"></span>
@@ -168,7 +192,7 @@
                                 </div>
 
                                 <div class="organization">
-                                    <div>
+                                    <div class="info">
                                         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9ICAZRHxzvNzj4WVbuc-TTAQEbzfC3sJ3I6EykhTqUA&s" width="40px" 
                                         height="40px" alt="">
                                         <div>
@@ -176,7 +200,7 @@
                                             <small>Gaza, Palestine</small>
                                         </div>
                                     </div>
-                                    <div>
+                                    <div class="contact">
                                         <span class="fa-solid fa-circle-user"></span>
                                         <span class="fa-solid fa-comment"></span>
                                         <span class="fa-solid fa-phone"></span>
@@ -184,7 +208,7 @@
                                 </div>
 
                                 <div class="organization">
-                                    <div>
+                                    <div class="info">
                                         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbaon0qHJKA8RikPtM24gVF2BGeTDNg9H9m_I2cSIWXw&s" width="40px" 
                                         height="40px" alt="">
                                         <div>
@@ -192,7 +216,7 @@
                                             <small>Cape Town, South Africa</small>
                                         </div>
                                     </div>
-                                    <div>
+                                    <div class="contact">
                                         <span class="fa-solid fa-circle-user"></span>
                                         <span class="fa-solid fa-comment"></span>
                                         <span class="fa-solid fa-phone"></span>
