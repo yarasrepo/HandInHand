@@ -55,9 +55,50 @@ const userProfile= new mongoose.Schema({
         maxlength: 1000 // Assuming you store the file path or URL
     }
 })
+
 const userProfCollection= mongoose.model("userProfCollection", userProfile)
+
+const jobSchema = new mongoose.Schema({
+    title: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+        required: true
+    },
+    openPositions: {
+        type: Number,
+        required: true
+    },
+    location: {
+        type: String,
+        required: true
+    },
+    requiredHours: {
+        type: Number,
+        required: true
+    },
+    requiredSkills: {
+        type: String,
+        required: true
+    },
+   ProfilePic: {
+    type: String,
+    ref: 'userProfileCollection'
+   },
+   creator: {
+    type: String,
+    ref: 'HandInHandcollection',
+   }
+})
+
+const JobCollection = mongoose.model("JobCollection", jobSchema)
+
+
 
 module.exports = {
     collection,
-    userProfCollection
+    userProfCollection,
+    JobCollection
 }

@@ -9,7 +9,7 @@ const jwt = require("jsonwebtoken");
 const app = express()
 const hbs = require("hbs")
 // const LogInCollection = require("./mongodb")
-const { collection: LogInCollection, userProfCollection } = require("./mongodb");
+const { collection: LogInCollection, userProfCollection, JobCollection } = require("./mongodb");
 const port = process.env.PORT || 3000
 app.use(express.json())
 
