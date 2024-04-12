@@ -110,6 +110,10 @@ app.get('/Posts', async (req, res) => {
 });
 
 
+app.get('/checkout', (req, res) => {
+    res.render('checkout');
+})
+
 
 app.get('/job_submission_form', (req, res) => {
     res.render('job_submission_form');

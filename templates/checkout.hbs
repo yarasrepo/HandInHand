@@ -1,0 +1,30 @@
+<header>
+    <div class="header-container">
+        <div class="logo-container">
+            <img src="https://i.imgur.com/MoSHBZX.png" class="logo" alt="HandinHand">
+             <link type="text/css" rel="stylesheet" href="poststyle">
+        </div>
+        <nav class="navbar">
+            <ul class="nav-menu">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="/Posts">Opportunities</a></li>
+                <li><a href="{{#if profileLink}}{{ profileLink }}{{else}}/signup{{/if}}">Profile</a></li>
+            </ul>
+            <div class="h-right">
+                {{#if signedIn}}
+                <a href="/logout">Logout</a>
+                {{#if isOrganization }}
+                <a href="/job_submission_form" class="post-button">Post an Opportunity</a>
+                {{/if}}
+                {{else}}
+                <ul class="auth-links">
+                    <li><a href="/signup">Register</a></li>
+                    <li><a href="/login">Login</a></li>
+                </ul>
+                {{/if}}
+                <div class="menu-icon" id="menu-icon"></div>
+            </div>
+        </nav>
+    </div>
+</header>
