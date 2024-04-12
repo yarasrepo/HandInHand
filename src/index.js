@@ -114,6 +114,37 @@ app.get('/job_submission_form', (req, res) => {
     res.render('job_submission_form');
 })
 
+
+app.post('/job_submission_form', async (req, res) => {
+    try {
+        const { jobName, description, openPositions, location, requiredHours, requiredSkills, imageLink } = req.body;
+
+        if (!jobName || !description || !openPositions || !location || !requiredHours || !requiredSkills) {
+            return res.status(400).send('All fields are required');
+        }
+
+        const newJob = new JobCollection({
+            title: jobName, 
+            description,
+            openPositions: parseInt(openPositions),
+            location,
+            requiredHours: parseInt(requiredHours),
+            requiredSkills,
+            ProfilePic: imageLink // FIX THIS LATER IMAGE LINK SHOULD BE AUTOMATIC 
+        });
+        await newJob.save();
+
+        res.redirect('/Posts');
+    } catch (error) {
+        console.error('Error submitting job:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
+
+
+
 app.get('/userprofile', async (req, res) => {
     try {
         // Check if the user is logged in
