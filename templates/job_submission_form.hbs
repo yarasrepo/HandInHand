@@ -45,56 +45,58 @@
 
     </div>
 
-    <script>
-        const submitJob = async (event) => {
-            event.preventDefault();
+  <script>
+    const submitJob = async (event) => {
+        event.preventDefault();
 
-            const jobName = document.getElementById("jobName").value;
-            const description = document.getElementById("description").value;
-            const openPositions = parseInt(document.getElementById("openPositions").value);
-            const location = document.getElementById("location").value;
-            const requiredHours = parseInt(document.getElementById("requiredHours").value);
-            const requiredSkills = document.getElementById("requiredSkills").value;
-            const imageLink = document.getElementById("imageLink").value || null;
+        const jobName = document.getElementById("jobName").value;
+        const description = document.getElementById("description").value;
+        const openPositions = parseInt(document.getElementById("openPositions").value);
+        const location = document.getElementById("location").value;
+        const requiredHours = parseInt(document.getElementById("requiredHours").value);
+        const requiredSkills = document.getElementById("requiredSkills").value;
+        const imageLink = document.getElementById("imageLink").value || null;
 
-            if (!jobName || !description || !openPositions || !location || !requiredHours || !requiredSkills) {
-                alert("Please fill out all required fields.");
-                return;
-            }
+        if (!jobName || !description || !openPositions || !location || !requiredHours || !requiredSkills) {
+            alert("Please fill out all required fields.");
+            return;
+        }
 
-            const jobData = {
-                jobName: jobName,
-                description: description,
-                openPositions: openPositions,
-                location: location,
-                requiredHours: requiredHours,
-                requiredSkills: requiredSkills,
-                imageLink: imageLink
-            };
-
-            try {
-                const response = await fetch("/job_submission_form", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(jobData)
-                });
-
-                if (response.ok) {
-                    alert("Job submitted successfully!");
-                    document.getElementById("jobForm").reset();
-                } else {
-                    const errorMessage = await response.text();
-                    alert(`Error: ${errorMessage}`);
-                }
-            } catch (error) {
-                console.error("Error submitting job:", error);
-                alert("An error occurred while submitting the job.");
-            }
+        const jobData = {
+            jobName: jobName,
+            description: description,
+            openPositions: openPositions,
+            location: location,
+            requiredHours: requiredHours,
+            requiredSkills: requiredSkills,
+            imageLink: imageLink
         };
 
-        document.getElementById("jobForm").addEventListener("submit", submitJob);
-    </script>
+        try {
+            const response = await fetch("/job_submission_form", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(jobData)
+            });
+
+            if (response.ok) {
+                alert("Job submitted successfully!");
+                document.getElementById("jobForm").reset();
+                window.location.href = "/Posts";
+            } else {
+                const errorMessage = await response.text();
+                alert(`Error: ${errorMessage}`);
+            }
+        } catch (error) {
+            console.error("Error submitting job:", error);
+            alert("An error occurred while submitting the job.");
+        }
+    };
+
+    document.getElementById("jobForm").addEventListener("submit", submitJob);
+</script>
+
 </body>
 </html>

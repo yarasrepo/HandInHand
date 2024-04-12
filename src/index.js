@@ -53,9 +53,6 @@ app.get('/signup', (req, res) => {
 })
 
 
-//  app.get('/', (req, res) => {
-//      res.render('homepage')
-//  })
 
 
 app.get('/', (req, res) => {
@@ -89,10 +86,8 @@ app.get('/login', (req, res) => {
 
 app.get('/Posts', async (req, res) => {
     try {
-        // Fetch job data from the database
         const jobs = await JobCollection.find();
-        
-        // Check if the user is signed in and determine their role
+
         const signedIn = !!req.session.user;
         let userRole;
         let profileLink;
@@ -107,8 +102,6 @@ app.get('/Posts', async (req, res) => {
                 isOrganization = true;
             }
         }
-
-        // Render the Posts template and pass job data and user information
         res.render('Posts', { jobs, signedIn, userRole, profileLink, isOrganization });
     } catch (error) {
         console.error('Error in /Posts route:', error);
