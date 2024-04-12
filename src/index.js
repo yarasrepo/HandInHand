@@ -66,11 +66,11 @@ app.get('/', (req, res) => {
             const userRole = req.session.user.role;
             let profileLink;
 
-            if (userRole === 'volunteer') {
+            // if (userRole === 'volunteer') {
                 profileLink = '/userprofile';
-            } else if (userRole === 'organization') {
-                profileLink = '/orgprofile';
-            }
+            // } else if (userRole === 'organization') {
+            //     profileLink = '/orgprofile';
+            // }
             res.render('homepage', { profileLink, signedIn });
         } else {
             res.render('homepage', { profileLink: null, signedIn });
@@ -117,6 +117,9 @@ app.get('/job_submission_form', (req, res) => {
 app.get('/userprofile', async (req, res) => {
     try {
         // Check if the user is logged in
+        if (req.session.user.role == "organization"){
+            res.redirect('/orgprofile');
+        }
         if (req.session.user) {
             const userName = req.session.user.name;
             console.log('Session user name:', req.session.user.name);
@@ -132,10 +135,12 @@ app.get('/userprofile', async (req, res) => {
                 const data = {
                     name: req.session.user.name,
                     email: existingUser.email,
+                    role: "volunteer",
                     Description: "I love helping others",
                     PhoneNum: 0,
                     Location: "Beirut",
-                    ProfilePic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR11lMafo-ZYohC2qYI1BJN80gzcC-7IpohIeUQT1RT0WgBttaZX7J1yEea92wMCcTXa9A&usqp=CAU",
+                    // ProfilePic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR11lMafo-ZYohC2qYI1BJN80gzcC-7IpohIeUQT1RT0WgBttaZX7J1yEea92wMCcTXa9A&usqp=CAU",
+                    ProfilePic: "",
                 };
                 await userProfCollection.create(data);
                 
@@ -175,7 +180,8 @@ app.get('/orgprofile', async (req,res) => {
                 const data = {
                     name: req.session.user.name,
                     email: existingUser.email,
-                    Description: "I love helping others",
+                    Description: "Let's make the world better together",
+                    role: "organization",
                     PhoneNum: 0,
                     Location: "Beirut",
                     ProfilePic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR11lMafo-ZYohC2qYI1BJN80gzcC-7IpohIeUQT1RT0WgBttaZX7J1yEea92wMCcTXa9A&usqp=CAU",
