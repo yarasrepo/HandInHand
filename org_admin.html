@@ -48,6 +48,97 @@
                     </div>
                 </div>
             </header>
+            <main>
+                <div class="grid">
+                    <div class="volunteers">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2>All Organizations</h2>
+                                <div class="search-wrapper">
+                                    <span class="fa-solid fa-magnifying-glass"></span>
+                                    <input type="search" placeholder="Search here"/>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="volunteersTable" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <td>Organization Name</td>
+                                                <td>Email Address</td>
+                                                <td>Phone Number</td>
+                                                <td>Location</td>
+                                                <td>Date Joined</td>
+                                                <td>Request</td>
+                                                <td>Review</td>
+                                                <td>Delete</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Red Cross Lebanon</td>
+                                                <td>fundraising@redcross.org.lb</td>
+                                                <td>+961 3 600 071</td>
+                                                <td>Beirut, Lebanon</td>
+                                                <td>May 25, 2022</td>
+                                                <td><button class="request-button" onclick="handleButtonClick()">Request</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Review</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Delete</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Save the Children</td>
+                                                <td>supportercare@savechildren.org</td>
+                                                <td>+92 51 111 107 108</td>
+                                                <td>Lahore, Pakistan</td>
+                                                <td>Mar. 4, 2023</td>
+                                                <td><button class="request-button" onclick="handleButtonClick()">Request</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Review</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Delete</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Doctors Without Border</td>
+                                                <td>support@dwb.mail.com</td>
+                                                <td>+1(213)555-3456</td>
+                                                <td>California, USA</td>
+                                                <td>Jun. 5, 2023</td>
+                                                <td><button class="request-button" onclick="handleButtonClick()">Request</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Review</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Delete</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Cure Violence Global</td>
+                                                <td>supportcustomers@cvg.mail.com</td>
+                                                <td>+1(213)555-8765</td>
+                                                <td>California, USA</td>
+                                                <td>Sep. 4, 2023</td>
+                                                <td><button class="request-button" onclick="handleButtonClick()">Request</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Review</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Delete</button></td>
+                                            </tr>   
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
         </div>
+        <script>
+            function handleButtonClick() {
+                var button = document.querySelector('.request-button');
+                var decision = prompt("Please enter your decision (accept/deny):").toLowerCase();
+    
+                if (decision === 'accept') {
+                    button.innerText = 'Accepted';
+                    button.style.backgroundColor = 'green';
+                } else if (decision === 'deny') {
+                    button.innerText = 'Denied';
+                    button.style.backgroundColor = 'red';
+                } else {
+                    alert("Invalid decision. Please enter either 'accept' or 'deny'.");
+                }
+            }
+        </script>
     </body>
 </html>

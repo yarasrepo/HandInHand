@@ -106,3 +106,60 @@ main{
     background: #F1F5F9;
     min-height: calc(100vh - 90px);
 }
+.grid{
+    margin-top: 1rem;
+    display: grid;
+    grid-gap: 2rem;
+    grid-template-columns: auto;
+}
+.card{
+    background: #fff;
+    border-radius: 5px;
+}
+.card-header,
+.card-body{
+    padding: 1rem;
+}
+.card-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #F0F0F0;
+}
+.card-body button{
+    background: var(--blue);
+    border-radius: 8px;
+    color: #fff;
+    font-size: .8rem;
+    padding: .4rem .8rem;
+    border: .8px solid var(--blue);
+    cursor: pointer;
+}
+table{
+    border-collapse: collapse;
+} 
+thead tr{
+    border-top: 1px solid #F0F0F0;
+    border-bottom: 2px solid #F0F0F0;
+}
+thead td{
+    font-weight: 700;
+}
+td{
+    padding: .5rem 1rem;
+    font-size: .9rem;
+    color: #222;
+}
+.table-responsive{
+    width: 100%;
+    overflow-x: auto;
+}
+.request-button {
+    background-color: var(--blue);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    outline: none;
+}
