@@ -87,8 +87,12 @@ app.get('/login', (req, res) => {
     res.render('login')
 })
 
-app.get('/Posts', (req, res) => {
+app.get('/Posts', async (req, res) => {
     try {
+        // Fetch job data from the database
+        const jobs = await JobCollection.find();
+        
+        // Check if the user is signed in and determine their role
         const signedIn = !!req.session.user;
         let userRole;
         let profileLink;
@@ -103,12 +107,16 @@ app.get('/Posts', (req, res) => {
                 isOrganization = true;
             }
         }
-        res.render('Posts', { signedIn, userRole, profileLink, isOrganization });
+
+        // Render the Posts template and pass job data and user information
+        res.render('Posts', { jobs, signedIn, userRole, profileLink, isOrganization });
     } catch (error) {
         console.error('Error in /Posts route:', error);
         res.status(500).send('Internal Server Error');
     }
 });
+
+
 
 app.get('/job_submission_form', (req, res) => {
     res.render('job_submission_form');
