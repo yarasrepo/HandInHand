@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name = "viewport" content = "width=device-width, initial-scale = 1.0">
+        <title>HandinHand Admin</title>
+        <link rel="stylesheet" href="volunteerstyle.css">
+        <link rel = "shortcut icon" type = "x-icon" href="logonowords.png">
+        <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    </head>
+    <body>
+        <div class="sidebar">
+            <div class="sidebar-brand">
+                <img src="https://i.imgur.com/x42wRvf.png" class = "logo" alt="HandinHand"> 
+            </div>
+            <div class="sidebar-menu">
+                <ul>
+                    <li>
+                        <a href="admin.html" class=""><span class="fa-solid fa-gauge"></span>
+                        <span>Dashboard</span></a>
+                    </li>
+                    <li>
+                        <a href="volunteeradmin.html" class="active"><span class="fa-solid fa-user"></span>
+                        <span>Volunteers</span></a>
+                    </li>
+                    <li>
+                        <a href=""><span class="fa-solid fa-building-ngo"></span>
+                        <span>Organizations</span></a>
+                    </li>
+                    <li>
+                        <a href=""><span class="fa-solid fa-calendar-days"></span>
+                        <span>Opportunities</span></a>
+                    </li>
+                    <li>
+                        <a href="homepage.hbs"><span class="fa-solid fa-house"></span>
+                        <span>Homepage</span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="main-content">
+            <header>
+                <div class="user-wrapper">
+                    <img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-512x512-zxne30hp.png" width="40px" height="40px" alt="">
+                    <div>
+                        <h4>John Doe</h4>
+                        <small>Administrator</small>
+                    </div>
+                </div>
+            </header>
+            <main>
+                <div class="grid">
+                    <div class="volunteers">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2>All Volunteers</h2>
+                                <div class="search-wrapper">
+                                    <span class="fa-solid fa-magnifying-glass"></span>
+                                    <input type="search" placeholder="Search here"/>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table width="100%">
+                                        <thead>
+                                            <tr>
+                                                <td>Volunteer Name</td>
+                                                <td>Email Address</td>
+                                                <td>Phone Number</td>
+                                                <td>Location</td>
+                                                <td>Track</td>
+                                                <td>Review</td>
+                                                <td>Delete</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Sally Smith</td>
+                                                <td>s.smith@gmail.com</td>
+                                                <td>+1(213)555-3890</td>
+                                                <td>California, USA</td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Track</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Review</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Delete</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Ahmad Khan</td>
+                                                <td>khan.ahmad@yahoo.com</td>
+                                                <td>+92-345-6789012</td>
+                                                <td>Lahore, Pakistan</td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Track</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Review</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Delete</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Caroline Will</td>
+                                                <td>carolwill03@outlook.com</td>
+                                                <td>+61-478-876-900</td>
+                                                <td>Sydney, Australia</td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Track</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Review</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Delete</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Layan Tariq</td>
+                                                <td>tariq12layan@outlook.com</td>
+                                                <td>+961 3 123 124</td>
+                                                <td>Tripoli, Lebanon</td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Track</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Review</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Delete</button></td>
+                                            </tr> 
+                                            <tr>
+                                                <td>Ahmad Mohamad</td>
+                                                <td>ahmadmoh1987@yahoo.com</td>
+                                                <td>+971 58 1111113</td>
+                                                <td>Dubai, UAE</td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Track</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Review</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Delete</button></td>
+                                            </tr> 
+                                            <tr>
+                                                <td>Lindsay Walton</td>
+                                                <td>walton.lindsay@outlook.com</td>
+                                                <td>N/A</td>
+                                                <td>London, UK</td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Track</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Review</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Delete</button></td>
+                                            </tr> 
+                                            <tr>
+                                                <td>Zhang Wei</td>
+                                                <td>zhang.wei@gmail.com</td>
+                                                <td>+966 54 456 6164</td>
+                                                <td>Jeddah, KSA</td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Track</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Review</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Delete</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Khadija Rashid</td>
+                                                <td>khadijarashid@gmail.com</td>
+                                                <td>+20 1 765 7897</td>
+                                                <td>Cairo, Egypt</td>                                                
+                                                <td><button onclick="window.location.href='your_page_url_here'">Track</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Review</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Delete</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Camila Hernandez</td>
+                                                <td>hernandez.camila@gmail.com</td>
+                                                <td>+52 55 1234 5678</td>
+                                                <td>Mexico City, Mexico</td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Track</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Review</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Delete</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Sade Bello</td>
+                                                <td>bello.sade@outlook.com</td>
+                                                <td>+234 201 555 6743</td>
+                                                <td>Lagos, Nigeria</td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Track</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Review</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Delete</button></td>
+                                            </tr>  
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+        </div>
+    </body>
+</html>
