@@ -27,6 +27,7 @@
     </header>
 
 <section class="checkout-section">
+     <h2 class = "heading ">Confirm Your Booking</h2>
     <div class="container">
         <div class="checkout-form-container container-box">
             <div class="checkout-form">
@@ -61,9 +62,9 @@
             <div class="job-details">
                 <h2>Job Details</h2>
                 <div class = "job-creator"><h3>{{job.creator}}</h3></div>
-                {{#if job.imageLink}}
+                <div class = "opportunity-image">{{#if job.imageLink}}
                     <img src="{{ job.imageLink }}" alt="Job Image">
-                {{/if}}
+                {{/if}}</div>
                 <h3>{{ job.title }}</h3>
                 <p>{{ job.description }}</p>
                 <p>Location: {{ job.location }}</p>
