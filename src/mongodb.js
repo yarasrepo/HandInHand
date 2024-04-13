@@ -91,6 +91,10 @@ const jobSchema = new mongoose.Schema({
     type: String,
     required:true,
     ref: 'HandInHandcollection',
+   },
+   participants: {
+    type: [String],  
+    ref: 'HandInHandcollection',
    }
 })
 
