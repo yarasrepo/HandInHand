@@ -30,7 +30,7 @@
     <div class="container">
         <div class="checkout-form-container container-box">
             <div class="checkout-form">
-                <h2>Checkout</h2>
+                <h2>Ready to take the next step? </h2>
                 <form action="/checkout" method="POST">
                     <div class="form-group">
                         <div class="inline-group">
@@ -60,6 +60,9 @@
         <div class="job-details-container container-box">
             <div class="job-details">
                 <h2>Job Details</h2>
+                {{#if job.imageLink}}
+                    <img src="{{ job.imageLink }}" alt="Job Image">
+                {{/if}}
                 <h3>{{ job.title }}</h3>
                 <p>{{ job.description }}</p>
                 <p>Location: {{ job.location }}</p>

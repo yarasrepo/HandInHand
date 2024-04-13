@@ -139,6 +139,7 @@ app.post('/job_submission_form', async (req, res) => {
         if (!jobName || !description || !openPositions || !location || !requiredHours || !requiredSkills) {
             return res.status(400).send('All fields are required');
         }
+        const organizationName = req.session.user.name;
 
         const newJob = new JobCollection({
             title: jobName, 
@@ -147,7 +148,8 @@ app.post('/job_submission_form', async (req, res) => {
             location,
             requiredHours: parseInt(requiredHours),
             requiredSkills,
-            ProfilePic: imageLink // FIX THIS LATER IMAGE LINK SHOULD BE AUTOMATIC 
+            imageLink,
+            creator: organizationName 
         });
         await newJob.save();
 
@@ -157,6 +159,7 @@ app.post('/job_submission_form', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 
 

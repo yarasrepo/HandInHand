@@ -83,12 +83,13 @@ const jobSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-   ProfilePic: {
+   imageLink: {
     type: String,
     ref: 'userProfileCollection'
    },
    creator: {
     type: String,
+    required:true,
     ref: 'HandInHandcollection',
    }
 })

@@ -51,20 +51,27 @@
         <main class="main-content">
             <section class="opportunities-page" id="opportunitiesPage">
 
-                {{#each jobs}}
-                <div class="opportunity-card">
-                    <h3>{{this.title}}</h3>
-                    <p>{{this.description}}</p>
-                    <span class="seats-left">Seats Left: {{this.openPositions}}</span>
-                 
-                    <a href="/checkout?jobId={{this._id}}" class="book-button">Book</a>
-                    <div class="more-details" style="display: none;">
-                        <p><strong>Location:</strong> {{this.location}}</p>
-                        <p><strong>Required Hours:</strong> {{this.requiredHours}}</p>
-                        <p><strong>Required Skills:</strong> {{this.requiredSkills}}</p>
-                    </div>
-                </div>
-                {{/each}}
+              {{#each jobs}}
+<div class="opportunity-card">
+    {{#if this.imageLink}}
+    <div class="opportunity-image">
+        <img src="{{this.imageLink}}" alt="Opportunity Image">
+    </div>
+    {{/if}}
+    <div class="opportunity-details">
+        <h3>{{this.title}}</h3>
+        <p>{{this.description}}</p>
+        <span class="seats-left">Seats Left: {{this.openPositions}}</span>
+        <a href="/checkout?jobId={{this._id}}" class="book-button">Book</a>
+        <div class="more-details" style="display: none;">
+            <p><strong>Location:</strong> {{this.location}}</p>
+            <p><strong>Required Hours:</strong> {{this.requiredHours}}</p>
+            <p><strong>Required Skills:</strong> {{this.requiredSkills}}</p>
+        </div>
+    </div>
+</div>
+{{/each}}
+
             </section>
         </main>
     </div>
