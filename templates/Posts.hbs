@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Opportunities - HandInHand</title>
     <link rel="stylesheet" href="poststyle.css">
-    <!-- Include any necessary stylesheets -->
+
 </head>
 <body>
     <header>
@@ -49,13 +49,13 @@
 
         <main class="main-content">
             <section class="opportunities-page" id="opportunitiesPage">
-                <!-- Display each job from the database -->
+
                 {{#each jobs}}
                 <div class="opportunity-card">
                     <h3>{{this.title}}</h3>
                     <p>{{this.description}}</p>
                     <span class="seats-left">Seats Left: {{this.openPositions}}</span>
-                    <!-- Add more details if needed -->
+                 
                     <a href="/checkout?jobId={{this._id}}" class="book-button">Book</a>
                     <div class="more-details" style="display: none;">
                         <p><strong>Location:</strong> {{this.location}}</p>
