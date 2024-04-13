@@ -56,7 +56,7 @@
                     <p>{{this.description}}</p>
                     <span class="seats-left">Seats Left: {{this.openPositions}}</span>
                     <!-- Add more details if needed -->
-                     <a href="/checkout" class="book-button">Book</a>
+                    <a href="/checkout?jobId={{this._id}}" class="book-button">Book</a>
                     <div class="more-details" style="display: none;">
                         <p><strong>Location:</strong> {{this.location}}</p>
                         <p><strong>Required Hours:</strong> {{this.requiredHours}}</p>

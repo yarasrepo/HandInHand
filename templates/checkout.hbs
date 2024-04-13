@@ -2,7 +2,7 @@
     <div class="header-container">
         <div class="logo-container">
             <img src="https://i.imgur.com/MoSHBZX.png" class="logo" alt="HandinHand">
-             <link type="text/css" rel="stylesheet" href="poststyle">
+             <link rel = "stylesheet" type = "text/css" href = "checkout.css">
         </div>
         <nav class="navbar">
             <ul class="nav-menu">
@@ -28,3 +28,37 @@
         </nav>
     </div>
 </header>
+
+<section class="checkout-section">
+   <div class="job-details-container">
+    <div class="job-details">
+        <h2>Job Details</h2>
+        <h3>{{ job.title }}</h3>
+        <p>{{ job.description }}</p>
+        <p>Location: {{ job.location }}</p>
+    </div>
+</div>
+    <div class="checkout-form">
+        <h2>Checkout</h2>
+        <form action="/checkout" method="POST">
+            <div class="form-group">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName" required>
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" name="lastName" required>
+            </div>
+            <div class="form-group">
+                <label for="phoneNumber">Phone Number:</label>
+                <input type="tel" id="phoneNumber" name="phoneNumber" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
+                <small>Format: 123-456-7890</small>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <button type="submit" class="checkout-button">Proceed to Checkout</button>
+        </form>
+    </div>
+</section>

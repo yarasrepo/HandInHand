@@ -110,9 +110,21 @@ app.get('/Posts', async (req, res) => {
 });
 
 
-app.get('/checkout', (req, res) => {
-    res.render('checkout');
-})
+app.get('/checkout', async (req, res) => {
+    try {
+        const jobId = req.query.jobId;
+        const job = await JobCollection.findById(jobId);
+        res.render('checkout', { job });
+    } catch (error) {
+        console.error('Error fetching job details:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
+
+
+
 
 
 app.get('/job_submission_form', (req, res) => {
