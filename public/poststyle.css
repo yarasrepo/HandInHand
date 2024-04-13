@@ -144,11 +144,37 @@ header {
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 10px;
-    padding: 80px;
+    padding: 20px;
     margin-bottom: 15px;
     width: 100%;
     box-sizing: border-box;
+    display: flex;
 }
+
+.opportunity-image {
+    width: 30%; 
+    margin-right: 20px; 
+}
+
+.opportunity-image img {
+    width: 100%; 
+    height: auto; 
+    border-radius: 10px; 
+}
+
+.opportunity-details {
+    flex: 1; 
+    display: flex;
+    flex-direction: column;
+}
+
+.creator {
+    color: #007c6b; 
+    font-weight: bold; 
+    margin-bottom: 5px;
+    font-size: 18px;
+}
+
 
 .opportunity-card h3 {
     margin-top: 0;
@@ -194,7 +220,7 @@ header {
 }
 
 .search-input {
-    flex: 1; /* Use remaining space */
+    flex: 1; 
     max-width: calc(100% - 150px);
     width: 70%;
     max-width: 400px;
@@ -246,7 +272,6 @@ header {
 .navbar li {
     list-style-type: none;
 }
-
 
 .sticky {
     position: fixed;
