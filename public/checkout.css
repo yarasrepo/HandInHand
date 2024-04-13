@@ -7,7 +7,7 @@ body {
 }
 
 header {
-    background-color: var(--bg-color); 
+    background-color: transparent; 
     padding: 10px 0;
     display: flex;
     justify-content: space-between;
@@ -182,8 +182,8 @@ header {
 }
 
 .checkout-button {
-    background-color: var(--main-color); /* Change background color to match Post page */
-    color: white;
+    background-color: #007bff; 
+    color: rgb(255, 255, 255);
     border: none;
     padding: 20px 15px;
     border-radius: 50px;
@@ -198,6 +198,7 @@ header {
 .checkout-button:hover {
     background-color: #0056b3;
 }
+
 
 @media screen and (min-width: 768px) {
     .navbar {
