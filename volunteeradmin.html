@@ -28,7 +28,7 @@
                         <span>Organizations</span></a>
                     </li>
                     <li>
-                        <a href=""><span class="fa-solid fa-calendar-days"></span>
+                        <a href="opp_admin.html"><span class="fa-solid fa-calendar-days"></span>
                         <span>Opportunities</span></a>
                     </li>
                     <li>
@@ -56,7 +56,7 @@
                                 <h2>All Volunteers</h2>
                                 <div class="search-wrapper">
                                     <span class="fa-solid fa-magnifying-glass"></span>
-                                    <input type="search" placeholder="Search here"/>
+                                    <input id="searchInput" type="search" placeholder="Search here"/>
                                 </div>
                             </div>
                             <div class="card-body">
@@ -184,5 +184,36 @@
                 </div>
             </main>
         </div>
+        <script>
+            document.getElementById("searchInput").addEventListener("keyup", function () {
+                var input, filter, table, tr, td, i, j, txtValue;
+                input = document.getElementById("searchInput");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("volunteersTable");
+                tr = table.getElementsByTagName("tr");
+                for (i = 1; i < tr.length; i++) {
+                    // Initialize flag to false
+                    var rowVisible = false;
+                    // Loop through all cells in current row
+                    for (j = 0; j < tr[i].cells.length; j++) {
+                        td = tr[i].cells[j];
+                        if (td) {
+                            txtValue = td.textContent || td.innerText;
+                            // If any cell matches the filter, set rowVisible to true and break loop
+                            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                rowVisible = true;
+                                break;
+                            }
+                        }
+                    }
+                    // Show/hide row based on rowVisible flag
+                    if (rowVisible) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            });
+        </script>
     </body>
 </html>
