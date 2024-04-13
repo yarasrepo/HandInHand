@@ -1,4 +1,3 @@
-
 body {
     font-family: 'Poppins', sans-serif;
     margin: 0;
@@ -85,69 +84,66 @@ body {
     color: #007bff;
 }
 
-/* Checkout section styles */
 .checkout-section {
+    padding: 50px;
+}
+
+.container {
     display: flex;
     justify-content: space-between;
-    padding: 90px;
+    margin-top: 20px;
+}
+
+.container-box {
+    flex-basis: 45%;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    padding: 20px;
+    align-items: flex-start; 
+}
+
+.inline-group {
+    display: flex;
+    gap: 50px; 
+}
+
+
+.job-details {
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+
+.job-details-container {
+    flex-basis: 30%;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    padding: 20px;
+}
+
+.checkout-form-container {
+    flex-basis: 70%; 
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    padding: 20px;
+    margin-right: 20px; 
 }
 
 .checkout-form {
-    max-width: 500px;
-    margin-right: 100px; /* Add margin for spacing */
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    padding: 20px;
 }
 
 .checkout-form h2 {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 50px;
 }
-
-
-.opportunity-section {
-    flex-grow: 1; /* Take remaining space */
-}
-
-.opportunity-section h2 {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.opportunity-card {
-    background-color: #ffffff;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 20px;
-    margin-bottom: 20px;
-}
-
-.opportunity-card h3 {
-    margin-top: 0;
-    margin-bottom: 10px;
-}
-
-.opportunity-card p {
-    margin-bottom: 10px;
-}
-
-.seats-left {
-    color: #888888;
-    font-size: 14px;
-}
-
-/* Responsive adjustments */
-@media screen and (max-width: 768px) {
-    .checkout-section {
-        flex-direction: column; /* Stack items vertically on small screens */
-    }
-
-    .checkout-form {
-        margin-right: 0; /* Remove right margin on small screens */
-        margin-bottom: 20px; /* Add bottom margin for spacing */
-    }
-}
-
+/* text inside checkout container */
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    text-align: left;
 }
 
 .form-group label {
@@ -159,14 +155,22 @@ body {
 .form-group input[type="email"],
 .form-group input[type="tel"] {
     width: 100%;
+    max-width: 300px;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 5px;
     outline: none;
+    font-family: 'Poppins', sans-serif; 
 }
 
 .form-group input[type="tel"] {
-    max-width: calc(100% - 100px);
+    width: 100%;
+    max-width: 300px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    font-family: 'Poppins', sans-serif; 
 }
 
 .form-group small {
@@ -180,14 +184,29 @@ body {
     background-color: #007bff;
     color: white;
     border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
+    padding: 20px 15px;
+    border-radius: 50px;
     cursor: pointer;
     outline: none;
-    width: 100%;
+    width: 30%;
     display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .checkout-button:hover {
     background-color: #0056b3;
+}
+
+@media screen and (max-width: 768px) {
+    .checkout-section {
+        flex-direction: column;
+    }
+
+    .checkout-form-container {
+        flex-basis: 60%; 
+        border: 1px solid #ccc;
+        border-radius: 50px;
+        padding: 20px;
+    }
 }
