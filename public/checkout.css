@@ -6,52 +6,42 @@ body {
     background-color: #f9f9f9;
 }
 
-.header-container {
+header {
+    background-color: var(--bg-color); 
+    padding: 10px 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
-    background-color: #ffffff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
-.logo-container {
-    display: flex;
-    align-items: center;
-}
 
 .logo {
     height: 50px;
+    cursor: pointer;
+    margin-left: 100px;
 }
 
 .navbar {
     display: flex;
+    justify-content: space-between;
     align-items: center;
+    padding: 0 20px; 
 }
 
-.nav-menu {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+.navbar li {
+    list-style-type: none;
 }
 
-.nav-menu li {
-    display: inline-block;
-    margin-right: 20px;
-}
-
-.nav-menu li:last-child {
-    margin-right: 0;
-}
-
-.nav-menu li a {
+.navbar a {
     text-decoration: none;
-    color: #333333;
-    transition: color 0.3s ease;
-}
-
-.nav-menu li a:hover {
-    color: #007bff;
+    color: var(--text-color);
+    font-size: var(--p-font);
+    font-weight: 500;
+    margin-right: 20px;
+    transition: all .50s ease;
 }
 
 .h-right {
@@ -59,30 +49,43 @@ body {
     align-items: center;
 }
 
-.auth-links {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+.h-right a:first-child {
+    color: var(--text-color); 
+    font-size: var(--p-font);
+    margin-right: 20px;
 }
 
-.auth-links li {
-    display: inline-block;
-    margin-right: 10px;
+.h-right li {
+    font-size: var(--p-font);
+    display: flex;
+    align-items: center;
 }
 
-.auth-links li:last-child {
-    margin-right: 0;
+.h-right a {
+    color: var(--text-color);
+    margin-right: 18px;
+    margin-left: 5px;
+    transition: all .50s ease;
+    font-size: inherit;
 }
 
-.auth-links li a {
-    text-decoration: none;
-    color: #333333;
-    transition: color 0.3s ease;
+.h-right span {
+    color: #000;
 }
 
-.auth-links li a:hover {
-    color: #007bff;
+.h-right a:hover {
+    color: var(--main-color); 
+    transform: translateY(-3px);
 }
+
+#menu-icon {
+    color: var(--text-color);
+    font-size: 30px;
+    cursor: pointer;
+    z-index: 10001;
+    display: none;
+}
+
 
 .checkout-section {
     padding: 50px;
@@ -107,13 +110,11 @@ body {
     gap: 50px; 
 }
 
-
 .job-details {
     background-color: #f9f9f9;
     border-radius: 5px;
     padding: 20px;
 }
-
 
 .job-details-container {
     flex-basis: 30%;
@@ -140,7 +141,7 @@ body {
     text-align: center;
     margin-bottom: 50px;
 }
-/* text inside checkout container */
+
 .form-group {
     margin-bottom: 10px;
     text-align: left;
@@ -181,7 +182,7 @@ body {
 }
 
 .checkout-button {
-    background-color: #007bff;
+    background-color: var(--main-color); /* Change background color to match Post page */
     color: white;
     border: none;
     padding: 20px 15px;
@@ -198,15 +199,85 @@ body {
     background-color: #0056b3;
 }
 
-@media screen and (max-width: 768px) {
-    .checkout-section {
-        flex-direction: column;
+@media screen and (min-width: 768px) {
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
     }
 
-    .checkout-form-container {
-        flex-basis: 60%; 
-        border: 1px solid #ccc;
-        border-radius: 50px;
-        padding: 20px;
+    .navbar li {
+        list-style-type: none;
+    }
+
+    .navbar a {
+        text-decoration: none;
+        color: var(--text-color);
+        font-size: var(--p-font);
+        font-weight: 500;
+        margin-right: 20px;
+        transition: all .50s ease;
+    }
+
+    .h-right {
+        display: flex;
+        align-items: center;
+    }
+
+    .h-right a:first-child {
+        color: var(--text-color);
+        font-size: var(--p-font);
+        margin-right: 20px;
+    }
+
+    .h-right li {
+        font-size: var(--p-font);
+        display: flex;
+        align-items: center;
+    }
+
+    .h-right a {
+        color: var(--text-color);
+        margin-right: 18px;
+        margin-left: 5px;
+        transition: all .50s ease;
+        font-size: inherit;
+    }
+
+    .h-right span {
+        color: #000;
+    }
+
+    .h-right a:hover {
+        color: var(--main-color);
+        transform: translateY(-3px);
+    }
+
+    #menu-icon {
+        color: var(--text-color);
+        font-size: 30px;
+        cursor: pointer;
+        z-index: 10001;
+        display: none;
+    }
+
+    .sticky {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        background: transparent;
+        backdrop-filter: blur(35px);
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .navbar {
+        display: none;
+    }
+
+    #menu-icon {
+        display: block;
     }
 }
