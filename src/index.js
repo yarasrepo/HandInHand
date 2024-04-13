@@ -114,12 +114,29 @@ app.get('/checkout', async (req, res) => {
     try {
         const jobId = req.query.jobId;
         const job = await JobCollection.findById(jobId);
-        res.render('checkout', { job });
+        
+        const signedIn = !!req.session.user;
+        let userRole;
+        let profileLink;
+        let isOrganization;
+        if (signedIn) {
+            userRole = req.session.user.role;
+            if (userRole === 'volunteer') {
+                isOrganization = false;
+                profileLink = '/userprofile';
+            } else if (userRole === 'organization') {
+                profileLink = '/orgprofile';
+                isOrganization = true;
+            }
+        }
+
+        res.render('checkout', { job, signedIn, userRole, profileLink, isOrganization });
     } catch (error) {
         console.error('Error fetching job details:', error);
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 
 

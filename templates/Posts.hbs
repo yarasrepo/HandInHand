@@ -18,11 +18,11 @@
             <li><a href="{{#if profileLink}}{{ profileLink }}{{else}}/signup{{/if}}">Profile</a></li>
         </ul>
         <div class="h-right">
-            {{#if signedIn}}
-            <a href="/logout">Logout</a> 
             {{#if isOrganization }}
             <a href="/job_submission_form" class="post-button">Post an Opportunity</a>
             {{/if}}
+            {{#if signedIn}}
+            <a href="/logout">Logout</a> 
             {{else}}
             <li><a href="/signup">Register</a>|<a href="/login">Login</a></li>
             {{/if}}
