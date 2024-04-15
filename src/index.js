@@ -156,28 +156,32 @@ app.post('/checkout', async (req, res) => {
 
         console.log('Form submission data:', { firstName, lastName, email, phoneNumber });
 
-        // Check if the user with the provided email exists
         const user = await LogInCollection.findOne({ email });
         if (!user) {
             console.log('User not found');
             return res.status(400).send('User not found. Please register before booking.');
         }
 
-        const participant = { email };
-        if (firstName && lastName) {
-            participant.firstName = firstName;
-            participant.lastName = lastName;
-        } else {
-            // If first name and last name are not provided, use the user's details from the database
-            participant.firstName = user.firstName;
-            participant.lastName = user.lastName;
+        if (firstName && lastName && 
+            (!user.firstName || !user.lastName || 
+            (firstName.toLowerCase() !== user.firstName.toLowerCase() || 
+            lastName.toLowerCase() !== user.lastName.toLowerCase()))) {
+            console.log('Provided first name and last name do not match existing user details');
+            return res.status(400).send('Provided first name and last name do not match existing user details. Please provide correct information.');
         }
 
-        job.participants.push(participant);
+        if (firstName && !user.firstName) {
+            user.firstName = firstName;
+        }
+        if (lastName && !user.lastName) {
+            user.lastName = lastName;
+        }
+        await user.save();
 
-        const numParticipants = job.participants.length;
-        job.openPositions -= numParticipants;
+        job.participants.push({ email, firstName: user.firstName, lastName: user.lastName });
+        await job.save();
 
+        job.openPositions -= 1;
         await job.save();
 
         res.redirect('/Posts'); 
@@ -186,6 +190,10 @@ app.post('/checkout', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
+
+
+
 
 
 
