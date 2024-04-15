@@ -137,6 +137,56 @@ app.get('/checkout', async (req, res) => {
     }
 });
 
+// match with the userprofile!!
+app.post('/checkout', async (req, res) => {
+    try {
+        const jobId = req.body.jobId;
+        console.log('Received jobId:', jobId); 
+        console.log('Query parameters:', req.query); 
+
+        const job = await JobCollection.findById(jobId);
+        console.log('Retrieved job:', job); 
+
+        if (!job) {
+            console.log('Job not found'); 
+            return res.status(404).send('Job not found');
+        }
+
+        const { firstName, lastName, email, phoneNumber } = req.body;
+
+        console.log('Form submission data:', { firstName, lastName, email, phoneNumber });
+
+        // Check if the user with the provided email exists
+        const user = await LogInCollection.findOne({ email });
+        if (!user) {
+            console.log('User not found');
+            return res.status(400).send('User not found. Please register before booking.');
+        }
+
+        const participant = { email };
+        if (firstName && lastName) {
+            participant.firstName = firstName;
+            participant.lastName = lastName;
+        } else {
+            // If first name and last name are not provided, use the user's details from the database
+            participant.firstName = user.firstName;
+            participant.lastName = user.lastName;
+        }
+
+        job.participants.push(participant);
+
+        const numParticipants = job.participants.length;
+        job.openPositions -= numParticipants;
+
+        await job.save();
+
+        res.redirect('/Posts'); 
+    } catch (error) {
+        console.error('Error processing checkout:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 
 
 

@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Opportunities - HandInHand</title>
-       <link rel="icon" type="image/png" href="https://i.imgur.com/MoSHBZX.png">
+    <link rel="icon" type="image/png" href="https://i.imgur.com/MoSHBZX.png">
     <link rel="stylesheet" href="poststyle.css">
 
 </head>
+
 <body>
     <header>
         <img src="https://i.imgur.com/MoSHBZX.png" class="logo" alt="HandinHand">
@@ -22,7 +24,7 @@
             <a href="/job_submission_form" class="post-button">Post an Opportunity</a>
             {{/if}}
             {{#if signedIn}}
-            <a href="/logout">Logout</a> 
+            <a href="/logout">Logout</a>
             {{else}}
             <li><a href="/signup">Register</a>|<a href="/login">Login</a></li>
             {{/if}}
@@ -51,30 +53,30 @@
         <main class="main-content">
             <section class="opportunities-page" id="opportunitiesPage">
 
-              {{#each jobs}}
-<div class="opportunity-card">
-    {{#if this.imageLink}}
-    <div class="opportunity-image">
-        <img src="{{this.imageLink}}" alt="Opportunity Image">
-    </div>
-    {{/if}}
-   <div class="opportunity-details">
-    <div class="creator">
-        <p>{{this.creator}}</p>
-    </div>
-    <h3>{{this.title}}</h3>
-    <p>{{this.description}}</p>
-    <span class="seats-left">Seats Left: {{this.openPositions}}</span>
-    <a href="/checkout?jobId={{this._id}}" class="book-button">Book</a>
-    <div class="more-details" style="display: none;">
-        <p><strong>Location:</strong> {{this.location}}</p>
-        <p><strong>Required Hours:</strong> {{this.requiredHours}}</p>
-        <p><strong>Required Skills:</strong> {{this.requiredSkills}}</p>
-    </div>
-</div>
+                {{#each jobs}}
+                <div class="opportunity-card">
+                    {{#if this.imageLink}}
+                    <div class="opportunity-image">
+                        <img src="{{this.imageLink}}" alt="Opportunity Image">
+                    </div>
+                    {{/if}}
+                    <div class="opportunity-details">
+                        <div class="creator">
+                            <p>{{this.creator}}</p>
+                        </div>
+                        <h3>{{this.title}}</h3>
+                        <p>{{this.description}}</p>
+                        <span class="seats-left">Seats Left: {{this.openPositions}}</span>
+                        <a href="/checkout?jobId={{this._id}}" class="book-button">Book</a>
+                        <div class="more-details" style="display: none;">
+                            <p><strong>Location:</strong> {{this.location}}</p>
+                            <p><strong>Required Hours:</strong> {{this.requiredHours}}</p>
+                            <p><strong>Required Skills:</strong> {{this.requiredSkills}}</p>
+                        </div>
+                    </div>
 
-</div>
-{{/each}}
+                </div>
+                {{/each}}
 
             </section>
         </main>
@@ -82,7 +84,7 @@
 
     <script>
         const header = document.querySelector("header");
-        window.addEventListener("scroll", function(){
+        window.addEventListener("scroll", function () {
             header.classList.toggle("sticky", window.scrollY > 60)
         });
 
@@ -94,10 +96,10 @@
             navbar.classList.toggle('open');
         };
 
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const opportunityCards = document.querySelectorAll(".opportunity-card");
             opportunityCards.forEach(card => {
-                card.addEventListener("click", function(event) {
+                card.addEventListener("click", function (event) {
                     if (!event.target.classList.contains("book-button")) {
                         const moreDetails = this.querySelector(".more-details");
                         moreDetails.style.display = moreDetails.style.display === "none" ? "block" : "none";
@@ -107,7 +109,7 @@
         });
 
         const searchInput = document.getElementById("searchInput");
-        searchInput.addEventListener("input", function() {
+        searchInput.addEventListener("input", function () {
             const searchText = searchInput.value.toLowerCase();
             const opportunityCards = document.querySelectorAll(".opportunity-card");
             opportunityCards.forEach(card => {
@@ -123,4 +125,5 @@
         });
     </script>
 </body>
+
 </html>

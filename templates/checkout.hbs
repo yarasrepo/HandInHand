@@ -32,7 +32,8 @@
         <div class="checkout-form-container container-box">
             <div class="checkout-form">
                 <h2>Ready to take the next step? </h2>
-                <form action="/checkout" method="POST">
+              <form action="/checkout" method="POST">
+    <input type="hidden" name="jobId" value="{{job._id}}">
                     <div class="form-group">
                         <div class="inline-group">
                             <div class="form-group">
