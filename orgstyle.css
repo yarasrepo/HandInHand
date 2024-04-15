@@ -142,8 +142,11 @@ thead tr{
     border-top: 1px solid #F0F0F0;
     border-bottom: 2px solid #F0F0F0;
 }
-thead td{
+thead th{
     font-weight: 700;
+    font-size: 1rem;
+    color: #222;
+    cursor: pointer;
 }
 td{
     padding: .5rem 1rem;
@@ -162,4 +165,14 @@ td{
     cursor: pointer;
     border-radius: 5px;
     outline: none;
+}
+.pagination {
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    margin-top: 20px; 
+}
+
+.pagination button {
+    margin: 0 5px; 
 }

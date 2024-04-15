@@ -138,12 +138,35 @@ main{
 table{
     border-collapse: collapse;
 } 
+.table-sortable th {
+	cursor: pointer;
+}
+.table-sortable .th-sort-asc::after {
+	content: "\25b4";
+}
+
+.table-sortable .th-sort-desc::after {
+	content: "\25be";
+}
+
+.table-sortable .th-sort-asc::after,
+.table-sortable .th-sort-desc::after {
+	margin-left: 5px;
+}
+
+.table-sortable .th-sort-asc,
+.table-sortable .th-sort-desc {
+	background: rgba(0, 0, 0, 0.1);
+}
 thead tr{
     border-top: 1px solid #F0F0F0;
     border-bottom: 2px solid #F0F0F0;
 }
-thead td{
+thead th{
     font-weight: 700;
+    font-size: 1rem;
+    color: #222;
+    cursor: pointer;
 }
 td{
     padding: .5rem 1rem;
@@ -153,6 +176,16 @@ td{
 .table-responsive{
     width: 100%;
     overflow-x: auto;
+}
+.pagination {
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    margin-top: 20px; 
+}
+
+.pagination button {
+    margin: 0 5px; 
 }
 
 

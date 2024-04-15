@@ -61,17 +61,17 @@
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table id="volunteersTable" width="100%">
+                                    <table class="table-sortable" id="volunteersTable" width="100%">
                                         <thead>
                                             <tr>
-                                                <td>Volunteer Name</td>
-                                                <td>Email Address</td>
-                                                <td>Phone Number</td>
-                                                <td>Location</td>
-                                                <td>Date Joined</td>
-                                                <td>Track</td>
-                                                <td>Review</td>
-                                                <td>Delete</td>
+                                                <th onclick="sortTable(0)">Volunteer Name</th>
+                                                <th>Email Address</th>
+                                                <th>Phone Number</th>
+                                                <th>Location</th>
+                                                <th onclick="sortTable(4)">Date Joined</th>
+                                                <th>Track</th>
+                                                <th>Review</th>
+                                                <th>Delete</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -174,9 +174,24 @@
                                                 <td><button onclick="window.location.href='vol_info.html'">Track</button></td>
                                                 <td><button class="review-button">Review</button></td>
                                                 <td><button onclick="window.location.href='your_page_url_here'">Delete</button></td>
+                                            </tr> 
+                                            <tr>
+                                                <td>Sade Bello</td>
+                                                <td>bello.sade@outlook.com</td>
+                                                <td>+234 201 555 6743</td>
+                                                <td>Lagos, Nigeria</td>
+                                                <td>Feb. 12, 2024</td>
+                                                <td><button onclick="window.location.href='vol_info.html'">Track</button></td>
+                                                <td><button class="review-button">Review</button></td>
+                                                <td><button onclick="window.location.href='your_page_url_here'">Delete</button></td>
                                             </tr>  
                                         </tbody>
                                     </table>
+                                    <div class="pagination">
+                                        <button id="prevPageBtn" onclick="prevPage()">Previous</button>
+                                        <span id="currentPage"></span>
+                                        <button id="nextPageBtn" onclick="nextPage()">Next</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -233,6 +248,86 @@
                     }
                 }
             });
+            function parseDate(dateString) {
+                const months = {
+                    "Jan.": 0, "Feb.": 1, "Mar.": 2, "Apr.": 3, "May": 4, "Jun.": 5,
+                    "Jul.": 6, "Aug.": 7, "Sep.": 8, "Oct.": 9, "Nov.": 10, "Dec.": 11
+                };
+                const [month, day, year] = dateString.split(" ");
+                return new Date(year, months[month], parseInt(day.slice(0, -1))); // Slicing "Day" to remove the comma
+            }
+            function sortTable(columnIndex) {
+            const table = document.getElementById("volunteersTable");
+            const tbody = table.getElementsByTagName("tbody")[0];
+            const rows = Array.from(tbody.getElementsByTagName("tr"));
+            let ascending = true; // Flag to indicate sorting direction
+            // Toggle sorting direction
+            if (table.dataset.sortColumnIndex === columnIndex.toString()) {
+                ascending = !table.dataset.sortAscending;
+            }
+            // Store sorting state in table attributes
+            table.dataset.sortColumnIndex = columnIndex;
+            table.dataset.sortAscending = ascending;
+            const sortedRows = rows.sort((a, b) => {
+                let aValue = a.getElementsByTagName("td")[columnIndex].innerText.trim();
+                let bValue = b.getElementsByTagName("td")[columnIndex].innerText.trim();
+                // For date column (index 4), parse the dates manually before comparison
+                if (columnIndex === 4) {
+                    aValue = parseDate(aValue);
+                    bValue = parseDate(bValue);
+                    // Reverse the comparison if sorting in descending order
+                    return ascending ? aValue - bValue : bValue - aValue;
+                }
+                // Compare values based on sorting direction
+                const comparison = aValue.localeCompare(bValue);
+                return ascending ? comparison : -comparison;
+            });
+            while (tbody.firstChild) {
+                tbody.removeChild(tbody.firstChild);
+            }
+            sortedRows.forEach(row => {
+                tbody.appendChild(row);
+            });
+        }
+        const pageSize = 10; // Number of entries per page
+        let currentPage = 1; // Current page being displayed
+        function displayPage(pageNumber) {
+            const table = document.getElementById("volunteersTable");
+            const tbody = table.getElementsByTagName("tbody")[0];
+            const rows = Array.from(tbody.getElementsByTagName("tr"));
+            // Calculate the start and end indices for the current page
+            const startIndex = (pageNumber - 1) * pageSize;
+            const endIndex = pageNumber * pageSize;
+            // Hide all rows
+            rows.forEach(row => {
+                row.style.display = "none";
+            });
+            // Show rows for the current page
+            for (let i = startIndex; i < Math.min(endIndex, rows.length); i++) {
+                rows[i].style.display = "";
+            }
+        }
+        function goToPage(pageNumber) {
+            if (pageNumber < 1 || pageNumber > getTotalPages()) {
+                return; // Page number out of range
+            }
+            currentPage = pageNumber;
+            displayPage(currentPage);
+        }
+        function getTotalPages() {
+            const table = document.getElementById("volunteersTable");
+            const tbody = table.getElementsByTagName("tbody")[0];
+            const rowCount = tbody.getElementsByTagName("tr").length;
+            return Math.ceil(rowCount / pageSize);
+        }
+        function nextPage() {
+            goToPage(currentPage + 1);
+        }
+        function prevPage() {
+            goToPage(currentPage - 1);
+        }
+        // Initial display
+        displayPage(currentPage);
         </script>
     </body>
 </html>
