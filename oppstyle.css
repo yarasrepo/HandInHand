@@ -144,6 +144,7 @@ thead tr{
 }
 thead th{
     font-weight: 700;
+    padding: 1rem 1rem;
     font-size: 1rem;
     color: #222;
     cursor: pointer;

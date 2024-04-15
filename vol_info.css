@@ -32,7 +32,18 @@ main {
 .title {
     font-weight: bold;
 } 
-
+.buttons {
+    text-align: center;
+} 
+.back-button{
+    padding: 10px 20px;
+    margin-right: 10px;
+    background-color: #2685F5;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
   
 
   

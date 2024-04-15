@@ -35,7 +35,7 @@ main {
 .buttons {
     text-align: center;
 } 
-.review-button, .delete-button {
+.back-button, .review-button, .delete-button {
     padding: 10px 20px;
     margin-right: 10px;
     background-color: #2685F5;
