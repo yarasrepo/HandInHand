@@ -41,7 +41,7 @@
                     <a href="/"><span class="fa-solid fa-house"></span>
                         <span>Homepage</span></a>
                 </li>
-                
+
             </ul>
         </div>
     </div>
@@ -75,7 +75,7 @@
                                             <th onclick="sortTable(0)">Event Name</th>
                                             <th onclick="sortTable(1)">Organized By</th>
                                             <th onclick="sortTable(2)">Date</th>
-                                            <th onclick="sortTable(3)">Start Time</th>
+                                            {{!-- <th onclick="sortTable(3)">Start Time</th> --}}
                                             <th>More Info</th>
                                             <th>Delete</th>
 
@@ -86,12 +86,14 @@
                                         <tr>
                                             <td>{{this.title}}</td>
                                             <td>{{this.creator}}</td>
-                                            <td>May 2, 2024</td>
-                                            <td>10:00</td>
+                                            <td>{{this.datePosted}}</td>
+                                            {{!-- <td>10:00</td> --}}
                                             <td><button onclick="redirectToOppInfo('{{this._id}}')">More Info</button>
                                             </td>
-                                            <td><button id="deleteButton-{{this._id}}" class="delete-button"
-                                                    data-user-id="{{this._id}}">Delete</button></td>
+                                            <td>
+                                                <button id="deleteButton-{{this._id}}" class="delete-button"
+                                                    data-user-id="{{this._id}}">Delete</button>
+                                            </td>
                                         </tr>
                                     </tbody>
                                     {{/each}}
@@ -140,17 +142,17 @@
         });
 
         document.addEventListener('DOMContentLoaded', function () {
-            var deleteButtons = document.querySelectorAll('[id^="deleteButton-"]');
+            var deleteButtons = document.querySelectorAll('.delete-button');
             deleteButtons.forEach(function (deleteButton) {
                 deleteButton.addEventListener('click', async function () {
-                    const userId = this.dataset.userId; // Get the user ID from the button's dataset
+                    const jobId = this.dataset.userId; // Get the job ID from the button's dataset
                     try {
                         const response = await fetch('/admindeletejob', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
                             },
-                            body: JSON.stringify({ userId }) // Send the user ID in the request body
+                            body: JSON.stringify({ jobId }) // Send the job ID in the request body
                         });
                         const data = await response.json();
                         if (data.success) {
@@ -162,12 +164,14 @@
                             // Handle error or display a message
                         }
                     } catch (error) {
-                        console.error('Error deleting account:', error);
+                        console.error('Error deleting job:', error);
                         // Handle error or display a message
                     }
                 });
             });
         });
+
+
 
         function parseDate(dateString) {
             const months = {

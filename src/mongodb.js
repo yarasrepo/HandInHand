@@ -72,7 +72,6 @@ const userProfile= new mongoose.Schema({
     DateJoined:{
         type: Date,
         ref: 'LogInSchema',
-        required: true
     },
 })
 

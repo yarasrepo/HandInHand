@@ -26,7 +26,7 @@
                         <span>Volunteers</span></a>
                 </li>
                 <li>
-                    <a href="/org_admin" class="active"><span class="fa-solid fa-building-ngo"></span>
+                    <a href="/org_admin"><span class="fa-solid fa-building-ngo"></span>
                         <span>Organizations</span></a>
                 </li>
                 <li>
@@ -34,7 +34,7 @@
                         <span>Opportunities</span></a>
                 </li>
                 <li>
-                    <a href="/requests"><span class="fa-solid fa-bell"></span>
+                    <a href="/requests" class="active"><span class="fa-solid fa-bell"></span>
                         <span>Requests</span></a>
                 </li>
                 <li>
@@ -75,7 +75,7 @@
                                             <th>Email Address</th>
                                             <th>Phone Number</th>
                                             <th>Location</th>
-                                            <th onclick="sortTable(4)">Date Joined</th>
+                                            <th onclick="sortTable(4)">Date Requested</th>
                                             {{!-- <th>Request</th> --}}
                                             <th>Review</th>
                                             <th>Delete</th>
@@ -91,9 +91,15 @@
                                             <td>{{this.DateReq}}</td>
                                             {{!-- <td><button class="request-button"
                                                     onclick="handleButtonClick()">Request</button></td> --}}
-                                            <td><button class="review-button">Accept</button></td>
-                                            <td><button id="deleteButton-{{this._id}}" class="delete-button"
-                                                    data-user-id="{{this._id}}">Deny</button></td>
+                                            <td><button class="review-button"
+                                                    onclick="acceptRequest('{{this._id}}')">Accept</button></td>
+                                            <td>
+                                                <button id="deleteButton-{{this._id}}" class="delete-button"
+                                                    data-user-id="{{this._id}}"
+                                                    onclick="denyRequest('{{this._id}}')">Deny</button>
+                                            </td>
+
+
                                         </tr>
                                     </tbody>
                                     {{/each}}
@@ -114,7 +120,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             var reviewButtons = document.querySelectorAll('.review-button');
             reviewButtons.forEach(function (reviewButton) {
-                reviewButton.addEventListener('click', function () {
+                reviewButton.addEventListener('click', async function () {
                     // Debugging: Ensure event listener is triggered
                     console.log("Review button clicked");
                     // Change button text to 'Reviewed'
@@ -125,55 +131,60 @@
                     this.style.cursor = 'default';
                     // Disable the button after it's reviewed
                     this.disabled = true;
-                });
-            });
-        });
 
-        document.addEventListener('DOMContentLoaded', function () {
-            var deleteButtons = document.querySelectorAll('[id^="deleteButton-"]');
-            deleteButtons.forEach(function (deleteButton) {
-                deleteButton.addEventListener('click', async function () {
-                    const userId = this.dataset.userId; // Get the user ID from the button's dataset
-                    try {
-                        const response = await fetch('/admindenyrequest', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({ userId }) // Send the user ID in the request body
-                        });
-                        const data = await response.json();
-                        if (data.success) {
-                            // Optionally, update the UI to reflect the deletion (e.g., remove the deleted row from the table)
-                            this.closest('tr').remove(); // Remove the row containing the delete button
-                            // You can add more UI updates as needed
-                        } else {
-                            console.error('Delete operation failed');
-                            // Handle error or display a message
-                        }
-                    } catch (error) {
-                        console.error('Error deleting account:', error);
-                        // Handle error or display a message
+                    // Hide the parent row of the button
+                    var row = this.closest('tr');
+                    if (row) {
+                        row.style.display = 'none'; // Hide the row
                     }
                 });
             });
         });
-    </script>
-    <script>
-        function handleButtonClick() {
-            var button = document.querySelector('.request-button');
-            var decision = prompt("Please enter your decision (accept/deny):").toLowerCase();
 
-            if (decision === 'accept') {
-                button.innerText = 'Accepted';
-                button.style.backgroundColor = 'green';
-            } else if (decision === 'deny') {
-                button.innerText = 'Denied';
-                button.style.backgroundColor = 'red';
-            } else {
-                alert("Invalid decision. Please enter either 'accept' or 'deny'.");
+        async function acceptRequest(requestId) {
+            try {
+                const response = await fetch('/adminacceptrequest', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ userId: requestId }) // Send the request ID in the request body
+                });
+                const data = await response.text(); // Assuming the response is a text message
+                alert(data); // Display the response message
+            } catch (error) {
+                console.error('Error accepting request:', error);
+                alert('An error occurred while accepting the request'); // Show an alert for errors
             }
         }
+
+        function denyRequest(objectId) {
+            fetch('/admindenyrequest', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ objectId })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // Optionally, update the UI to reflect the denial (e.g., remove the denied item from the table)
+                        document.getElementById(`deleteButton-${objectId}`).closest('tr').remove();
+                        // You can add more UI updates as needed
+                    } else {
+                        console.error('Deny operation failed');
+                        // Handle error or display a message
+                    }
+                })
+                .catch(error => {
+                    console.error('Error denying request:', error);
+                    // Handle error or display a message
+                });
+        }
+
+
+
+
         document.getElementById("searchInput").addEventListener("keyup", function () {
             var input, filter, table, tr, td, i, j, txtValue;
             input = document.getElementById("searchInput");

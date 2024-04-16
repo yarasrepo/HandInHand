@@ -70,35 +70,37 @@ app.post('/signup', async (req, res) => {
 
     try {
         const existingUser = await LogInCollection.findOne({ email: req.body.email });
-
         if (existingUser) {
             res.send("User details already exist");
-            return; // Return to prevent further execution
+            return;
         }
 
         if (data.role === 'organization') {
             const checkReq = await ReqCollection.findOne({ email: req.body.email });
-
             if (checkReq && checkReq.flag === 'false') {
                 res.send("Request pending approval");
-                return; // Return to prevent further execution
+                return;
             }
 
             if (!checkReq) {
                 await ReqCollection.create(data);
                 res.send("Request submitted successfully");
-                return; // Return to prevent further execution
+                return;
             }
         }
 
         await LogInCollection.create(data);
-        await ReqCollection.deleteOne({ email: req.body.email });
+        if (data.role === 'organization') {
+            await ReqCollection.deleteOne({ email: req.body.email });
+        }
         req.session.user = {
             name: req.body.name,
             role: req.body.role
         };
-        const description = req.session.user.role === 'volunteer' ? "I love helping others" : "Let's make the world better together";
 
+        const description = req.session.user.role === 'volunteer' ? "I love helping others" : "Let's make the world better together";
+        const user = await LogInCollection.findOne({name: req.session.user.name}); // Find the user by their name
+        const dateJoined = user ? user.DateJoined : null; // Get the DateJoined if the user exists, otherwise set to null
         const profileData = {
             name: req.session.user.name,
             email: req.body.email,
@@ -107,14 +109,18 @@ app.post('/signup', async (req, res) => {
             PhoneNum: 0,
             Location: "Beirut",
             ProfilePic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR11lMafo-ZYohC2qYI1BJN80gzcC-7IpohIeUQT1RT0WgBttaZX7J1yEea92wMCcTXa9A&usqp=CAU",
+            DateJoined: dateJoined,
         };
         await userProfCollection.create(profileData);
+
         res.redirect(302, '/');
     } catch (error) {
         console.error("Error during signup:", error);
-        res.status(500).send("An error occurred during signup");
+        res.status(500).send("An error occurred during signup: " + error.message); // Include error message in response
     }
 });
+
+
 
 
 
@@ -559,23 +565,25 @@ app.post('/admindeleteaccount', async (req, res) => {
 
 app.post('/admindeletejob', async (req, res) => {
     try {
-        const userId = req.body.userId; // Assuming the entire user object is sent in the request body
-        console.log(userId);
+        const jobId = req.body.jobId; // Assuming the entire job object is sent in the request body
 
-        const deleteJob = await JobCollection.deleteOne(userId);
+        // Use Mongoose to delete the job from JobCollection based on jobId
+        const deleteJob = await JobCollection.deleteOne({ _id: jobId });
 
-        // Check if deletion was successful in both collections
+        // Check if deletion was successful
         if (deleteJob.deletedCount) {
-            // Redirect or send success response
+            // Send a success response
             res.json({ success: true });
         } else {
-            res.status(404).send('User account not found');
+            // Send an error response if job not found or deletion failed
+            res.status(404).send('Job not found or deletion failed');
         }
     } catch (error) {
         console.error('Error deleting job:', error);
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 app.get('/admin', async (req, res) => {
     // Check if the user is logged in
@@ -734,23 +742,25 @@ app.get('/requests', async (req, res) => {
 
 app.post('/admindenyrequest', async (req, res) => {
     try {
-        const userId = req.body.userId; // Assuming the entire user object is sent in the request body
-        console.log(userId);
+        const objectId = req.body.objectId; // Assuming the entire object is sent in the request body
 
-        const deleteReq = await ReqCollection.deleteOne(userId);
+        // Use Mongoose to delete the object from ReqCollection based on objectId
+        const deleteResult = await ReqCollection.deleteOne({ _id: objectId });
 
-        // Check if deletion was successful in both collections
-        if (deleteReq.deletedCount) {
-            // Redirect or send success response
+        // Check if deletion was successful
+        if (deleteResult.deletedCount) {
+            // Send a success response
             res.json({ success: true });
         } else {
-            res.status(404).send('User account not found');
+            // Send an error response if object not found or deletion failed
+            res.status(404).send('Object not found or deletion failed');
         }
     } catch (error) {
-        console.error('Error deleting job:', error);
+        console.error('Error deleting object:', error);
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 app.post('/adminacceptrequest', async (req, res) => {
     try {
