@@ -211,19 +211,19 @@ app.post('/checkout', async (req, res) => {
 
         console.log('Form submission data:', { firstName, lastName, email, phoneNumber });
 
-        const user = await LogInCollection.findOne({ email });
+        const user = await LogInCollection.findOne({email: email });
         if (!user) {
             console.log('User not found');
             return res.status(400).send('User not found. Please register before booking.');
         }
 
-        if (firstName && lastName && 
-            (!user.firstName || !user.lastName || 
-            (firstName.toLowerCase() !== user.firstName.toLowerCase() || 
-            lastName.toLowerCase() !== user.lastName.toLowerCase()))) {
+        if (firstName && lastName &&  user.firstName && user.lastName &&
+            (firstName.toLowerCase() !== user.firstName.toLowerCase() ||
+            (lastName.toLowerCase() !== user.lastName.toLowerCase()))) {
             console.log('Provided first name and last name do not match existing user details');
             return res.status(400).send('Provided first name and last name do not match existing user details. Please provide correct information.');
         }
+        
 
         if (firstName && !user.firstName) {
             user.firstName = firstName;
@@ -497,6 +497,7 @@ app.post('/deleteaccount', async (req, res) => {
     try {
         // Get the username from the session or request body (adjust based on your setup)
         const username = req.session.user.name
+        const user = await LogInCollection.findOne({ name : username})
 
         // Delete user from LogInCollection
         const deleteLogIn = await LogInCollection.deleteOne({ name: username });
@@ -506,9 +507,9 @@ app.post('/deleteaccount', async (req, res) => {
         
         const deleteJob = await JobCollection.deleteMany({creator: username});
 
-        const jobs = await JobCollection.find({ 'participants.email': username });
+        const jobs = await JobCollection.find({ 'participants.email': user.email });
         for (const job of jobs) {
-            job.participants = job.participants.filter(participant => participant.email !== username);
+            job.participants = job.participants.filter(participant => participant.email !== user.email);
             await job.save();
         }
 
