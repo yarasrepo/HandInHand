@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name = "viewport" content = "width=device-width, initial-scale = 1.0">
+        <title>HandinHand Admin</title>
+        <link rel="stylesheet" href="opp_info.css">
+        <link rel = "shortcut icon" type = "x-icon" href="logonowords.png">
+    </head>
+    <body>
+        <header>
+            <h1>Volunteering Opportunity with <span>Red Cross Lebanon</span></h1>
+        </header>
+        <main>
+            <div class="opp-details">
+                <h2>Opportunity Details</h2>
+                <div class="details-container">
+                    <div class="detail">
+                        <span class="title">Event Name:</span>
+                        <span class="info">Sample</span>
+                    </div>
+                    <div class="detail">
+                        <span class="title">Organized By:</span>
+                        <span class="info">Sample</span>
+                    </div>
+                    <div class="detail">
+                        <span class="title">Location:</span>
+                        <span class="info">Sample</span>
+                    </div>
+                    <div class="detail">
+                        <span class="title">Date:</span>
+                        <span class="info">Sample</span>
+                    </div>
+                    <div class="detail">
+                        <span class="title">Start Time:</span>
+                        <span class="info">Sample</span>
+                    </div>
+                    <div class="detail">
+                        <span class="title">Total Number of Hours:</span>
+                        <span class="info">Sample</span>
+                    </div>
+                    <div class="detail">
+                        <span class="title">Total Number of Days:</span>
+                        <span class="info">Sample</span>
+                    </div>
+                    <div class="detail">
+                        <span class="title">Total Number of Volunteers Needed:</span>
+                        <span class="info">Sample</span>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button onclick="window.location.href='opp_admin.html'" class="back-button">Back</button>
+                    <button class="review-button">Review</button>
+                    <button class="delete-button">Delete</button>
+                </div>
+            </div>
+        </main>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var reviewButton = document.querySelector('.review-button');
+                reviewButton.addEventListener('click', function() {
+                    reviewButton.textContent = 'Reviewed';
+                    reviewButton.style.backgroundColor = '#28a745'; // Change button color to green
+                    reviewButton.style.cursor = 'default'; // Change cursor to default
+                    reviewButton.disabled = true; // Disable the button after it's reviewed
+                });
+            });
+        </script>                  
+    </body>
+</html>

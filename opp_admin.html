@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name = "viewport" content = "width=device-width, initial-scale = 1.0">
+        <title>HandinHand Admin</title>
+        <link rel="stylesheet" href="oppstyle.css">
+        <link rel = "shortcut icon" type = "x-icon" href="logonowords.png">
+        <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    </head>
+    <body>
+        <div class="sidebar">
+            <div class="sidebar-brand">
+                <img src="https://i.imgur.com/x42wRvf.png" class = "logo" alt="HandinHand"> 
+            </div>
+            <div class="sidebar-menu">
+                <ul>
+                    <li>
+                        <a href="admin.html"><span class="fa-solid fa-gauge"></span>
+                        <span>Dashboard</span></a>
+                    </li>
+                    <li>
+                        <a href="volunteeradmin.html"><span class="fa-solid fa-user"></span>
+                        <span>Volunteers</span></a>
+                    </li>
+                    <li>
+                        <a href="org_admin.html"><span class="fa-solid fa-building-ngo"></span>
+                        <span>Organizations</span></a>
+                    </li>
+                    <li>
+                        <a href="opp_admin.html" class="active"><span class="fa-solid fa-calendar-days"></span>
+                        <span>Opportunities</span></a>
+                    </li>
+                    <li>
+                        <a href="homepage.hbs"><span class="fa-solid fa-house"></span>
+                        <span>Homepage</span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="main-content">
+            <header>
+                <div class="user-wrapper">
+                    <img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-512x512-zxne30hp.png" width="40px" height="40px" alt="">
+                    <div>
+                        <h4>John Doe</h4>
+                        <small>Administrator</small>
+                    </div>
+                </div>
+            </header>
+            <main>
+                <div class="grid">
+                    <div class="opportunities">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2>All Opportunities</h2>
+                                <div class="search-wrapper">
+                                    <span class="fa-solid fa-magnifying-glass"></span>
+                                    <input id="searchInput" type="search" placeholder="Search here">
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="opportunitiesTable" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th onclick="sortTable(0)">Event Name</th>
+                                                <th onclick="sortTable(1)">Organized By</th>
+                                                <th onclick="sortTable(2)">Date</th>
+                                                <th onclick="sortTable(3)">Start Time</th>
+                                                <th>More Info</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Blood Drive</td>
+                                                <td>Red Cross Lebanon</td>
+                                                <td>May 2, 2024</td>
+                                                <td>10:00</td>
+                                                <td><button onclick="window.location.href='opp_info.html'">More Info</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>First Aid Training</td>
+                                                <td>Red Cross Lebanon</td>
+                                                <td>Jul 8, 2023</td>
+                                                <td>08:00</td>
+                                                <td><button onclick="window.location.href='opp_info.html'">More Info</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Refugee Support</td>
+                                                <td>Red Cross Lebanon</td>
+                                                <td>Jan. 20, 2024</td>
+                                                <td>08:00</td>
+                                                <td><button onclick="window.location.href='opp_info.html'">More Info</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Administrative Support</td>
+                                                <td>Red Cross Lebanon</td>
+                                                <td>Jun. 25, 2024</td>
+                                                <td>09:00</td>
+                                                <td><button onclick="window.location.href='opp_info.html'">More Info</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Advocacy Work</td>
+                                                <td>Save the Children</td>
+                                                <td>Mar. 19, 2024</td>
+                                                <td>13:00</td>
+                                                <td><button onclick="window.location.href='opp_info.html'">More Info</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Community Outreach</td>
+                                                <td>Save the Children</td>
+                                                <td>May 5, 2023</td>
+                                                <td>10:00</td>
+                                                <td><button onclick="window.location.href='opp_info.html'">More Info</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Emergency Response</td>
+                                                <td>Save the Children</td>
+                                                <td>Aug. 12, 2024</td>
+                                                <td>00:00</td>
+                                                <td><button onclick="window.location.href='opp_info.html'">More Info</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Language Support</td>
+                                                <td>Doctors Without Borders</td>
+                                                <td>Sep. 13, 2024</td>
+                                                <td>08:00</td>
+                                                <td><button onclick="window.location.href='opp_info.html'">More Info</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Research and Data Analysis</td>
+                                                <td>Doctors Without Borders</td>
+                                                <td>May 19, 2024</td>
+                                                <td>09:30</td>
+                                                <td><button onclick="window.location.href='opp_info.html'">More Info</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Medical Missions</td>
+                                                <td>Doctors Without Borders</td>
+                                                <td>Dec. 25, 2024</td>
+                                                <td>02:00</td>
+                                                <td><button onclick="window.location.href='opp_info.html'">More Info</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Event Coordination</td>
+                                                <td>Red Cross Lebanon</td>
+                                                <td>Aug. 11, 2024</td>
+                                                <td>15:00</td>
+                                                <td><button onclick="window.location.href='opp_info.html'">More Info</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Social Media Training</td>
+                                                <td>Red Cross Lebanon</td>
+                                                <td>Mar. 20, 2025</td>
+                                                <td>10:00</td>
+                                                <td><button onclick="window.location.href='opp_info.html'">More Info</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Blood Drive</td>
+                                                <td>Red Cross Lebanon</td>
+                                                <td>Dec. 15, 2024</td>
+                                                <td>10:00</td>
+                                                <td><button onclick="window.location.href='opp_info.html'">More Info</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Social Media Advocacy</td>
+                                                <td>Cure Violence Global</td>
+                                                <td>Jan. 31, 2024</td>
+                                                <td>14:00</td>
+                                                <td><button onclick="window.location.href='opp_info.html'">More Info</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Community Engagement</td>
+                                                <td>Cure Violence Global</td>
+                                                <td>Apr. 12, 2024</td>
+                                                <td>12:00</td>
+                                                <td><button onclick="window.location.href='opp_info.html'">More Info</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Field Assignments</td>
+                                                <td>Doctors Without Borders</td>
+                                                <td>Apr. 25, 2024</td>
+                                                <td>01:00</td>
+                                                <td><button onclick="window.location.href='opp_info.html'">More Info</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Fundraising</td>
+                                                <td>Save the Children</td>
+                                                <td>May 22, 2025</td>
+                                                <td>17:00</td>
+                                                <td><button onclick="window.location.href='opp_info.html'">More Info</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Language Support</td>
+                                                <td>Red Cross Lebanon</td>
+                                                <td>Mar. 2, 2024</td>
+                                                <td>10:00</td>
+                                                <td><button onclick="window.location.href='opp_info.html'">More Info</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Blood Drive</td>
+                                                <td>Red Cross Lebanon</td>
+                                                <td>Feb 1, 2025</td>
+                                                <td>12:00</td>
+                                                <td><button onclick="window.location.href='opp_info.html'">More Info</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Training and Capacity Building</td>
+                                                <td>Doctors Without Borders</td>
+                                                <td>Jan 2, 2025</td>
+                                                <td>09:00</td>
+                                                <td><button onclick="window.location.href='opp_info.html'">More Info</button></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="pagination">
+                                        <button id="prevPageBtn" onclick="prevPage()">Previous</button>
+                                        <span id="currentPage"></span>
+                                        <button id="nextPageBtn" onclick="nextPage()">Next</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <script>
+            document.getElementById("searchInput").addEventListener("keyup", function () {
+                var input, filter, table, tr, td, i, j, txtValue;
+                input = document.getElementById("searchInput");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("opportunitiesTable");
+                tr = table.getElementsByTagName("tr");
+                for (i = 1; i < tr.length; i++) {
+                    // Initialize flag to false
+                    var rowVisible = false;
+                    // Loop through all cells in current row
+                    for (j = 0; j < tr[i].cells.length; j++) {
+                        td = tr[i].cells[j];
+                        if (td) {
+                            txtValue = td.textContent || td.innerText;
+                            // If any cell matches the filter, set rowVisible to true and break loop
+                            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                rowVisible = true;
+                                break;
+                            }
+                        }
+                    }
+                    // Show/hide row based on rowVisible flag
+                    if (rowVisible) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            });
+            function parseDate(dateString) {
+                const months = {
+                    "Jan.": 0, "Feb.": 1, "Mar.": 2, "Apr.": 3, "May": 4, "Jun.": 5,
+                    "Jul.": 6, "Aug.": 7, "Sep.": 8, "Oct.": 9, "Nov.": 10, "Dec.": 11
+                };
+                const [month, day, year] = dateString.split(" ");
+                return new Date(year, months[month], parseInt(day.slice(0, -1))); // Slicing "Day" to remove the comma
+            }
+            function sortTable(columnIndex) {
+            const table = document.getElementById("opportunitiesTable");
+            const tbody = table.getElementsByTagName("tbody")[0];
+            const rows = Array.from(tbody.getElementsByTagName("tr"));
+            let ascending = true; // Flag to indicate sorting direction
+            // Toggle sorting direction
+            if (table.dataset.sortColumnIndex === columnIndex.toString()) {
+                ascending = !table.dataset.sortAscending;
+            }
+            // Store sorting state in table attributes
+            table.dataset.sortColumnIndex = columnIndex;
+            table.dataset.sortAscending = ascending;
+            const sortedRows = rows.sort((a, b) => {
+                let aValue = a.getElementsByTagName("td")[columnIndex].innerText.trim();
+                let bValue = b.getElementsByTagName("td")[columnIndex].innerText.trim();
+                // For date column (index 2), parse the dates manually before comparison
+                if (columnIndex === 2) {
+                    aValue = parseDate(aValue);
+                    bValue = parseDate(bValue);
+                    // Reverse the comparison if sorting in descending order
+                    return ascending ? aValue - bValue : bValue - aValue;
+                }
+                // Compare values based on sorting direction
+                const comparison = aValue.localeCompare(bValue);
+                return ascending ? comparison : -comparison;
+            });
+            while (tbody.firstChild) {
+                tbody.removeChild(tbody.firstChild);
+            }
+            sortedRows.forEach(row => {
+                tbody.appendChild(row);
+            });
+            }
+            const pageSize = 10; // Number of entries per page
+            let currentPage = 1; // Current page being displayed
+            function displayPage(pageNumber) {
+                const table = document.getElementById("opportunitiesTable");
+                const tbody = table.getElementsByTagName("tbody")[0];
+                const rows = Array.from(tbody.getElementsByTagName("tr"));
+                // Calculate the start and end indices for the current page
+                const startIndex = (pageNumber - 1) * pageSize;
+                const endIndex = pageNumber * pageSize;
+                // Hide all rows
+                rows.forEach(row => {
+                    row.style.display = "none";
+                });
+                // Show rows for the current page
+                for (let i = startIndex; i < Math.min(endIndex, rows.length); i++) {
+                    rows[i].style.display = "";
+                }
+            }
+            function goToPage(pageNumber) {
+                if (pageNumber < 1 || pageNumber > getTotalPages()) {
+                    return; // Page number out of range
+                }
+                currentPage = pageNumber;
+                displayPage(currentPage);
+            }
+            function getTotalPages() {
+                const table = document.getElementById("opportunitiesTable");
+                const tbody = table.getElementsByTagName("tbody")[0];
+                const rowCount = tbody.getElementsByTagName("tr").length;
+                return Math.ceil(rowCount / pageSize);
+            }
+            function nextPage() {
+                goToPage(currentPage + 1);
+            }
+            function prevPage() {
+                goToPage(currentPage - 1);
+            }
+            // Initial display
+            displayPage(currentPage);
+        </script>
+    </body>
+</html>
