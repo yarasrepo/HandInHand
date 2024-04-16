@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale = 1.0">
+    <title>HandinHand Admin</title>
+    <link rel="stylesheet" href="adminstyle.css">
+    <link rel="shortcut icon" type="x-icon" href="logonowords.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <img src="https://i.imgur.com/x42wRvf.png" class="logo" alt="HandinHand">
+        </div>
+        <div class="sidebar-menu">
+            <ul>
+                <li>
+                    <a href="/admin" class="active"><span class="fa-solid fa-gauge"></span>
+                        <span>Dashboard</span></a>
+                </li>
+                <li>
+                    <a href="/volunteeradmin"><span class="fa-solid fa-user"></span>
+                        <span>Volunteers</span></a>
+                </li>
+                <li>
+                    <a href="/org_admin"><span class="fa-solid fa-building-ngo"></span>
+                        <span>Organizations</span></a>
+                </li>
+                <li>
+                    <a href="/opp_admin"><span class="fa-solid fa-calendar-days"></span>
+                        <span>Opportunities</span></a>
+                </li>
+                <li>
+                    <a href="/"><span class="fa-solid fa-house"></span>
+                        <span>Homepage</span></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="main-content">
+        <header>
+            <div class="user-wrapper">
+                <img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-512x512-zxne30hp.png"
+                    width="40px" height="40px" alt="">
+                <div>
+                    <h4>{{adName}}</h4>
+                    <small>Administrator</small>
+                </div>
+            </div>
+        </header>
+        <main>
+            <div class="cards">
+                <div class="card-single">
+                    <div>
+                        <h1>{{numVolunteers}}</h1>
+                        <span>Volunteers</span>
+                    </div>
+                    <div>
+                        <span class="fa-solid fa-user"></span>
+                    </div>
+                </div>
+                <div class="card-single">
+                    <div>
+                        <h1>{{numOrgs}}</h1>
+                        <span>Organizations</span>
+                    </div>
+                    <div>
+                        <span class="fa-solid fa-building-ngo"></span>
+                    </div>
+                </div>
+                <div class="card-single">
+                    <div>
+                        <h1>{{numJobs}}</h1>
+                        <span>Opportunities</span>
+                    </div>
+                    <div>
+                        <span class="fa-solid fa-calendar-days"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="recent-grid">
+                <div class="volunteers">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>New Volunteers</h2>
+                            <a href="/volunteeradmin">
+                                <button>View All <span class="fa-solid fa-arrow-right"></span></button>
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Volunteer Name</th>
+                                            <th>Email Address</th>
+                                            <th>Phone Number</th>
+                                            <th>Location</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{#each userprofs}}
+                                        {{#if (eq this.role 'volunteer')}}
+                                        <tr>
+                                            <td>{{this.name}}</td>
+                                            <td>{{this.email}}</td>
+                                            <td>{{this.PhoneNum}}</td>
+                                            <td>{{this.Location}}</td>
+                                        </tr>
+                                        {{/if}}
+                                        {{/each}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="organizations">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>New Organizations</h2>
+                            <a href="/org_admin">
+                                <button>View All <span class="fa-solid fa-arrow-right"></span></button>
+                            </a>
+                            </span></button>
+                        </div>
+                        <div class="card-body">
+                            <div class="organization">
+                                {{#each userprofs}}
+                                {{#if (eq this.role 'organization')}}
+
+                                <div class="info">
+                                    <img src="{{this.ProfilePic}}" width="40px" height="40px" alt="">
+                                    <div>
+                                        <h4>{{this.name}}</h4>
+                                        <small>{{this.Location}}</small>
+                                    </div>
+                                </div>
+                                <div class="contact">
+                                    <span class="fa-solid fa-circle-user"></span>
+                                    <span class="fa-solid fa-comment"></span>
+                                    <span class="fa-solid fa-phone"></span>
+                                </div>
+                                {{/if}}
+
+                                {{/each}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
