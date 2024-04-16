@@ -401,6 +401,23 @@ app.post('/deleteaccount', async (req, res) => {
     }
 });
 
+app.get('/admin', (req,res)=>{
+    const adName= req.session.user.name;
+    res.render('admin', { adName: adName });
+});
+
+app.get('/volunteeradmin', (req,res)=>{
+    res.render('volunteeradmin');
+});
+
+app.get('/org_admin', (req,res)=>{
+    res.render('org_admin');
+});
+
+app.get('/opp_admin', (req,res)=>{
+    res.render('opp_admin');
+});
+
 app.listen(port, () => {
     console.log('port connected');
 })
