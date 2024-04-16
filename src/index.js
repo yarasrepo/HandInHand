@@ -122,7 +122,11 @@ app.post('/login', async (req, res) => {
                 role: check.role
             };
             // Redirect to the homepage after successful login
+            if (req.session.user.role == "admin"){
+                res.redirect('/admin')
+            }else{
             res.redirect(302, '/');
+            }
         } else {
             //if user is not found or passwords do not match 
             res.send("Incorrect username or password");
