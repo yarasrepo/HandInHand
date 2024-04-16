@@ -572,21 +572,12 @@ app.get('/admin', async (req, res) => {
 app.get('/volunteeradmin', async(req, res) => {
     if (req.session.user && req.session.user.name) {
         const adName = req.session.user.name;
-
         try {
             // Fetch the number of volunteers and organizations
-            const numVolunteers = await LogInCollection.countDocuments({ role: 'volunteer' });
-            const numOrgs = await LogInCollection.countDocuments({ role: 'organization' });
-            const numJobs = await JobCollection.countDocuments();
-            const users = await LogInCollection.find();
             const userprofs = await userProfCollection.find();
 
-            console.log(`Number of volunteers: ${numVolunteers}`);
-            console.log(`Number of organizations: ${numOrgs}`);
-            console.log(`Number of Opportunities: ${numJobs}`);
-
             // Render the admin page with data
-            res.render('volunteeradmin', { adName, numVolunteers, numOrgs, numJobs, users, userprofs });
+            res.render('volunteeradmin', { adName, userprofs });
         } catch (error) {
             console.error('Error fetching data for admin page:', error);
             res.status(500).send('Internal Server Error');
@@ -596,8 +587,23 @@ app.get('/volunteeradmin', async(req, res) => {
         res.redirect('/login');
     }});
 
-app.get('/org_admin', (req, res) => {
-    res.render('org_admin');
+app.get('/org_admin', async(req, res) => {
+    if (req.session.user && req.session.user.name) {
+        const adName = req.session.user.name;
+        try {
+            // Fetch the number of volunteers and organizations
+            const userprofs = await userProfCollection.find();
+
+            // Render the admin page with data
+            res.render('org_admin', { adName, userprofs });
+        } catch (error) {
+            console.error('Error fetching data for admin page:', error);
+            res.status(500).send('Internal Server Error');
+        }
+    } else {
+        // Redirect to the login page if the user is not logged in
+        res.redirect('/login');
+    }
 });
 
 app.get('/opp_admin', (req, res) => {
