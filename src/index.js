@@ -79,10 +79,65 @@ app.get('/', (req, res) => {
 });
 
 
+app.post('/signup', async (req, res) => {
+    const data = {
+        name: req.body.name,
+    email: req.body.email,
+    password: req.body.password,
+    role: req.body.role
+}
+
+try {
+    const existingUser = await LogInCollection.findOne({ email: req.body.email });
+
+    if (existingUser) {
+        res.send("User details already exist");
+    } else {
+        await LogInCollection.create(data);
+        req.session.user = {
+            name: req.body.name,
+            role: req.body.role
+        };
+        res.redirect(302, '/');
+    }
+} catch (error) {
+    console.error("Error during signup:", error);
+    res.status(500).send("An error occurred during signup");
+}
+});
+
 
 app.get('/login', (req, res) => {
     res.render('login')
 })
+
+app.post('/login', async (req, res) => {
+    try {
+        const check = await LogInCollection.findOne({ name: req.body.name })
+
+        if (check && check.password === req.body.password) {
+            // Set user information in session
+            req.session.user = {
+                name: check.name,
+                role: check.role
+            };
+            // Redirect to the homepage after successful login
+            res.redirect(302, '/');
+        } else {
+            //if user is not found or passwords do not match 
+            res.send("Incorrect username or password");
+        }
+    } catch (e) {
+        console.error("Error during login:", e);
+        res.status(500).send("An error occurred during login");
+    }
+});
+
+
+app.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.redirect('/');
+});
 
 app.get('/Posts', async (req, res) => {
     try {
@@ -190,15 +245,6 @@ app.post('/checkout', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
-
-
-
-
-
-
-
-
-
 
 
 
@@ -330,62 +376,8 @@ app.get('/orgprofile', async (req,res) => {
 app.get('/home', (req, res) => {
      res.render('homepage')
     })
-    
-    app.post('/signup', async (req, res) => {
-        const data = {
-            name: req.body.name,
-        email: req.body.email,
-        password: req.body.password,
-        role: req.body.role
-    }
-
-    try {
-        const existingUser = await LogInCollection.findOne({ email: req.body.email });
-
-        if (existingUser) {
-            res.send("User details already exist");
-        } else {
-            await LogInCollection.create(data);
-            req.session.user = {
-                name: req.body.name,
-                role: req.body.role
-            };
-            res.redirect(302, '/');
-        }
-    } catch (error) {
-        console.error("Error during signup:", error);
-        res.status(500).send("An error occurred during signup");
-    }
-});
 
 
-app.post('/login', async (req, res) => {
-    try {
-        const check = await LogInCollection.findOne({ name: req.body.name })
-
-        if (check && check.password === req.body.password) {
-            // Set user information in session
-            req.session.user = {
-                name: check.name,
-                role: check.role
-            };
-            // Redirect to the homepage after successful login
-            res.redirect(302, '/');
-        } else {
-            //if user is not found or passwords do not match 
-            res.send("Incorrect username or password");
-        }
-    } catch (e) {
-        console.error("Error during login:", e);
-        res.status(500).send("An error occurred during login");
-    }
-});
-
-
-app.get('/logout', (req, res) => {
-    req.session.destroy();
-    res.redirect('/');
-});
 
 
 app.get('/forgot-password', (req, res) => {
@@ -501,10 +493,18 @@ app.post('/deleteaccount', async (req, res) => {
 
         // Delete user from userProfCollection
         const deleteUserProf = await userProfCollection.deleteOne({ name: username });
+        
+        const deleteJob = await JobCollection.deleteMany({creator: username});
+
+        const jobs = await JobCollection.find({ 'participants.email': username });
+        for (const job of jobs) {
+            job.participants = job.participants.filter(participant => participant.email !== username);
+            await job.save();
+        }
 
         // Check if deletion was successful in both collections
         if (deleteLogIn.deletedCount && deleteUserProf.deletedCount) {
-            // Redirect or send success response
+            // Redirect or send success c
             req.session.destroy(() => {
                 res.json({ success: true }); 
             });
