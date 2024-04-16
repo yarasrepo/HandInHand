@@ -47,6 +47,11 @@ const userProfile= new mongoose.Schema({
         ref: 'LogInSchema',
         required: true
     },
+    role: {
+        type: String,
+        ref: 'LogInSchema',
+        required: true
+    },
     Description: {
         type: String,
     },

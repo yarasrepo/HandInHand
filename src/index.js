@@ -63,11 +63,11 @@ app.get('/', (req, res) => {
             const userRole = req.session.user.role;
             let profileLink;
 
-            if (userRole === 'volunteer') {
+            // if (userRole === 'volunteer') {
                 profileLink = '/userprofile';
-            } else if (userRole === 'organization') {
-                profileLink = '/orgprofile';
-            }
+            // } else if (userRole === 'organization') {
+            //     profileLink = '/orgprofile';
+            // }
             res.render('homepage', { profileLink, signedIn });
         } else {
             res.render('homepage', { profileLink: null, signedIn });
@@ -296,20 +296,29 @@ app.get('/userprofile', async (req, res) => {
 
             if (userProf) {
                 // Render the profile page if userProf is found
+                if (req.session.user.role == 'organization'){
+                    res.render('orgprofile', {userProf});
+                }
+                else{
                 res.render('userprofile', { userProf });
+                }
             } else {
                 // Create the user profile if not found
                 const existingUser = await LogInCollection.findOne({ name: req.session.user.name });
                 if (existingUser){
-                const data = {
-                    name: req.session.user.name,
-                    email: existingUser.email,
-                    Description: "I love helping others",
-                    PhoneNum: 0,
-                    Location: "Beirut",
-                    ProfilePic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR11lMafo-ZYohC2qYI1BJN80gzcC-7IpohIeUQT1RT0WgBttaZX7J1yEea92wMCcTXa9A&usqp=CAU",
-                };
-                await userProfCollection.create(data);
+                    const description = req.session.user.role === 'volunteer' ? "I love helping others" : "Let's make the world better together";
+
+                    const data = {
+                        name: req.session.user.name,
+                        email: existingUser.email,
+                        role: req.session.user.role,
+                        Description: description,
+                        PhoneNum: 0,
+                        Location: "Beirut",
+                        ProfilePic: "",
+                    };
+                    await userProfCollection.create(data);
+                    
                 
                 // Redirect to the profile page after creating the profile
                 res.redirect('/userprofile');
@@ -347,7 +356,8 @@ app.get('/orgprofile', async (req,res) => {
                 const data = {
                     name: req.session.user.name,
                     email: existingUser.email,
-                    Description: "I love helping others",
+                    Description: "Let's make the world better together",
+                    role: "organization",
                     PhoneNum: 0,
                     Location: "Beirut",
                     ProfilePic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR11lMafo-ZYohC2qYI1BJN80gzcC-7IpohIeUQT1RT0WgBttaZX7J1yEea92wMCcTXa9A&usqp=CAU",
@@ -355,7 +365,7 @@ app.get('/orgprofile', async (req,res) => {
                 await userProfCollection.create(data);
                 
                 // Redirect to the profile page after creating the profile
-                res.redirect('/orgprofile');
+                res.redirect('/userprofile');
             }else{
                 console.log('user not found in LogInCollection');
                 res.status(404).send('User not found');
