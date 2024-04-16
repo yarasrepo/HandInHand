@@ -31,7 +31,11 @@ const LogInSchema = new mongoose.Schema({
     role:{
         type:String,
         required:true
-    }
+    },
+    DateJoined:{
+        type: Date,
+        default: Date.now
+    },
 })
 
 const collection = new mongoose.model("HandInHandcollection", LogInSchema)
@@ -64,7 +68,12 @@ const userProfile= new mongoose.Schema({
     ProfilePic: {
         type: String, // Corrected to directly specify String as the type
         maxlength: 1000 // Assuming you store the file path or URL
-    }
+    },
+    DateJoined:{
+        type: Date,
+        ref: 'LogInSchema',
+        required: true
+    },
 })
 
 const userProfCollection= mongoose.model("userProfCollection", userProfile)
@@ -103,6 +112,10 @@ const jobSchema = new mongoose.Schema({
     required:true,
     ref: 'HandInHandcollection',
    },
+   datePosted: {
+        type: Date,
+        default: Date.now
+   },
    participants: [{
     email: String,
     firstName: String,
@@ -112,10 +125,43 @@ const jobSchema = new mongoose.Schema({
 
 const JobCollection = mongoose.model("JobCollection", jobSchema)
 
+const reqOrg= new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
+    PhoneNum: {
+        type: Number,
+    },
+    Location: {
+        type: String,
+    },
+    DateReq:{
+        type: Date,
+        default: Date.now
+    },
+    ProfilePic: {
+        type: String, // Corrected to directly specify String as the type
+        maxlength: 1000 // Assuming you store the file path or URL
+    },
+    flag: {
+        type: Boolean,
+        default: 'false',
+        required: true,
+    },
+});
+
+const ReqCollection = mongoose.model("ReqCollection", reqOrg)
+
 
 
 module.exports = {
     collection,
     userProfCollection,
-    JobCollection
+    JobCollection,
+    ReqCollection
 }

@@ -9,7 +9,7 @@ const app = express()
 const hbs = require("hbs")
 const helpers = require("handlebars-helpers")();
 hbs.registerHelper(helpers);
-const { collection: LogInCollection, userProfCollection, JobCollection } = require("./mongodb");
+const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection } = require("./mongodb");
 const port = process.env.PORT || 3000
 app.use(express.json())
 
@@ -73,31 +73,49 @@ app.post('/signup', async (req, res) => {
 
         if (existingUser) {
             res.send("User details already exist");
-        } else {
-            await LogInCollection.create(data);
-            req.session.user = {
-                name: req.body.name,
-                role: req.body.role
-            };
-            const description = req.session.user.role === 'volunteer' ? "I love helping others" : "Let's make the world better together";
-
-            const profileData = {
-                name: req.session.user.name,
-                email: req.body.email, // Use req.body.email instead of existingUser.email
-                role: req.session.user.role,
-                Description: description,
-                PhoneNum: 0,
-                Location: "Beirut",
-                ProfilePic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR11lMafo-ZYohC2qYI1BJN80gzcC-7IpohIeUQT1RT0WgBttaZX7J1yEea92wMCcTXa9A&usqp=CAU", // Set the profile picture as needed
-            };
-            await userProfCollection.create(profileData);
-            res.redirect(302, '/');
+            return; // Return to prevent further execution
         }
+
+        if (data.role === 'organization') {
+            const checkReq = await ReqCollection.findOne({ email: req.body.email });
+
+            if (checkReq && checkReq.flag === 'false') {
+                res.send("Request pending approval");
+                return; // Return to prevent further execution
+            }
+
+            if (!checkReq) {
+                await ReqCollection.create(data);
+                res.send("Request submitted successfully");
+                return; // Return to prevent further execution
+            }
+        }
+
+        await LogInCollection.create(data);
+        await ReqCollection.deleteOne({ email: req.body.email });
+        req.session.user = {
+            name: req.body.name,
+            role: req.body.role
+        };
+        const description = req.session.user.role === 'volunteer' ? "I love helping others" : "Let's make the world better together";
+
+        const profileData = {
+            name: req.session.user.name,
+            email: req.body.email,
+            role: req.session.user.role,
+            Description: description,
+            PhoneNum: 0,
+            Location: "Beirut",
+            ProfilePic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR11lMafo-ZYohC2qYI1BJN80gzcC-7IpohIeUQT1RT0WgBttaZX7J1yEea92wMCcTXa9A&usqp=CAU",
+        };
+        await userProfCollection.create(profileData);
+        res.redirect(302, '/');
     } catch (error) {
         console.error("Error during signup:", error);
         res.status(500).send("An error occurred during signup");
     }
 });
+
 
 
 
@@ -512,7 +530,7 @@ app.post('/admindeleteaccount', async (req, res) => {
         const user = await userProfCollection.findById(userId);
         const userName = user ? user.name : null;
         console.log(userName);
-        
+
         // Delete user from LogInCollection
         const deleteLogIn = await LogInCollection.deleteOne({ name: user.name });
 
@@ -563,7 +581,7 @@ app.get('/admin', async (req, res) => {
     // Check if the user is logged in
     if (req.session.user && req.session.user.name) {
         const adName = req.session.user.name;
-        if (req.session.user.role !== 'admin'){
+        if (req.session.user.role !== 'admin') {
             res.redirect('/');
         }
 
@@ -591,9 +609,9 @@ app.get('/admin', async (req, res) => {
     }
 });
 
-app.get('/volunteeradmin', async(req, res) => {
+app.get('/volunteeradmin', async (req, res) => {
     if (req.session.user && req.session.user.name) {
-        if (req.session.user.role !== 'admin'){
+        if (req.session.user.role !== 'admin') {
             res.redirect('/');
         }
         const adName = req.session.user.name;
@@ -610,11 +628,12 @@ app.get('/volunteeradmin', async(req, res) => {
     } else {
         // Redirect to the login page if the user is not logged in
         res.redirect('/login');
-    }});
+    }
+});
 
-app.get('/org_admin', async(req, res) => {
+app.get('/org_admin', async (req, res) => {
     if (req.session.user && req.session.user.name) {
-        if (req.session.user.role !== 'admin'){
+        if (req.session.user.role !== 'admin') {
             res.redirect('/');
         }
         const adName = req.session.user.name;
@@ -634,9 +653,9 @@ app.get('/org_admin', async(req, res) => {
     }
 });
 
-app.get('/opp_admin', async(req, res) => {
+app.get('/opp_admin', async (req, res) => {
     if (req.session.user && req.session.user.name) {
-        if (req.session.user.role !== 'admin'){
+        if (req.session.user.role !== 'admin') {
             res.redirect('/');
         }
         const adName = req.session.user.name;
@@ -653,11 +672,12 @@ app.get('/opp_admin', async(req, res) => {
     } else {
         // Redirect to the login page if the user is not logged in
         res.redirect('/login');
-    }});
+    }
+});
 
 
 
-app.get('/vol_info/:name', async(req, res) => {
+app.get('/vol_info/:name', async (req, res) => {
     const volunteerName = req.params.name;
     try {
         const volunteer = await userProfCollection.findOne({ name: volunteerName });
@@ -672,7 +692,7 @@ app.get('/vol_info/:name', async(req, res) => {
     }
 });
 
-app.get('/opp_info', async(req, res) => {
+app.get('/opp_info', async (req, res) => {
     // Extract the objectId parameter from the request query
     const objectId = req.query.objectId;
     try {
@@ -687,7 +707,71 @@ app.get('/opp_info', async(req, res) => {
         console.error('Error fetching volunteer information:', error);
         res.status(500).send('Internal Server Error');
     }
-    
+
+});
+
+app.get('/requests', async (req, res) => {
+    if (req.session.user && req.session.user.name) {
+        if (req.session.user.role !== 'admin') {
+            res.redirect('/');
+        }
+        const adName = req.session.user.name;
+        try {
+            // Fetch the number of volunteers and organizations
+            const reqOrgs = await ReqCollection.find();
+
+            // Render the admin page with data
+            res.render('requests', { adName, reqOrgs });
+        } catch (error) {
+            console.error('Error fetching data for requests page:', error);
+            res.status(500).send('Internal Server Error');
+        }
+    } else {
+        // Redirect to the login page if the user is not logged in
+        res.redirect('/login');
+    }
+});
+
+app.post('/admindenyrequest', async (req, res) => {
+    try {
+        const userId = req.body.userId; // Assuming the entire user object is sent in the request body
+        console.log(userId);
+
+        const deleteReq = await ReqCollection.deleteOne(userId);
+
+        // Check if deletion was successful in both collections
+        if (deleteReq.deletedCount) {
+            // Redirect or send success response
+            res.json({ success: true });
+        } else {
+            res.status(404).send('User account not found');
+        }
+    } catch (error) {
+        console.error('Error deleting job:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.post('/adminacceptrequest', async (req, res) => {
+    try {
+        const userId = req.body.userId; // Assuming the entire user object is sent in the request body
+
+        // Find the request to be updated based on userId
+        const existingReq = await ReqCollection.findOne({ _id: userId });
+
+        if (!existingReq) {
+            return res.status(404).send('Request not found'); // Send a 404 response if request not found
+        }
+
+        // Update the flag to 'true'
+        existingReq.flag = 'true';
+        await existingReq.save(); // Save the updated request
+
+        res.send('Request accepted successfully'); // Send a success response
+    } catch (error) {
+        console.error('Error accepting request:', error);
+        res.status(500).send('Internal Server Error'); // Send a generic error response for internal server errors
+    }
 });
 
 app.listen(port, () => {
