@@ -539,11 +539,33 @@ app.post('/admindeleteaccount', async (req, res) => {
     }
 });
 
+app.post('/admindeletejob', async (req, res) => {
+    try {
+        const userId = req.body.userId; // Assuming the entire user object is sent in the request body
+        console.log(userId);
+
+        const deleteJob = await JobCollection.deleteOne(userId);
+
+        // Check if deletion was successful in both collections
+        if (deleteJob.deletedCount) {
+            // Redirect or send success response
+            res.json({ success: true });
+        } else {
+            res.status(404).send('User account not found');
+        }
+    } catch (error) {
+        console.error('Error deleting job:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
 
 app.get('/admin', async (req, res) => {
     // Check if the user is logged in
     if (req.session.user && req.session.user.name) {
         const adName = req.session.user.name;
+        if (req.session.user.role !== 'admin'){
+            res.redirect('/');
+        }
 
         try {
             // Fetch the number of volunteers and organizations
@@ -571,6 +593,9 @@ app.get('/admin', async (req, res) => {
 
 app.get('/volunteeradmin', async(req, res) => {
     if (req.session.user && req.session.user.name) {
+        if (req.session.user.role !== 'admin'){
+            res.redirect('/');
+        }
         const adName = req.session.user.name;
         try {
             // Fetch the number of volunteers and organizations
@@ -589,6 +614,9 @@ app.get('/volunteeradmin', async(req, res) => {
 
 app.get('/org_admin', async(req, res) => {
     if (req.session.user && req.session.user.name) {
+        if (req.session.user.role !== 'admin'){
+            res.redirect('/');
+        }
         const adName = req.session.user.name;
         try {
             // Fetch the number of volunteers and organizations
@@ -606,9 +634,26 @@ app.get('/org_admin', async(req, res) => {
     }
 });
 
-app.get('/opp_admin', (req, res) => {
-    res.render('opp_admin');
-});
+app.get('/opp_admin', async(req, res) => {
+    if (req.session.user && req.session.user.name) {
+        if (req.session.user.role !== 'admin'){
+            res.redirect('/');
+        }
+        const adName = req.session.user.name;
+        try {
+            // Fetch the number of volunteers and organizations
+            const jobOps = await JobCollection.find();
+
+            // Render the admin page with data
+            res.render('opp_admin', { adName, jobOps });
+        } catch (error) {
+            console.error('Error fetching data for admin page:', error);
+            res.status(500).send('Internal Server Error');
+        }
+    } else {
+        // Redirect to the login page if the user is not logged in
+        res.redirect('/login');
+    }});
 
 
 
@@ -625,6 +670,24 @@ app.get('/vol_info/:name', async(req, res) => {
         console.error('Error fetching volunteer information:', error);
         res.status(500).send('Internal Server Error');
     }
+});
+
+app.get('/opp_info', async(req, res) => {
+    // Extract the objectId parameter from the request query
+    const objectId = req.query.objectId;
+    try {
+        const job = await JobCollection.findById(objectId);
+
+        if (job) {
+            res.render('opp_info', { job });
+        } else {
+            res.status(404).send('Volunteer not found');
+        }
+    } catch (error) {
+        console.error('Error fetching volunteer information:', error);
+        res.status(500).send('Internal Server Error');
+    }
+    
 });
 
 app.listen(port, () => {
