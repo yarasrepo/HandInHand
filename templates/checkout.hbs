@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - HandInHand</title>
+       <link rel="icon" type="image/png" href="https://i.imgur.com/MoSHBZX.png">
+    <link rel="stylesheet" href="checkout.css">
+
+</head>
+<header>
+        <img src="https://i.imgur.com/MoSHBZX.png" class="logo" alt="HandinHand">
+        <ul class="navbar">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="/Posts">Opportunities</a></li>
+            <li><a href="{{#if profileLink}}{{ profileLink }}{{else}}/signup{{/if}}">Profile</a></li>
+        </ul>
+        <div class="h-right">
+            {{#if signedIn}}
+            <a href="/logout">Logout</a> 
+            {{else}}
+            <li><a href="/signup">Register</a>|<a href="/login">Login</a></li>
+            {{/if}}
+            <div class="bx bx-menu" id="menu-icon"></div>
+        </div>
+    </header>
+
+<section class="checkout-section">
+     <h2 class = "heading ">Confirm Your Booking</h2>
+    <div class="container">
+        <div class="checkout-form-container container-box">
+            <div class="checkout-form">
+                <h2>Ready to take the next step? </h2>
+              <form action="/checkout" method="POST">
+    <input type="hidden" name="jobId" value="{{job._id}}">
+                    <div class="form-group">
+                        <div class="inline-group">
+                            <div class="form-group">
+                                <label for="firstName">First Name:</label>
+                                <input type="text" id="firstName" name="firstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name:</label>
+                                <input type="text" id="lastName" name="lastName" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phoneNumber">Phone Number:</label>
+                        <input type="tel" id="phoneNumber" name="phoneNumber" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
+                        <small>Format: 123-456-7890</small>
+                    </div>
+                    <button type="submit" class="checkout-button">Proceed to Checkout</button>
+                </form>
+            </div>
+        </div>
+        <div class="job-details-container container-box">
+            <div class="job-details">
+                <h2>Job Details</h2>
+                <div class = "job-creator"><h3>{{job.creator}}</h3></div>
+                <div class = "opportunity-image">{{#if job.imageLink}}
+                    <img src="{{ job.imageLink }}" alt="Job Image">
+                {{/if}}</div>
+                <h3>{{ job.title }}</h3>
+                <p>{{ job.description }}</p>
+                <p>Location: {{ job.location }}</p>
+                <p>Required Hours: {{ job.requiredHours }}</p>
+                <p>Required Skills: {{ job.requiredSkills }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+     const header = document.querySelector("header");
+        window.addEventListener("scroll", function(){
+            header.classList.toggle("sticky", window.scrollY > 60)
+        });
+
+        let menu = document.querySelector('#menu-icon');
+        let navbar = document.querySelector('.navbar');
+
+        menu.onclick = () => {
+            menu.classList.toggle('bx-x');
+            navbar.classList.toggle('open');
+        };
+</script>

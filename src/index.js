@@ -9,7 +9,7 @@ const jwt = require("jsonwebtoken");
 const app = express()
 const hbs = require("hbs")
 // const LogInCollection = require("./mongodb")
-const { collection: LogInCollection, userProfCollection } = require("./mongodb");
+const { collection: LogInCollection, userProfCollection, JobCollection } = require("./mongodb");
 const port = process.env.PORT || 3000
 app.use(express.json())
 
@@ -53,9 +53,6 @@ app.get('/signup', (req, res) => {
 })
 
 
-//  app.get('/', (req, res) => {
-//      res.render('homepage')
-//  })
 
 
 app.get('/', (req, res) => {
@@ -82,13 +79,70 @@ app.get('/', (req, res) => {
 });
 
 
+app.post('/signup', async (req, res) => {
+    const data = {
+        name: req.body.name,
+    email: req.body.email,
+    password: req.body.password,
+    role: req.body.role
+}
+
+try {
+    const existingUser = await LogInCollection.findOne({ email: req.body.email });
+
+    if (existingUser) {
+        res.send("User details already exist");
+    } else {
+        await LogInCollection.create(data);
+        req.session.user = {
+            name: req.body.name,
+            role: req.body.role
+        };
+        res.redirect(302, '/');
+    }
+} catch (error) {
+    console.error("Error during signup:", error);
+    res.status(500).send("An error occurred during signup");
+}
+});
+
 
 app.get('/login', (req, res) => {
     res.render('login')
 })
 
-app.get('/Posts', (req, res) => {
+app.post('/login', async (req, res) => {
     try {
+        const check = await LogInCollection.findOne({ name: req.body.name })
+
+        if (check && check.password === req.body.password) {
+            // Set user information in session
+            req.session.user = {
+                name: check.name,
+                role: check.role
+            };
+            // Redirect to the homepage after successful login
+            res.redirect(302, '/');
+        } else {
+            //if user is not found or passwords do not match 
+            res.send("Incorrect username or password");
+        }
+    } catch (e) {
+        console.error("Error during login:", e);
+        res.status(500).send("An error occurred during login");
+    }
+});
+
+
+app.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.redirect('/');
+});
+
+app.get('/Posts', async (req, res) => {
+    try {
+        const jobs = await JobCollection.find();
+
         const signedIn = !!req.session.user;
         let userRole;
         let profileLink;
@@ -103,16 +157,134 @@ app.get('/Posts', (req, res) => {
                 isOrganization = true;
             }
         }
-        res.render('Posts', { signedIn, userRole, profileLink, isOrganization });
+        res.render('Posts', { jobs, signedIn, userRole, profileLink, isOrganization });
     } catch (error) {
         console.error('Error in /Posts route:', error);
         res.status(500).send('Internal Server Error');
     }
 });
 
+
+app.get('/checkout', async (req, res) => {
+    try {
+        const jobId = req.query.jobId;
+        const job = await JobCollection.findById(jobId);
+        
+        const signedIn = !!req.session.user;
+        let userRole;
+        let profileLink;
+        let isOrganization;
+        if (signedIn) {
+            userRole = req.session.user.role;
+            if (userRole === 'volunteer') {
+                isOrganization = false;
+                profileLink = '/userprofile';
+            } else if (userRole === 'organization') {
+                profileLink = '/orgprofile';
+                isOrganization = true;
+            }
+        }
+
+        res.render('checkout', { job, signedIn, userRole, profileLink, isOrganization });
+    } catch (error) {
+        console.error('Error fetching job details:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// match with the userprofile!!
+app.post('/checkout', async (req, res) => {
+    try {
+        const jobId = req.body.jobId;
+        console.log('Received jobId:', jobId); 
+        console.log('Query parameters:', req.query); 
+
+        const job = await JobCollection.findById(jobId);
+        console.log('Retrieved job:', job); 
+
+        if (!job) {
+            console.log('Job not found'); 
+            return res.status(404).send('Job not found');
+        }
+
+        const { firstName, lastName, email, phoneNumber } = req.body;
+
+        console.log('Form submission data:', { firstName, lastName, email, phoneNumber });
+
+        const user = await LogInCollection.findOne({email: email });
+        if (!user) {
+            console.log('User not found');
+            return res.status(400).send('User not found. Please register before booking.');
+        }
+
+        if (firstName && lastName &&  user.firstName && user.lastName &&
+            (firstName.toLowerCase() !== user.firstName.toLowerCase() ||
+            (lastName.toLowerCase() !== user.lastName.toLowerCase()))) {
+            console.log('Provided first name and last name do not match existing user details');
+            return res.status(400).send('Provided first name and last name do not match existing user details. Please provide correct information.');
+        }
+        
+
+        if (firstName && !user.firstName) {
+            user.firstName = firstName;
+        }
+        if (lastName && !user.lastName) {
+            user.lastName = lastName;
+        }
+        await user.save();
+
+        job.participants.push({ email, firstName: user.firstName, lastName: user.lastName });
+        await job.save();
+
+        job.openPositions -= 1;
+        await job.save();
+
+        res.redirect('/Posts'); 
+    } catch (error) {
+        console.error('Error processing checkout:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
+
 app.get('/job_submission_form', (req, res) => {
     res.render('job_submission_form');
 })
+
+
+app.post('/job_submission_form', async (req, res) => {
+    try {
+        const { jobName, description, openPositions, location, requiredHours, requiredSkills, imageLink } = req.body;
+
+        if (!jobName || !description || !openPositions || !location || !requiredHours || !requiredSkills) {
+            return res.status(400).send('All fields are required');
+        }
+        const organizationName = req.session.user.name;
+
+        const newJob = new JobCollection({
+            title: jobName, 
+            description,
+            openPositions: parseInt(openPositions),
+            location,
+            requiredHours: parseInt(requiredHours),
+            requiredSkills,
+            imageLink,
+            creator: organizationName 
+        });
+        await newJob.save();
+
+        res.redirect('/Posts');
+    } catch (error) {
+        console.error('Error submitting job:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
+
+
+
 
 app.get('/userprofile', async (req, res) => {
     try {
@@ -214,62 +386,8 @@ app.get('/orgprofile', async (req,res) => {
 app.get('/home', (req, res) => {
      res.render('homepage')
     })
-    
-    app.post('/signup', async (req, res) => {
-        const data = {
-            name: req.body.name,
-        email: req.body.email,
-        password: req.body.password,
-        role: req.body.role
-    }
-
-    try {
-        const existingUser = await LogInCollection.findOne({ email: req.body.email });
-
-        if (existingUser) {
-            res.send("User details already exist");
-        } else {
-            await LogInCollection.create(data);
-            req.session.user = {
-                name: req.body.name,
-                role: req.body.role
-            };
-            res.redirect(302, '/');
-        }
-    } catch (error) {
-        console.error("Error during signup:", error);
-        res.status(500).send("An error occurred during signup");
-    }
-});
 
 
-app.post('/login', async (req, res) => {
-    try {
-        const check = await LogInCollection.findOne({ name: req.body.name })
-
-        if (check && check.password === req.body.password) {
-            // Set user information in session
-            req.session.user = {
-                name: check.name,
-                role: check.role
-            };
-            // Redirect to the homepage after successful login
-            res.redirect(302, '/');
-        } else {
-            //if user is not found or passwords do not match 
-            res.send("Incorrect username or password");
-        }
-    } catch (e) {
-        console.error("Error during login:", e);
-        res.status(500).send("An error occurred during login");
-    }
-});
-
-
-app.get('/logout', (req, res) => {
-    req.session.destroy();
-    res.redirect('/');
-});
 
 
 app.get('/forgot-password', (req, res) => {
@@ -379,16 +497,25 @@ app.post('/deleteaccount', async (req, res) => {
     try {
         // Get the username from the session or request body (adjust based on your setup)
         const username = req.session.user.name
+        const user = await LogInCollection.findOne({ name : username})
 
         // Delete user from LogInCollection
         const deleteLogIn = await LogInCollection.deleteOne({ name: username });
 
         // Delete user from userProfCollection
         const deleteUserProf = await userProfCollection.deleteOne({ name: username });
+        
+        const deleteJob = await JobCollection.deleteMany({creator: username});
+
+        const jobs = await JobCollection.find({ 'participants.email': user.email });
+        for (const job of jobs) {
+            job.participants = job.participants.filter(participant => participant.email !== user.email);
+            await job.save();
+        }
 
         // Check if deletion was successful in both collections
         if (deleteLogIn.deletedCount && deleteUserProf.deletedCount) {
-            // Redirect or send success response
+            // Redirect or send success c
             req.session.destroy(() => {
                 res.json({ success: true }); 
             });
