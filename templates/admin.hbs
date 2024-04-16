@@ -127,11 +127,10 @@
                             </a>
                             </span></button>
                         </div>
+                        {{#each userprofs}}
+                        {{#if (eq this.role 'organization')}}
                         <div class="card-body">
                             <div class="organization">
-                                {{#each userprofs}}
-                                {{#if (eq this.role 'organization')}}
-
                                 <div class="info">
                                     <img src="{{this.ProfilePic}}" width="40px" height="40px" alt="">
                                     <div>
@@ -144,11 +143,10 @@
                                     <span class="fa-solid fa-comment"></span>
                                     <span class="fa-solid fa-phone"></span>
                                 </div>
-                                {{/if}}
-
-                                {{/each}}
                             </div>
                         </div>
+                        {{/if}}
+                        {{/each}}
                     </div>
                 </div>
             </div>

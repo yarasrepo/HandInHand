@@ -534,11 +534,32 @@ app.get('/admin', async (req, res) => {
     }
 });
 
+app.get('/volunteeradmin', async(req, res) => {
+    if (req.session.user && req.session.user.name) {
+        const adName = req.session.user.name;
 
+        try {
+            // Fetch the number of volunteers and organizations
+            const numVolunteers = await LogInCollection.countDocuments({ role: 'volunteer' });
+            const numOrgs = await LogInCollection.countDocuments({ role: 'organization' });
+            const numJobs = await JobCollection.countDocuments();
+            const users = await LogInCollection.find();
+            const userprofs = await userProfCollection.find();
 
-app.get('/volunteeradmin', (req, res) => {
-    res.render('volunteeradmin');
-});
+            console.log(`Number of volunteers: ${numVolunteers}`);
+            console.log(`Number of organizations: ${numOrgs}`);
+            console.log(`Number of Opportunities: ${numJobs}`);
+
+            // Render the admin page with data
+            res.render('volunteeradmin', { adName, numVolunteers, numOrgs, numJobs, users, userprofs });
+        } catch (error) {
+            console.error('Error fetching data for admin page:', error);
+            res.status(500).send('Internal Server Error');
+        }
+    } else {
+        // Redirect to the login page if the user is not logged in
+        res.redirect('/login');
+    }});
 
 app.get('/org_admin', (req, res) => {
     res.render('org_admin');
@@ -546,6 +567,23 @@ app.get('/org_admin', (req, res) => {
 
 app.get('/opp_admin', (req, res) => {
     res.render('opp_admin');
+});
+
+
+
+app.get('/vol_info/:name', async(req, res) => {
+    const volunteerName = req.params.name;
+    try {
+        const volunteer = await userProfCollection.findOne({ name: volunteerName });
+        if (volunteer) {
+            res.render('vol_info', { volunteer });
+        } else {
+            res.status(404).send('Volunteer not found');
+        }
+    } catch (error) {
+        console.error('Error fetching volunteer information:', error);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
 app.listen(port, () => {
