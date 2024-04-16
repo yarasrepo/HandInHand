@@ -34,7 +34,7 @@
                         <span>Opportunities</span></a>
                 </li>
                 <li>
-                    <a href="/homepage"><span class="fa-solid fa-house"></span>
+                    <a href="/"><span class="fa-solid fa-house"></span>
                         <span>Homepage</span></a>
                 </li>
             </ul>
@@ -72,7 +72,7 @@
                                             <th>Phone Number</th>
                                             <th>Location</th>
                                             <th onclick="sortTable(4)">Date Joined</th>
-                                            {{!-- <th>Track</th> --}}
+                                            <th>Track</th>
                                             <th>Review</th>
                                             <th>Delete</th>
                                         </tr>
@@ -86,9 +86,15 @@
                                             <td>{{this.PhoneNum}}</td>
                                             <td>{{this.Location}}</td>
                                             <td>Jan. 1, 2024</td>
+                                            <td><button onclick=>Track</button>
                                             <td><button onclick="viewVolunteerInfo('{{this.name}}')">Review</button>
                                             </td>
-                                            <td><button onclick="deleteUser('{{this.name}}')">Delete</button></td>
+                                            {{!-- <form action="/admindeleteaccount" method="POST">
+                                                <input type="hidden" name="userId" value="{{this._id}}">
+                                                <td><button type="submit">Delete</button></td>
+                                            </form> --}}
+                                            <td><button id="deleteButton-{{this._id}}" class="delete-button"
+                                                    data-user-id="{{this._id}}">Delete</button></td>
 
                                         </tr>
                                     </tbody>
@@ -125,6 +131,37 @@
                 });
             });
         });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var deleteButtons = document.querySelectorAll('[id^="deleteButton-"]');
+            deleteButtons.forEach(function (deleteButton) {
+                deleteButton.addEventListener('click', async function () {
+                    const userId = this.dataset.userId; // Get the user ID from the button's dataset
+                    try {
+                        const response = await fetch('/admindeleteaccount', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ userId }) // Send the user ID in the request body
+                        });
+                        const data = await response.json();
+                        if (data.success) {
+                            // Optionally, update the UI to reflect the deletion (e.g., remove the deleted row from the table)
+                            this.closest('tr').remove(); // Remove the row containing the delete button
+                            // You can add more UI updates as needed
+                        } else {
+                            console.error('Delete operation failed');
+                            // Handle error or display a message
+                        }
+                    } catch (error) {
+                        console.error('Error deleting account:', error);
+                        // Handle error or display a message
+                    }
+                });
+            });
+        });
+
     </script>
     <script>
         document.getElementById("searchInput").addEventListener("keyup", function () {
@@ -237,31 +274,6 @@
         function viewVolunteerInfo(name) {
             window.location.href = `/vol_info/${name}`;
         }
-
-        function deleteUser(userName) {
-            // Send a POST request to the server to delete the user
-            fetch('/deleteaccount', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ userName }),
-            })
-                .then(response => {
-                    if (response.ok) {
-                        // Reload the page or handle the success case
-                        window.location.reload(); // Example: Reload the page after successful deletion
-                    } else {
-                        throw new Error('Failed to delete user');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error deleting user:', error);
-                    // Handle the error case, such as displaying an error message to the user
-                });
-        }
-
-
 
         // Initial display
         displayPage(currentPage);

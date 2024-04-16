@@ -505,6 +505,41 @@ app.post('/deleteaccount', async (req, res) => {
     }
 });
 
+app.post('/admindeleteaccount', async (req, res) => {
+    try {
+        const userId = req.body.userId; // Assuming the entire user object is sent in the request body
+        console.log(userId);
+        const user = await userProfCollection.findById(userId);
+        const userName = user ? user.name : null;
+        console.log(userName);
+        
+        // Delete user from LogInCollection
+        const deleteLogIn = await LogInCollection.deleteOne({ name: user.name });
+
+        // Delete user from userProfCollection
+        const deleteUserProf = await userProfCollection.deleteOne({ name: user.name });
+
+        const deleteJob = await JobCollection.deleteMany({ creator: user.name });
+
+        const jobs = await JobCollection.find({ 'participants.email': user.email });
+        for (const job of jobs) {
+            job.participants = job.participants.filter(participant => participant.email !== user.email);
+            await job.save();
+        }
+        // Check if deletion was successful in both collections
+        if (deleteLogIn.deletedCount && deleteUserProf.deletedCount) {
+            // Redirect or send success response
+            res.json({ success: true });
+        } else {
+            res.status(404).send('User account not found');
+        }
+    } catch (error) {
+        console.error('Error deleting account:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
 app.get('/admin', async (req, res) => {
     // Check if the user is logged in
     if (req.session.user && req.session.user.name) {
