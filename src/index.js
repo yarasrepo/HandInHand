@@ -371,30 +371,11 @@ app.get('/orgprofile', async (req, res) => {
             const userProf = await userProfCollection.findOne({ name: req.session.user.name });
 
             if (userProf) {
-                const jobs= await JobCollection.find({creator: orgName});
+                const jobs = await JobCollection.find({ creator: orgName });
                 console.log(jobs);
                 res.render('orgprofile', { userProf, jobs });
             } else {
-                // Create the user profile if not found
-                const existingUser = await LogInCollection.findOne({ name: req.session.user.name });
-                if (existingUser) {
-                    const data = {
-                        name: req.session.user.name,
-                        email: existingUser.email,
-                        Description: "Let's make the world better together",
-                        role: "organization",
-                        PhoneNum: 0,
-                        Location: "Beirut",
-                        ProfilePic: "https://www.iconbunny.com/icons/media/catalog/product/1/4/144.1-building-institution-icon-iconbunny.jpg",
-                    };
-                    await userProfCollection.create(data);
-
-                    // Redirect to the profile page after creating the profile
-                    res.redirect('/userprofile');
-                } else {
-                    console.log('user not found in LogInCollection');
-                    res.status(404).send('User not found');
-                }
+                res.redirect('/login');
             }
         } else {
             res.redirect('/login');
@@ -511,9 +492,9 @@ app.post('/edituserprof', async (req, res) => {
         const updatedProfile = await userProfCollection.findOneAndUpdate(query, update, { new: true });
 
         if (updatedProfile) {
-            if (req.session.user.role === 'organization'){
+            if (req.session.user.role === 'organization') {
                 res.redirect('/orgprofile');
-            } else{
+            } else {
                 res.redirect('/userprofile');
             }
         } else {
