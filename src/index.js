@@ -706,6 +706,21 @@ app.get('/vol_info', async (req, res) => {
     }
 });
 
+app.get('/org_info', async (req, res) => {
+    const objectId = req.query.objectId;
+    try {
+        const organization = await userProfCollection.findById(objectId);
+        if (organization) {
+            res.render('org_info', { organization });
+        } else {
+            res.status(404).send('Organization not found');
+        }
+    } catch (error) {
+        console.error('Error fetching organization information:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 app.get('/opp_info', async (req, res) => {
     // Extract the objectId parameter from the request query
     const objectId = req.query.objectId;
