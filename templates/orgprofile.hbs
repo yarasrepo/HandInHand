@@ -55,24 +55,26 @@
     <section class="current" id="current">
         <h1 class="heading"><span>Current</span> Opportunities</h1>
         <div id="currentOpps"></div>
-
-        {{!-- <div class="box-container">
+        <div class="box-container">
+            {{#each jobs}}
             <div class="box">
                 <i class="fa-solid fa-calendar-week"></i>
-                <span>DAY</span>
-                <h3>Opportunity 1</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio deserunt aspernatur
-                    fugiat minus enim ullam repundiandae sint sed magnam tenetur!</p>
+                <span>{{this.startDate}}</span>
+                <h3>{{this.title}}</h3>
+                <p>{{this.description}}</p>
                 <button class="btn1">Read More</button>
             </div>
-        </div> --}}
-        
+            {{/each}}
+        </div>
     </section>
 
     <!--Previous Opportunities design-->
     <section class="previous" id="previous">
         <h1 class="heading"><span>Previous</span> Opportunities</h1>
+    <section class="previous" id="previous">
+        <h1 class="heading"><span>Previous</span> Opportunities</h1>
         <div id="PreviousOpps"></div>
+
 
         <!-- <div class = "box-container">
             <div class = "box">
@@ -106,26 +108,13 @@
     <section class="photos" id="photos">
         <h1 class="heading"><span>Photos</span></h1>
         <div id="photos"></div>
-        <!-- <div class = "box-container">
-            <div class = "box">
-                <img src = "https://foodforthepoor.org/wp-content/uploads/volunteers-heart-giving-blog-1.jpg" alt = "">
+        {{#each userProf.images}}
+        <div class="box-container">
+            <div class="box">
+                <img src="{{this}}" alt="">
             </div>
-            <div class = "box">
-                <img src = "https://info.flip.com/en-us/blog/get-inspired/environmental-volunteering/_jcr_content/root/container/container_copy/teaser.coreimg.85.1024.jpeg/1681702105963/earth-day-activities.jpeg" alt = "">
-            </div>
-            <div class = "box">
-                <img src = "https://imageio.forbes.com/specials-images/imageserve/65ad49201b8a4682439df59f/Happy-group-of-volunteer-people-showing-importance-of-volunteering-/960x0.jpg?format=jpg&width=960" alt = "">
-            </div>
-            <div class = "box">
-                <img src = "https://familypromisecarteret.org/wp-content/uploads/2015/03/url-14.jpeg" alt = "">
-            </div>
-            <div class = "box">
-                <img src = "https://www.undp.org/sites/g/files/zskgke326/files/2023-08/01.jpg" alt = "">            
-            </div>
-            <div class = "box">
-                <img src = "https://aginginplace.org/wp-content/uploads/Senior-Volunteer.jpg" alt = "">
-            </div>
-        </div> -->
+        </div>
+        {{/each}}
     </section>
 
     <!--Contact Information Design-->

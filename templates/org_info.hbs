@@ -9,15 +9,15 @@
     </head>
     <body>
         <header>
-            <h1>Volunteer Review</span></h1>
+            <h1>Organization Review</span></h1>
         </header>
         <main>
             <div class="opp-details">
-                <h2>Volunteer Details</h2>
+                <h2>Organization Details</h2>
                 <div class="details-container">
                     <div class="detail">
-                        <span class="title">Volunteer Name:</span>
-                        <span class="info">{{volunteer.name}}</span>
+                        <span class="title">Organization Name:</span>
+                        <span class="info">{{organization.name}}</span>
                     </div>
                     {{!-- <div class="detail">
                         <span class="title">Date of Birth:</span>
@@ -25,35 +25,35 @@
                     </div> --}}
                     <div class="detail">
                         <span class="title">Email Address:</span>
-                        <span class="info">{{volunteer.email}}</span>
+                        <span class="info">{{organization.email}}</span>
                     </div>
                     <div class="detail">
                         <span class="title">Phone Number:</span>
-                        <span class="info">{{volunteer.PhoneNum}}</span>
+                        <span class="info">{{organization.PhoneNum}}</span>
                     </div>
                     <div class="detail">
                         <span class="title">Location:</span>
-                        <span class="info">{{volunteer.Location}}</span>
+                        <span class="info">{{organization.Location}}</span>
                     </div>
                     <div class="detail">
                         <span class="title">Date Joined:</span>
-                        <span class="info">{{volunteer.DateJoined}}</span>
+                        <span class="info">{{organization.DateJoined}}</span>
                     </div>
                     <div class="detail">
-                        <span class="title">Number of Hours Volunteered:</span>
-                        <span class="info">{{volunteer.Hours}}</span>
+                        <span class="title">Number of Jobs Posted</span>
+                        <span class="info">{{organization.JobsPosted}}</span>
                     </div>
-                    <div class="detail">
-                        <span class="title">Number of Opportunities Booked:</span>
-                        <span class="info">{{volunteer.JobsBooked}}</span>
-                    </div>
+                    {{!-- <div class="detail">
+                        <span class="title">Number of Opportunities Volunteered:</span>
+                        <span class="info">Sample</span>
+                    </div> --}}
                     {{!-- <div class="detail">
                         <span class="title">List of Events:</span>
                         <span class="info">Sample</span>
                     </div> --}}
                 </div>
                 <div class="buttons">
-                    <button onclick="window.location.href='/volunteeradmin'" class="back-button">Back</button>
+                    <button onclick="window.location.href='/org_admin'" class="back-button">Back</button>
                 </div>
             </div>
         </main>                 
