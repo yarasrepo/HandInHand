@@ -66,8 +66,13 @@
                         </div>
                         <h3>{{this.title}}</h3>
                         <p>{{this.description}}</p>
+                        {{#if this.openPositions}}
                         <span class="seats-left">Seats Left: {{this.openPositions}}</span>
                         <a href="/checkout?jobId={{this._id}}" class="book-button">Book</a>
+                        {{else}}
+                        <p class="seats-left">No seats left</p>
+                        {{/if}}
+
                         <div class="more-details" style="display: none;">
                             <p><strong>Location:</strong> {{this.location}}</p>
                             <p><strong>Required Hours:</strong> {{this.requiredHours}}</p>
@@ -107,6 +112,7 @@
                 });
             });
         });
+
 
         const searchInput = document.getElementById("searchInput");
         searchInput.addEventListener("input", function () {
