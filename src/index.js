@@ -691,10 +691,10 @@ app.get('/opp_admin', async (req, res) => {
 
 
 
-app.get('/vol_info/:name', async (req, res) => {
-    const volunteerName = req.params.name;
+app.get('/vol_info', async (req, res) => {
+    const objectId = req.query.objectId;
     try {
-        const volunteer = await userProfCollection.findOne({ name: volunteerName });
+        const volunteer = await userProfCollection.findById(objectId);
         if (volunteer) {
             res.render('vol_info', { volunteer });
         } else {
