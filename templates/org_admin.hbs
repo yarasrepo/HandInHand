@@ -41,7 +41,7 @@
                     <a href="/"><span class="fa-solid fa-house"></span>
                         <span>Homepage</span></a>
                 </li>
-                
+
             </ul>
         </div>
     </div>
@@ -93,7 +93,8 @@
                                             <td>{{this.DateJoined}}</td>
                                             {{!-- <td><button class="request-button"
                                                     onclick="handleButtonClick()">Request</button></td> --}}
-                                            <td><button class="review-button">Review</button></td>
+                                            <td><button onclick="viewOrgInfo('{{this._id}}')">Review</button>
+                                            </td>
                                             <td><button id="deleteButton-{{this._id}}" class="delete-button"
                                                     data-user-id="{{this._id}}">Delete</button></td>
                                         </tr>
@@ -283,6 +284,9 @@
         }
         function prevPage() {
             goToPage(currentPage - 1);
+        }
+        function viewOrgInfo(objectId) {
+            window.location.href = `/org_info?objectId=${objectId}`;
         }
         // Initial display
         displayPage(currentPage);

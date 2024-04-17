@@ -9,7 +9,7 @@ const app = express()
 const hbs = require("hbs")
 const helpers = require("handlebars-helpers")();
 hbs.registerHelper(helpers);
-const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection } = require("./mongodb");
+const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, ReqBookCollection } = require("./mongodb");
 const port = process.env.PORT || 3000
 app.use(express.json())
 
@@ -80,7 +80,7 @@ app.post('/signup', async (req, res) => {
             if (org && org.flag === false) {
                 res.send("Request pending approval");
                 return;
-            } 
+            }
             else if (!org) {
                 await ReqCollection.create(data);
                 res.send("Request submitted successfully");
@@ -98,7 +98,7 @@ app.post('/signup', async (req, res) => {
         };
 
         const description = req.session.user.role === 'volunteer' ? "I love helping others" : "Let's make the world better together";
-        const user = await LogInCollection.findOne({name: req.session.user.name}); // Find the user by their name
+        const user = await LogInCollection.findOne({ name: req.session.user.name }); // Find the user by their name
         const dateJoined = user ? user.DateJoined : null; // Get the DateJoined if the user exists, otherwise set to null
         const profileData = {
             name: req.session.user.name,
@@ -234,6 +234,8 @@ app.post('/checkout', async (req, res) => {
         console.log('Form submission data:', { firstName, lastName, email, phoneNumber });
 
         const user = await LogInCollection.findOne({ email: email });
+        const userProf = await userProfCollection.findOne({ email: email });
+
         if (!user) {
             console.log('User not found');
             return res.status(400).send('User not found. Please register before booking.');
@@ -251,6 +253,9 @@ app.post('/checkout', async (req, res) => {
             console.log('User has already booked this job');
             return res.status(400).send('You have already booked this job.');
         }
+        //increase job count in userprof
+        userProf.JobsBooked += 1;
+        await userProf.save();
 
         if (firstName && !user.firstName) {
             user.firstName = firstName;
@@ -283,9 +288,9 @@ app.get('/job_submission_form', (req, res) => {
 
 app.post('/job_submission_form', async (req, res) => {
     try {
-        const { jobName, description, openPositions, location, requiredHours, requiredSkills, imageLink } = req.body;
+        const { jobName, description, openPositions, location, startDate, requiredHours, requiredSkills, imageLink } = req.body;
 
-        if (!jobName || !description || !openPositions || !location || !requiredHours || !requiredSkills) {
+        if (!jobName || !description || !openPositions || !location || !startDate || !requiredHours || !requiredSkills) {
             return res.status(400).send('All fields are required');
         }
         const organizationName = req.session.user.name;
@@ -295,12 +300,17 @@ app.post('/job_submission_form', async (req, res) => {
             description,
             openPositions: parseInt(openPositions),
             location,
+            startDate, // Use the startDate directly since it's already formatted
             requiredHours: parseInt(requiredHours),
             requiredSkills,
             imageLink,
-            creator: organizationName
+            creator: organizationName,
         });
         await newJob.save();
+
+        const organization = await userProfCollection.findOne({ name: organizationName });
+        organization.JobsPosted += 1;
+        await organization.save();
 
         res.redirect('/Posts');
     } catch (error) {
@@ -308,10 +318,6 @@ app.post('/job_submission_form', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
-
-
-
-
 
 
 app.get('/userprofile', async (req, res) => {
@@ -473,16 +479,23 @@ app.get('/editable', async (req, res) => {
 
 app.post('/edituserprof', async (req, res) => {
     const query = { name: req.session.user.name }; // Query to find the existing user profile
-    const update = {
-        $set: {
-            Description: req.body.Description,
-            PhoneNum: req.body.PhoneNum,
-            Location: req.body.Location,
-            ProfilePic: req.body.ProfilePic,
-        }
-    };
 
     try {
+        let update = {
+            $set: {
+                Description: req.body.Description,
+                PhoneNum: req.body.PhoneNum,
+                Location: req.body.Location,
+                ProfilePic: req.body.ProfilePic,
+            }
+        };
+
+        // Check if the user is an organization
+        if (req.session.user.role === 'organization') {
+            // Add to the images array only if the user is an organization
+            update.$addToSet = { images: req.body.AddPhotos };
+        }
+
         const updatedProfile = await userProfCollection.findOneAndUpdate(query, update, { new: true });
 
         if (updatedProfile) {
@@ -495,6 +508,8 @@ app.post('/edituserprof', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
+
 
 app.get('/deletepage', (req, res) => {
     res.render('deletepage')
@@ -691,10 +706,10 @@ app.get('/opp_admin', async (req, res) => {
 
 
 
-app.get('/vol_info/:name', async (req, res) => {
-    const volunteerName = req.params.name;
+app.get('/vol_info', async (req, res) => {
+    const objectId = req.query.objectId;
     try {
-        const volunteer = await userProfCollection.findOne({ name: volunteerName });
+        const volunteer = await userProfCollection.findById(objectId);
         if (volunteer) {
             res.render('vol_info', { volunteer });
         } else {
@@ -702,6 +717,21 @@ app.get('/vol_info/:name', async (req, res) => {
         }
     } catch (error) {
         console.error('Error fetching volunteer information:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.get('/org_info', async (req, res) => {
+    const objectId = req.query.objectId;
+    try {
+        const organization = await userProfCollection.findById(objectId);
+        if (organization) {
+            res.render('org_info', { organization });
+        } else {
+            res.status(404).send('Organization not found');
+        }
+    } catch (error) {
+        console.error('Error fetching organization information:', error);
         res.status(500).send('Internal Server Error');
     }
 });

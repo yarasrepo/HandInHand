@@ -1,38 +1,38 @@
 const mongoose = require("mongoose")
 
 mongoose.connect("mongodb://localhost:27017/HandInHand")
-.then(() => {
-    console.log("mongodb connected");
-})
-.catch(() => {
-    console.log("failed to connect");
-})
+    .then(() => {
+        console.log("mongodb connected");
+    })
+    .catch(() => {
+        console.log("failed to connect");
+    })
 
 const LogInSchema = new mongoose.Schema({
-    name:{
-        type:String,
-        required:true,
-        unique:true
+    name: {
+        type: String,
+        required: true,
+        unique: true
     },
     firstName: {
-        type:String
+        type: String
     },
     lastName: {
-        type:String
+        type: String
     },
-    email:{
-        type:String,
-        required:true
+    email: {
+        type: String,
+        required: true
     },
-    password:{
-        type:String,
-        required:true
+    password: {
+        type: String,
+        required: true
     },
-    role:{
-        type:String,
-        required:true
+    role: {
+        type: String,
+        required: true
     },
-    DateJoined:{
+    DateJoined: {
         type: Date,
         default: Date.now
     },
@@ -40,7 +40,7 @@ const LogInSchema = new mongoose.Schema({
 
 const collection = new mongoose.model("HandInHandcollection", LogInSchema)
 
-const userProfile= new mongoose.Schema({
+const userProfile = new mongoose.Schema({
     name: {
         type: String,
         ref: 'LogInSchema',
@@ -69,13 +69,26 @@ const userProfile= new mongoose.Schema({
         type: String, // Corrected to directly specify String as the type
         maxlength: 1000 // Assuming you store the file path or URL
     },
-    DateJoined:{
+    DateJoined: {
         type: Date,
         ref: 'LogInSchema',
     },
+    JobsBooked: {
+        type: Number,
+        default: 0,
+    },
+    JobsPosted: {
+        type: Number,
+        default: 0,
+    },
+    images:
+    {
+        type: [String],
+    }
+
 })
 
-const userProfCollection= mongoose.model("userProfCollection", userProfile)
+const userProfCollection = mongoose.model("userProfCollection", userProfile)
 
 const jobSchema = new mongoose.Schema({
     title: {
@@ -94,6 +107,10 @@ const jobSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    startDate: {
+        type: String,
+        required: true,
+    },
     requiredHours: {
         type: Number,
         required: true
@@ -102,29 +119,29 @@ const jobSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-   imageLink: {
-    type: String,
-    ref: 'userProfileCollection'
-   },
-   creator: {
-    type: String,
-    required:true,
-    ref: 'HandInHandcollection',
-   },
-   datePosted: {
+    imageLink: {
+        type: String,
+        ref: 'userProfileCollection'
+    },
+    creator: {
+        type: String,
+        required: true,
+        ref: 'HandInHandcollection',
+    },
+    datePosted: {
         type: Date,
         default: Date.now
-   },
-   participants: [{
-    email: String,
-    firstName: String,
-    lastName: String
-}]
+    },
+    participants: [{
+        email: String,
+        firstName: String,
+        lastName: String
+    }]
 });
 
 const JobCollection = mongoose.model("JobCollection", jobSchema)
 
-const reqOrg= new mongoose.Schema({
+const reqOrg = new mongoose.Schema({
     name: {
         type: String,
         required: true
@@ -139,7 +156,7 @@ const reqOrg= new mongoose.Schema({
     Location: {
         type: String,
     },
-    DateReq:{
+    DateReq: {
         type: Date,
         default: Date.now
     },
@@ -156,11 +173,44 @@ const reqOrg= new mongoose.Schema({
 
 const ReqCollection = mongoose.model("ReqCollection", reqOrg)
 
+const reqBook = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
+    PhoneNum: {
+        type: Number,
+    },
+    Location: {
+        type: String,
+    },
+    DateReq: {
+        type: Date,
+        default: Date.now
+    },
+    // ProfilePic: {
+    //     type: String, // Corrected to directly specify String as the type
+    //     maxlength: 1000 // Assuming you store the file path or URL
+    // },
+    flag: {
+        type: Boolean,
+        default: 'false',
+        required: true,
+    },
+});
+
+const ReqBookCollection = mongoose.model("ReqBookCollection", reqBook)
+
 
 
 module.exports = {
     collection,
     userProfCollection,
     JobCollection,
-    ReqCollection
+    ReqCollection,
+    ReqBookCollection,
 }
