@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale = 1.0">
     <title>HandinHand Admin</title>
-    <link rel="stylesheet" href="orgstyle.css">
+    <link rel="stylesheet" href="volunteerstyle.css">
     <link rel="shortcut icon" type="x-icon" href="logonowords.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -26,7 +26,7 @@
                         <span>Volunteers</span></a>
                 </li>
                 <li>
-                    <a href="/org_admin" class="active"><span class="fa-solid fa-building-ngo"></span>
+                    <a href="/org_admin"><span class="fa-solid fa-building-ngo"></span>
                         <span>Organizations</span></a>
                 </li>
                 <li>
@@ -34,18 +34,17 @@
                         <span>Opportunities</span></a>
                 </li>
                 <li>
-                    <a href="/feedback"><span class="fa-solid fa-bell"></span>
+                    <a href="/requests"><span class="fa-solid fa-bell"></span>
                         <span>Requests</span></a>
                 </li>
                 <li>
-                    <a href="/feedback_admin"><span class="fa-solid fa-message"></span>
+                    <a href="/feedback_admin" class="active"><span class="fa-solid fa-message"></span>
                         <span>Feedback</span></a>
                 </li>
                 <li>
                     <a href="/"><span class="fa-solid fa-house"></span>
                         <span>Homepage</span></a>
                 </li>
-
             </ul>
         </div>
     </div>
@@ -62,10 +61,10 @@
         </header>
         <main>
             <div class="grid">
-                <div class="organizations">
+                <div class="volunteers">
                     <div class="card">
                         <div class="card-header">
-                            <h2>All Organizations</h2>
+                            <h2>All Feedback</h2>
                             <div class="search-wrapper">
                                 <span class="fa-solid fa-magnifying-glass"></span>
                                 <input id="searchInput" type="search" placeholder="Search here" />
@@ -73,37 +72,33 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table id="organizationsTable" width="100%">
+                                <table class="table-sortable" id="volunteersTable" width="100%">
                                     <thead>
                                         <tr>
-                                            <th onclick="sortTable(0)">Organization Name</th>
+                                            <th onclick="sortTable(0)">Name</th>
                                             <th>Email Address</th>
-                                            <th>Phone Number</th>
-                                            <th>Location</th>
-                                            <th onclick="sortTable(4)">Date Joined</th>
-                                            {{!-- <th>Request</th> --}}
-                                            <th>Review</th>
+                                            <th>Feedback Message</th>
+                                            <th>Feedback Emoji</th>
+                                            <th onclick="sortTable(4)">Date Posted</th>
+                                            {{!-- <th>Highlight</th> --}}
                                             <th>Delete</th>
                                         </tr>
                                     </thead>
-                                    {{#each userprofs}}
-                                    {{#if (eq this.role 'organization')}}
+                                    {{#each fbs}}
                                     <tbody>
                                         <tr>
                                             <td>{{this.name}}</td>
                                             <td>{{this.email}}</td>
-                                            <td>{{this.PhoneNum}}</td>
-                                            <td>{{this.Location}}</td>
-                                            <td>{{this.DateJoined}}</td>
-                                            {{!-- <td><button class="request-button"
-                                                    onclick="handleButtonClick()">Request</button></td> --}}
-                                            <td><button onclick="viewOrgInfo('{{this._id}}')">Review</button>
-                                            </td>
-                                            <td><button id="deleteButton-{{this._id}}" class="delete-button"
+                                            <td>{{this.feedbackMessage}}</td>
+                                            <td>{{this.feedbackEmoji}}</td>
+                                            <td>{{this.datePosted}}</td>
+                                            {{!-- <td><button onclick="viewVolunteerInfo('{{this._id}}')">Highlight</button>
+                                            </td> --}}
+                                            <td>
+                                            <button id="deleteButton-{{this._id}}" class="delete-button"
                                                     data-user-id="{{this._id}}">Delete</button></td>
                                         </tr>
                                     </tbody>
-                                    {{/if}}
                                     {{/each}}
                                 </table>
                                 <div class="pagination">
@@ -138,17 +133,17 @@
         });
 
         document.addEventListener('DOMContentLoaded', function () {
-            var deleteButtons = document.querySelectorAll('[id^="deleteButton-"]');
+            var deleteButtons = document.querySelectorAll('.delete-button');
             deleteButtons.forEach(function (deleteButton) {
                 deleteButton.addEventListener('click', async function () {
-                    const userId = this.dataset.userId; // Get the user ID from the button's dataset
+                    const fbId = this.dataset.userId; // Get the job ID from the button's dataset
                     try {
-                        const response = await fetch('/admindeleteaccount', {
+                        const response = await fetch('/admindeletefeedback', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
                             },
-                            body: JSON.stringify({ userId }) // Send the user ID in the request body
+                            body: JSON.stringify({ fbId }) // Send the job ID in the request body
                         });
                         const data = await response.json();
                         if (data.success) {
@@ -160,33 +155,20 @@
                             // Handle error or display a message
                         }
                     } catch (error) {
-                        console.error('Error deleting account:', error);
+                        console.error('Error deleting job:', error);
                         // Handle error or display a message
                     }
                 });
             });
         });
+
     </script>
     <script>
-        function handleButtonClick() {
-            var button = document.querySelector('.request-button');
-            var decision = prompt("Please enter your decision (accept/deny):").toLowerCase();
-
-            if (decision === 'accept') {
-                button.innerText = 'Accepted';
-                button.style.backgroundColor = 'green';
-            } else if (decision === 'deny') {
-                button.innerText = 'Denied';
-                button.style.backgroundColor = 'red';
-            } else {
-                alert("Invalid decision. Please enter either 'accept' or 'deny'.");
-            }
-        }
         document.getElementById("searchInput").addEventListener("keyup", function () {
             var input, filter, table, tr, td, i, j, txtValue;
             input = document.getElementById("searchInput");
             filter = input.value.toUpperCase();
-            table = document.getElementById("organizationsTable");
+            table = document.getElementById("volunteersTable");
             tr = table.getElementsByTagName("tr");
             for (i = 1; i < tr.length; i++) {
                 // Initialize flag to false
@@ -220,7 +202,7 @@
             return new Date(year, months[month], parseInt(day.slice(0, -1))); // Slicing "Day" to remove the comma
         }
         function sortTable(columnIndex) {
-            const table = document.getElementById("organizationsTable");
+            const table = document.getElementById("volunteersTable");
             const tbody = table.getElementsByTagName("tbody")[0];
             const rows = Array.from(tbody.getElementsByTagName("tr"));
             let ascending = true; // Flag to indicate sorting direction
@@ -255,7 +237,7 @@
         const pageSize = 10; // Number of entries per page
         let currentPage = 1; // Current page being displayed
         function displayPage(pageNumber) {
-            const table = document.getElementById("organizationsTable");
+            const table = document.getElementById("volunteersTable");
             const tbody = table.getElementsByTagName("tbody")[0];
             const rows = Array.from(tbody.getElementsByTagName("tr"));
             // Calculate the start and end indices for the current page
@@ -278,7 +260,7 @@
             displayPage(currentPage);
         }
         function getTotalPages() {
-            const table = document.getElementById("organizationsTable");
+            const table = document.getElementById("volunteersTable");
             const tbody = table.getElementsByTagName("tbody")[0];
             const rowCount = tbody.getElementsByTagName("tr").length;
             return Math.ceil(rowCount / pageSize);
@@ -288,9 +270,6 @@
         }
         function prevPage() {
             goToPage(currentPage - 1);
-        }
-        function viewOrgInfo(objectId) {
-            window.location.href = `/org_info?objectId=${objectId}`;
         }
         // Initial display
         displayPage(currentPage);
