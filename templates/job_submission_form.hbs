@@ -1,102 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Submission Form</title>
-    <link rel="stylesheet" href="job_form_style.css"/>
+    <link rel="stylesheet" href="job_form_style.css" />
 </head>
+
 <body>
     <div class="container">
         <h1>Job Submission Form</h1>
-       <form id="jobForm" class="job-form">
-    <div class="form-group">
-        <label for="jobName">Job Name:</label>
-        <input type="text" id="jobName" name="jobName" required>
-    </div>
-    <div class="form-group">
-        <label for="description">Description:</label>
-        <textarea id="description" name="description" required></textarea>
-    </div>
-    <div class="form-group">
-        <label for="openPositions">Open Positions:</label>
-        <input type="number" id="openPositions" name="openPositions" required>
-    </div>
-    <div class="form-group">
-        <label for="location">Location:</label>
-        <input type="text" id="location" name="location" required>
-    </div>
-    <div class="form-group">
-        <label for="requiredHours">Required Hours:</label>
-        <input type="number" id="requiredHours" name="requiredHours" required>
-    </div>
-    <div class="form-group">
-        <label for="requiredSkills">Required Skills:</label>
-        <input type="text" id="requiredSkills" name="requiredSkills" required>
-    </div>
-    <div class="form-group">
-        <label for="imageLink">Image Link:</label>
-        <input type="url" id="imageLink" name="imageLink">
-    </div>
-    <div class="form-group">
-        <input type="submit" value="Submit">
-    </div>
-</form>
+        <form id="jobForm" class="job-form">
+            <div class="form-group">
+                <label for="jobName">Job Name:</label>
+                <input type="text" id="jobName" name="jobName" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="openPositions">Open Positions:</label>
+                <input type="number" id="openPositions" name="openPositions" required>
+            </div>
+            <div class="form-group">
+                <label for="location">Location:</label>
+                <input type="text" id="location" name="location" required>
+            </div>
+            <div class="form-group">
+                <label for="requiredHours">Required Hours:</label>
+                <input type="number" id="requiredHours" name="requiredHours" required>
+            </div>
+            <div class="form-group">
+                <label for="requiredSkills">Required Skills:</label>
+                <input type="text" id="requiredSkills" name="requiredSkills" required>
+            </div>
+            <div class="form-group">
+                <label for="imageLink">Image Link:</label>
+                <input type="url" id="imageLink" name="imageLink">
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Submit">
+            </div>
+        </form>
 
     </div>
 
-  <script>
-    const submitJob = async (event) => {
-        event.preventDefault();
+    <script>
+        const submitJob = async (event) => {
+            event.preventDefault();
 
-        const jobName = document.getElementById("jobName").value;
-        const description = document.getElementById("description").value;
-        const openPositions = parseInt(document.getElementById("openPositions").value);
-        const location = document.getElementById("location").value;
-        const requiredHours = parseInt(document.getElementById("requiredHours").value);
-        const requiredSkills = document.getElementById("requiredSkills").value;
-        const imageLink = document.getElementById("imageLink").value || null;
+            const jobName = document.getElementById("jobName").value;
+            const description = document.getElementById("description").value;
+            const openPositions = parseInt(document.getElementById("openPositions").value);
+            const location = document.getElementById("location").value;   
+            const requiredHours = parseInt(document.getElementById("requiredHours").value);
+            const requiredSkills = document.getElementById("requiredSkills").value;
+            const imageLink = document.getElementById("imageLink").value || null;
 
-        if (!jobName || !description || !openPositions || !location || !requiredHours || !requiredSkills) {
-            alert("Please fill out all required fields.");
-            return;
-        }
+            if (!jobName || !description || !openPositions || !location || !requiredHours || !requiredSkills) {
+                alert("Please fill out all required fields.");
+                return;
+            }
 
-        const jobData = {
-            jobName: jobName,
-            description: description,
-            openPositions: openPositions,
-            location: location,
-            requiredHours: requiredHours,
-            requiredSkills: requiredSkills,
-            imageLink: imageLink
+            const jobData = {
+                jobName: jobName,
+                description: description,
+                openPositions: openPositions,
+                location: location,
+                requiredHours: requiredHours,
+                requiredSkills: requiredSkills,
+                imageLink: imageLink
+            };
+
+            try {
+                const response = await fetch("/job_submission_form", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(jobData)
+                });
+
+                if (response.ok) {
+                    alert("Job submitted successfully!");
+                    document.getElementById("jobForm").reset();
+                    window.location.href = "/Posts";
+                } else {
+                    const errorMessage = await response.text();
+                    alert(`Error: ${errorMessage}`);
+                }
+            } catch (error) {
+                console.error("Error submitting job:", error);
+                alert("An error occurred while submitting the job.");
+            }
         };
 
-        try {
-            const response = await fetch("/job_submission_form", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(jobData)
-            });
-
-            if (response.ok) {
-                alert("Job submitted successfully!");
-                document.getElementById("jobForm").reset();
-                window.location.href = "/Posts";
-            } else {
-                const errorMessage = await response.text();
-                alert(`Error: ${errorMessage}`);
-            }
-        } catch (error) {
-            console.error("Error submitting job:", error);
-            alert("An error occurred while submitting the job.");
-        }
-    };
-
-    document.getElementById("jobForm").addEventListener("submit", submitJob);
-</script>
+        document.getElementById("jobForm").addEventListener("submit", submitJob);
+    </script>
 
 </body>
+
 </html>

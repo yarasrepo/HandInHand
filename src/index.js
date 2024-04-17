@@ -9,7 +9,7 @@ const app = express()
 const hbs = require("hbs")
 const helpers = require("handlebars-helpers")();
 hbs.registerHelper(helpers);
-const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection } = require("./mongodb");
+const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, ReqBookCollection } = require("./mongodb");
 const port = process.env.PORT || 3000
 app.use(express.json())
 
@@ -80,7 +80,7 @@ app.post('/signup', async (req, res) => {
             if (org && org.flag === false) {
                 res.send("Request pending approval");
                 return;
-            } 
+            }
             else if (!org) {
                 await ReqCollection.create(data);
                 res.send("Request submitted successfully");
@@ -98,7 +98,7 @@ app.post('/signup', async (req, res) => {
         };
 
         const description = req.session.user.role === 'volunteer' ? "I love helping others" : "Let's make the world better together";
-        const user = await LogInCollection.findOne({name: req.session.user.name}); // Find the user by their name
+        const user = await LogInCollection.findOne({ name: req.session.user.name }); // Find the user by their name
         const dateJoined = user ? user.DateJoined : null; // Get the DateJoined if the user exists, otherwise set to null
         const profileData = {
             name: req.session.user.name,
@@ -234,6 +234,8 @@ app.post('/checkout', async (req, res) => {
         console.log('Form submission data:', { firstName, lastName, email, phoneNumber });
 
         const user = await LogInCollection.findOne({ email: email });
+        const userProf = await userProfCollection.findOne({ email: email });
+
         if (!user) {
             console.log('User not found');
             return res.status(400).send('User not found. Please register before booking.');
@@ -251,6 +253,9 @@ app.post('/checkout', async (req, res) => {
             console.log('User has already booked this job');
             return res.status(400).send('You have already booked this job.');
         }
+        //increase job count in userprof
+        userProf.JobsBooked += 1;
+        await userProf.save();
 
         if (firstName && !user.firstName) {
             user.firstName = firstName;
@@ -298,9 +303,13 @@ app.post('/job_submission_form', async (req, res) => {
             requiredHours: parseInt(requiredHours),
             requiredSkills,
             imageLink,
-            creator: organizationName
+            creator: organizationName,
         });
         await newJob.save();
+
+        const organization = await userProfCollection.findOne({ name: organizationName });
+        organization.JobsPosted += 1;
+        await organization.save();
 
         res.redirect('/Posts');
     } catch (error) {
@@ -308,11 +317,6 @@ app.post('/job_submission_form', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
-
-
-
-
-
 
 app.get('/userprofile', async (req, res) => {
     try {

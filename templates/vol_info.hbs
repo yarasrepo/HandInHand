@@ -19,10 +19,10 @@
                         <span class="title">Volunteer Name:</span>
                         <span class="info">{{volunteer.name}}</span>
                     </div>
-                    <div class="detail">
+                    {{!-- <div class="detail">
                         <span class="title">Date of Birth:</span>
                         <span class="info">Sample</span>
-                    </div>
+                    </div> --}}
                     <div class="detail">
                         <span class="title">Email Address:</span>
                         <span class="info">{{volunteer.email}}</span>
@@ -41,16 +41,16 @@
                     </div>
                     <div class="detail">
                         <span class="title">Number of Hours Volunteered:</span>
-                        <span class="info">Sample</span>
+                        <span class="info">{{volunteer.Hours}}</span>
                     </div>
                     <div class="detail">
-                        <span class="title">Number of Opportunities Volunteered:</span>
-                        <span class="info">Sample</span>
+                        <span class="title">Number of Opportunities Booked:</span>
+                        <span class="info">{{volunteer.JobsBooked}}</span>
                     </div>
-                    <div class="detail">
+                    {{!-- <div class="detail">
                         <span class="title">List of Events:</span>
                         <span class="info">Sample</span>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="buttons">
                     <button onclick="window.location.href='/volunteeradmin'" class="back-button">Back</button>
