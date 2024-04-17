@@ -36,10 +36,6 @@ const LogInSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    verified: {
-        type: Boolean,
-        default: false,
-    }
 })
 
 const collection = new mongoose.model("HandInHandcollection", LogInSchema)
