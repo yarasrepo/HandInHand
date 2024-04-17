@@ -82,6 +82,7 @@
                                         </tr>
                                     </thead>
                                     {{#each reqOrgs}}
+                                    {{#if (eq this.reqCount this.deniedCount)}}
                                     <tbody>
                                         <tr>
                                             <td>{{this.name}}</td>
@@ -98,10 +99,9 @@
                                                     data-user-id="{{this._id}}"
                                                     onclick="denyRequest('{{this._id}}')">Deny</button>
                                             </td>
-
-
                                         </tr>
                                     </tbody>
+                                    {{/if}}
                                     {{/each}}
                                 </table>
                                 <div class="pagination">

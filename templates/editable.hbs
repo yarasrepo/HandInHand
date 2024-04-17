@@ -33,6 +33,12 @@
                         <label for="ProfilePic">Profile Picture Link:</label>
                         <input type="text" id="ProfilePic" name="ProfilePic" value=" {{userProf.ProfilePic}}"> <br>
                     </div>
+                    {{#if (eq userProf.role 'organization')}}
+                    <div class="input-container">
+                        <label for="AddPhotos">Add Photos (URL):</label>
+                        <input type="text" id="AddPhotos" name="AddPhotos" placeholder="Enter photo URL"><br>
+                    </div>
+                    {{/if}}
                 </div>
                 <div class="btn-field">
                     <button type="button" id="DiscardBtn" class="Discard" onclick="window.location.href='/userprofile'">Discard</button>

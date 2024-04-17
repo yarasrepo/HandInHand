@@ -14,7 +14,7 @@
                     <div class="input-group">
                         <div class="input-container">
                             <label for="Description">Description:</label>
-                            <input type="text" name="Description" id="Description" placeholder="Helping Others" value="{{userProf.Description}}"><br>
+                            <input type="text" name="Description" id="Description" value="{{userProf.Description}}"><br>
                         </div>
                         <div class="input-container">
                             <label for="PhoneNum">Phone Number:</label>
@@ -26,15 +26,15 @@
                         </div>
                         <div class="input-container">
                             <label for="ProfilePic">Profile Picture:</label>
-                            <input type="file" id="ProfilePic" name="ProfilePic" accept="image/*"><br>
+                            <input type="text" id="ProfilePic" name="ProfilePic" value=" {{userProf.ProfilePic}}"><br>
                         </div>
                         <div class="input-container">
                             <label for="Photos">Photos:</label>
-                            <input type="file" name="Photos" id="Photos" accept="image/*"><br>
+                            <input type="text" name="Photos" id="Photos"><br>
                         </div>
                     </div>
                     <div class="btn-field">
-                        <button type="button" id="DiscardBtn" class="Discard" onclick="window.location.href='/userprofile'">Discard</button>
+                        <button type="button" id="DiscardBtn" class="Discard" onclick="window.location.href='/orgprofile'">Discard</button>
                         <button type="submit" name="Submit" value="Submit Button">Submit</button>
                     </div>
                 </form>
