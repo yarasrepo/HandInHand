@@ -479,16 +479,23 @@ app.get('/editable', async (req, res) => {
 
 app.post('/edituserprof', async (req, res) => {
     const query = { name: req.session.user.name }; // Query to find the existing user profile
-    const update = {
-        $set: {
-            Description: req.body.Description,
-            PhoneNum: req.body.PhoneNum,
-            Location: req.body.Location,
-            ProfilePic: req.body.ProfilePic,
-        }
-    };
 
     try {
+        let update = {
+            $set: {
+                Description: req.body.Description,
+                PhoneNum: req.body.PhoneNum,
+                Location: req.body.Location,
+                ProfilePic: req.body.ProfilePic,
+            }
+        };
+
+        // Check if the user is an organization
+        if (req.session.user.role === 'organization') {
+            // Add to the images array only if the user is an organization
+            update.$addToSet = { images: req.body.AddPhotos };
+        }
+
         const updatedProfile = await userProfCollection.findOneAndUpdate(query, update, { new: true });
 
         if (updatedProfile) {
@@ -501,6 +508,8 @@ app.post('/edituserprof', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
+
 
 app.get('/deletepage', (req, res) => {
     res.render('deletepage')

@@ -80,7 +80,12 @@ const userProfile = new mongoose.Schema({
     JobsPosted: {
         type: Number,
         default: 0,
+    },
+    images:
+    {
+        type: [String],
     }
+
 })
 
 const userProfCollection = mongoose.model("userProfCollection", userProfile)
