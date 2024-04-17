@@ -82,6 +82,7 @@
                                         </tr>
                                     </thead>
                                     {{#each reqOrgs}}
+                                    {{#if (eq this.reqCount this.deniedCount)}}
                                     <tbody>
                                         <tr>
                                             <td>{{this.name}}</td>
@@ -100,6 +101,7 @@
                                             </td>
                                         </tr>
                                     </tbody>
+                                    {{/if}}
                                     {{/each}}
                                 </table>
                                 <div class="pagination">

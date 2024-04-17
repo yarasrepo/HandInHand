@@ -9,7 +9,7 @@ const app = express()
 const hbs = require("hbs")
 const helpers = require("handlebars-helpers")();
 hbs.registerHelper(helpers);
-const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection } = require("./mongodb");
+const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, ReqBookCollection } = require("./mongodb");
 const port = process.env.PORT || 3000
 app.use(express.json())
 
@@ -78,9 +78,20 @@ app.post('/signup', async (req, res) => {
         if (data.role === 'organization') {
             const org = await ReqCollection.findOne({ email: req.body.email });
             if (org && org.flag === false) {
-                res.send("Request pending approval");
-                return;
-            } 
+                if (org.deniedCount == 3) {
+                    res.send("Your application request has been denied three times! You cannot create an account with this email.");
+                    return;
+                }
+                else if (org.reqCount == org.deniedCount) {
+                    res.send("Request pending approval");
+                    return;
+                } else {
+                    org.reqCount += 1;
+                    await org.save();
+                    res.send("Request submitted successfully");
+                    return;
+                }
+            }
             else if (!org) {
                 await ReqCollection.create(data);
                 res.send("Request submitted successfully");
@@ -98,7 +109,7 @@ app.post('/signup', async (req, res) => {
         };
 
         const description = req.session.user.role === 'volunteer' ? "I love helping others" : "Let's make the world better together";
-        const user = await LogInCollection.findOne({name: req.session.user.name}); // Find the user by their name
+        const user = await LogInCollection.findOne({ name: req.session.user.name }); // Find the user by their name
         const dateJoined = user ? user.DateJoined : null; // Get the DateJoined if the user exists, otherwise set to null
         const profileData = {
             name: req.session.user.name,
@@ -234,6 +245,8 @@ app.post('/checkout', async (req, res) => {
         console.log('Form submission data:', { firstName, lastName, email, phoneNumber });
 
         const user = await LogInCollection.findOne({ email: email });
+        const userProf = await userProfCollection.findOne({ email: email });
+
         if (!user) {
             console.log('User not found');
             return res.status(400).send('User not found. Please register before booking.');
@@ -251,6 +264,9 @@ app.post('/checkout', async (req, res) => {
             console.log('User has already booked this job');
             return res.status(400).send('You have already booked this job.');
         }
+        //increase job count in userprof
+        userProf.JobsBooked += 1;
+        await userProf.save();
 
         if (firstName && !user.firstName) {
             user.firstName = firstName;
@@ -283,9 +299,9 @@ app.get('/job_submission_form', (req, res) => {
 
 app.post('/job_submission_form', async (req, res) => {
     try {
-        const { jobName, description, openPositions, location, requiredHours, requiredSkills, imageLink } = req.body;
+        const { jobName, description, openPositions, location, startDate, requiredHours, requiredSkills, imageLink } = req.body;
 
-        if (!jobName || !description || !openPositions || !location || !requiredHours || !requiredSkills) {
+        if (!jobName || !description || !openPositions || !location || !startDate || !requiredHours || !requiredSkills) {
             return res.status(400).send('All fields are required');
         }
         const organizationName = req.session.user.name;
@@ -295,12 +311,17 @@ app.post('/job_submission_form', async (req, res) => {
             description,
             openPositions: parseInt(openPositions),
             location,
+            startDate, // Use the startDate directly since it's already formatted
             requiredHours: parseInt(requiredHours),
             requiredSkills,
             imageLink,
-            creator: organizationName
+            creator: organizationName,
         });
         await newJob.save();
+
+        const organization = await userProfCollection.findOne({ name: organizationName });
+        organization.JobsPosted += 1;
+        await organization.save();
 
         res.redirect('/Posts');
     } catch (error) {
@@ -308,10 +329,6 @@ app.post('/job_submission_form', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
-
-
-
-
 
 
 app.get('/userprofile', async (req, res) => {
@@ -354,8 +371,9 @@ app.get('/orgprofile', async (req, res) => {
             const userProf = await userProfCollection.findOne({ name: req.session.user.name });
 
             if (userProf) {
-                // Render the profile page if userProf is found
-                res.render('orgprofile', { userProf });
+                const jobs= await JobCollection.find();
+                console.log(jobs);
+                res.render('orgprofile', { userProf, jobs });
             } else {
                 // Create the user profile if not found
                 const existingUser = await LogInCollection.findOne({ name: req.session.user.name });
@@ -473,20 +491,31 @@ app.get('/editable', async (req, res) => {
 
 app.post('/edituserprof', async (req, res) => {
     const query = { name: req.session.user.name }; // Query to find the existing user profile
-    const update = {
-        $set: {
-            Description: req.body.Description,
-            PhoneNum: req.body.PhoneNum,
-            Location: req.body.Location,
-            ProfilePic: req.body.ProfilePic,
-        }
-    };
 
     try {
+        let update = {
+            $set: {
+                Description: req.body.Description,
+                PhoneNum: req.body.PhoneNum,
+                Location: req.body.Location,
+                ProfilePic: req.body.ProfilePic,
+            }
+        };
+
+        // Check if the user is an organization
+        if (req.session.user.role === 'organization') {
+            // Add to the images array only if the user is an organization
+            update.$addToSet = { images: req.body.AddPhotos };
+        }
+
         const updatedProfile = await userProfCollection.findOneAndUpdate(query, update, { new: true });
 
         if (updatedProfile) {
-            res.redirect('/userprofile'); // Redirect after updating the profile
+            if (req.session.user.role === 'organization'){
+                res.redirect('/orgprofile');
+            } else{
+                res.redirect('/userprofile');
+            }
         } else {
             res.status(404).send('User profile not found');
         }
@@ -495,6 +524,8 @@ app.post('/edituserprof', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
+
 
 app.get('/deletepage', (req, res) => {
     res.render('deletepage')
@@ -763,24 +794,25 @@ app.get('/requests', async (req, res) => {
 
 app.post('/admindenyrequest', async (req, res) => {
     try {
-        const objectId = req.body.objectId; // Assuming the entire object is sent in the request body
+        const objectId = req.body.objectId;
+        const org = await ReqCollection.findById(objectId);
 
-        // Use Mongoose to delete the object from ReqCollection based on objectId
-        const deleteResult = await ReqCollection.deleteOne({ _id: objectId });
-
-        // Check if deletion was successful
-        if (deleteResult.deletedCount) {
-            // Send a success response
-            res.json({ success: true });
-        } else {
-            // Send an error response if object not found or deletion failed
-            res.status(404).send('Object not found or deletion failed');
+        if (!org) {
+            return res.status(404).send('Organization not found');
         }
+
+        org.deniedCount += 1;
+        await org.save(); // Wait for the save operation to complete
+
+
+        return res.json({ success: true });
+
     } catch (error) {
         console.error('Error deleting object:', error);
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 
 app.post('/adminacceptrequest', async (req, res) => {
