@@ -14,8 +14,8 @@
     <header>
         <img src="https://i.imgur.com/MoSHBZX.png" class="logo" alt="HandinHand">
         <ul class="navbar">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
             <li><a href="/Posts">Opportunities</a></li>
             <li><a href="{{#if profileLink}}{{ profileLink }}{{else}}/signup{{/if}}">Profile</a></li>
         </ul>
@@ -70,7 +70,7 @@
 
                         {{#if this.openPositions}}
                         <span class="seats-left">Seats Left: {{this.openPositions}}</span>
-                        <a href="/checkout?jobId={{this._id}}" class="book-button">Book</a>
+                        <a href="/checkout?jobId={{this._id}}" class="book-button">Book</a> 
                         {{else}}
                         <p class="seats-left">No seats left</p>
                         {{/if}}

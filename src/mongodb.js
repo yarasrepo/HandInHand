@@ -215,7 +215,28 @@ const reqBook = new mongoose.Schema({
 
 const ReqBookCollection = mongoose.model("ReqBookCollection", reqBook)
 
+const FbSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
+    datePosted: {
+        type: Date,
+        default: Date.now
+    },
+    feedbackMessage: {
+        type: String,
+    },
+    feedbackEmoji: {
+        type: String,
+    }
+});
 
+const FeedbackCollection = mongoose.model("FeedbackCollection", FbSchema)
 
 module.exports = {
     collection,
@@ -223,4 +244,5 @@ module.exports = {
     JobCollection,
     ReqCollection,
     ReqBookCollection,
+    FeedbackCollection
 }

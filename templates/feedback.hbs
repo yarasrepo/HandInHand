@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale = 1">
+    <link rel="shortcut icon" type="x-icon" href="https://i.imgur.com/MoSHBZX.png">
+    <title>HandInHand-Feedback</title>
+    <link rel="stylesheet" type="text/css" href="feedback.css">
+</head>
+
+<body style="background-image: url('https://logincdn.msauth.net/shared/5/js/../images/2_bc3d32a696895f78c19d.svg');">
+    <a href="/">
+        <img src="https://i.imgur.com/MoSHBZX.png" class="logo" alt="HandinHand">
+    </a>
+    <div class="feedback-container">
+        <h1>Give us your valuable feedback</h1>
+        <p>Your feedback is very important to us</p>
+        <form id="feedbackForm" action="/submitFeedback" method="POST">
+            <div class="emoji-box">
+                <button class="btn-normal" type="button">&#128578;</button>
+                <button class="btn-normal" type="button">&#128515;</button>
+                <button class="btn-normal" type="button">&#128531;</button>
+                <button class="btn-normal" type="button">&#128532;</button>
+                <button class="btn-normal" type="button">&#128545;</button>
+                <input type="hidden" id="selectedEmoji" name="selectedEmoji">
+            </div>
+            <p class="question">Your feedback:</p>
+            <textarea id="textarea" name="feedback" cols="20" rows="5"></textarea>
+            <div class="info-field">
+                <div class="name">
+                    <label>
+                        <input type="text" name="name" placeholder=" ">
+                        <span>Name</span>
+                    </label>
+                </div>
+                <div class="email">
+                    <label>
+                        <input type="email" name="email" placeholder=" ">
+                        <span>Email Address (will not be published)</span>
+                    </label>
+                </div>
+            </div>
+            <div class="center">
+                <button class="btn button" type="submit">Send</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const btns = document.querySelectorAll(".emoji-box .btn-normal");
+        const feedbackForm = document.getElementById("feedbackForm");
+        const selectedEmojiInput = document.getElementById("selectedEmoji");
+
+        btns.forEach(btn => {
+            btn.addEventListener("click", () => {
+                btns.forEach(b => b.classList.remove("selected"));
+                btn.classList.add("selected");
+                selectedEmojiInput.value = btn.textContent;
+            });
+        });
+
+        feedbackForm.addEventListener("submit", (event) => {
+            const textareaValue = document.getElementById("textarea").value.trim();
+            const nameValue = document.querySelector(".name input").value.trim();
+            const emailValue = document.querySelector(".email input").value.trim();
+
+            if (textareaValue === "") {
+                event.preventDefault();
+                displayErrorMessage("Please provide your feedback");
+            } else if (nameValue === "") {
+                event.preventDefault();
+                displayErrorMessage("Please provide your name");
+            } else if (emailValue === "") {
+                event.preventDefault();
+                displayErrorMessage("Please provide your email");
+            }
+        });
+
+        function displayErrorMessage(message) {
+            const errorMessage = document.createElement("p");
+            errorMessage.classList.add("error-message");
+            errorMessage.textContent = message;
+            document.querySelector(".feedback-container").appendChild(errorMessage);
+        }
+    </script>
+</body>
+
+</html>
