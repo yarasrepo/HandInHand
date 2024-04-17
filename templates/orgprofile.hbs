@@ -62,7 +62,7 @@
                 <span>{{this.startDate}}</span>
                 <h3>{{this.title}}</h3>
                 <p>{{this.description}}</p>
-                <button class="btn1">Read More</button>
+                <button class="btn1" onclick="redirectToOppProf('{{this._id}}')">Read More</button>
             </div>
             {{/each}}
         </div>
@@ -179,6 +179,10 @@
             });
 
         });
+
+        function redirectToOppProf(objectId) {
+            window.location.href = `/opp_profile?objectId=${objectId}`;
+        }
     </script>
 </body>
 

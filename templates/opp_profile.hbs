@@ -1,122 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>HandinHand-Opportunity Info</title>
-        <link rel="stylesheet" href="/opp_profile">
-        <link rel="shortcut icon" type="x-icon" href="/logonowords">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    </head>
-    <body>
-        <header>
-            <h1>Opportunity name</h1>
-        </header>
-        <main>
-            <div class="opp-details">
-                <h2>Opportunity Details</h2>
-                <div class="details-container">
-                    <div class="detail">
-                        <span class="title">Location:</span>
-                        <span class="info">Sample</span>
-                    </div>
-                    <div class="detail">
-                        <span class="title">Date:</span>
-                        <span class="info">Sample</span>
-                    </div>
-                    <div class="detail">
-                        <span class="title">Start Time:</span>
-                        <span class="info">Sample</span>
-                    </div>
-                    <div class="detail">
-                        <span class="title">Total Number of Hours:</span>
-                        <span class="info">Sample</span>
-                    </div>
-                    <div class="detail">
-                        <span class="title">Total Number of Days:</span>
-                        <span class="info">Sample</span>
-                    </div>
-                    <div class="detail">
-                        <span class="title">Total Number of Volunteers Needed:</span>
-                        <span class="info">Sample</span>
-                    </div>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HandinHand-Opportunity Info</title>
+    <link rel="stylesheet" href="/opp_profile">
+    <link rel="shortcut icon" type="x-icon" href="/logonowords">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+    <header>
+        <h1>Opportunity name</h1>
+    </header>
+    <main>
+        <div class="opp-details">
+            <h2>Opportunity Details</h2>
+            <div class="details-container">
+                <div class="detail">
+                    <span class="title">Event Name:</span>
+                    <span class="info">{{job.title}}</span>
                 </div>
-                <div class="buttons">
-                    <button class="view-volunteers-button">View Volunteers</button>
-                    <button class="done-button">Close Opportunity</button>
+                <div class="detail">
+                    <span class="title">Location:</span>
+                    <span class="info">{{job.Location}}</span>
+                </div>
+                <div class="detail">
+                    <span class="title">Date Posted:</span>
+                    <span class="info">{{job.datePosted}}</span>
+                </div>
+                <div class="detail">
+                    <span class="title">Date:</span>
+                    <span class="info">{{job.startDate}}</span>
+                </div>
+                <div class="detail">
+                    <span class="title">Total Number of Hours:</span>
+                    <span class="info">{{job.requiredHours}}</span>
+                </div>
+                <div class="detail">
+                    <span class="title">Number of Volunteers Needed:</span>
+                    <span class="info">{{job.openPositions}}</span>
                 </div>
             </div>
-            <div class="grid" id="grid">
-                <div class="volunteers">
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>All Volunteers</h2>
-                            <div class="search-wrapper">
-                                <span class="fa-solid fa-magnifying-glass"></span>
-                                <input id="searchInput" type="search" placeholder="Search here" />
-                            </div>
+            <div class="buttons">
+                <button class="view-volunteers-button">View Volunteers</button>
+                <button class="done-button">Close Opportunity</button>
+                <button class="delete-button">Delete</button>
+            </div>
+        </div>
+        <div class="grid" id="grid">
+            <div class="volunteers">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>All Volunteers</h2>
+                        <div class="search-wrapper">
+                            <span class="fa-solid fa-magnifying-glass"></span>
+                            <input id="searchInput" type="search" placeholder="Search here" />
                         </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table-sortable" id="volunteersTable" width="100%">
-                                    <thead>
-                                        <tr>
-                                            <th onclick="sortTable(0)">Volunteer Name</th>
-                                            <th>Email Address</th>
-                                            <th>Phone Number</th>
-                                            <th>Location</th>
-                                            <th onclick="sortTable(4)">Date Joined</th>
-                                            <th>Review</th>
-                                            <th>Report</th>
-                                            <th>Remove</th>
-                                        </tr>
-                                    </thead>
-                                    {{#each userprofs}}
-                                    {{#if (eq this.role 'volunteer')}}
-                                    <tbody>
-                                        <tr>
-                                            <td>{{this.name}}</td>
-                                            <td>{{this.email}}</td>
-                                            <td>{{this.PhoneNum}}</td>
-                                            <td>{{this.Location}}</td>
-                                            <td>{{this.DateJoined}}</td>
-                                            <td><button onclick="viewVolunteerInfo('{{this._id}}')">Review</button>
-                                            <td><button id="report-button" class="report-button">Report</button></td>
-                                            <td><button id="remove-button" class="removet-button">Remove</button></td>
-                                        </tr>
-                                    </tbody>
-                                    {{/if}}
-                                    {{/each}}
-                                </table>
-                                <div class="pagination">
-                                    <button id="prevPageBtn" onclick="prevPage()">Previous</button>
-                                    <span id="currentPage"></span>
-                                    <button id="nextPageBtn" onclick="nextPage()">Next</button>
-                                </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table-sortable" id="volunteersTable" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th onclick="sortTable(0)">Volunteer Name</th>
+                                        <th>Email Address</th>
+                                        <th>Phone Number</th>
+                                        <th>Location</th>
+                                        <th onclick="sortTable(4)">Date Joined</th>
+                                        <th>Review</th>
+                                        <th>Report</th>
+                                        <th>Remove</th>
+                                    </tr>
+                                </thead>
+                                {{#each participants}}
+                                <tbody>
+                                    <tr>
+                                        <td>{{this.name}}</td>
+                                        <td>{{this.email}}</td>
+                                        <td>{{this.PhoneNum}}</td>
+                                        <td>{{this.Location}}</td>
+                                        <td>{{this.DateJoined}}</td>
+                                        <td><button onclick="viewVolunteerInfo('{{this._id}}')">Review</button>
+                                        <td><button id="report-button" class="report-button">Report</button></td>
+                                        <td><button id="remove-button" class="removet-button">Remove</button></td>
+                                    </tr>
+                                </tbody>
+                                {{/each}}
+                            </table>
+                            <div class="pagination">
+                                <button id="prevPageBtn" onclick="prevPage()">Previous</button>
+                                <span id="currentPage"></span>
+                                <button id="nextPageBtn" onclick="nextPage()">Next</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </main>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                var doneButton = document.querySelector('.done-button');
-                doneButton.addEventListener('click', function() {
-                    doneButton.textContent = 'Opportunity Closed';
-                    doneButton.style.backgroundColor = '#28a745'; // Change button color to green
-                    doneButton.style.cursor = 'default'; // Change cursor to default
-                    doneButton.disabled = true; // Disable the button after it's reviewed
-                });
+        </div>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var doneButton = document.querySelector('.done-button');
+            doneButton.addEventListener('click', function () {
+                doneButton.textContent = 'Opportunity Closed';
+                doneButton.style.backgroundColor = '#28a745'; // Change button color to green
+                doneButton.style.cursor = 'default'; // Change cursor to default
+                doneButton.disabled = true; // Disable the button after it's reviewed
             });
-            document.addEventListener('DOMContentLoaded', function() {
-                var viewVolunteersButton = document.querySelector('.view-volunteers-button');
-                viewVolunteersButton.addEventListener('click', function() {
-                    var volunteersSection = document.getElementById('grid');
-                    volunteersSection.scrollIntoView({ behavior: 'smooth' });
-                });
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            var viewVolunteersButton = document.querySelector('.view-volunteers-button');
+            viewVolunteersButton.addEventListener('click', function () {
+                var volunteersSection = document.getElementById('grid');
+                volunteersSection.scrollIntoView({ behavior: 'smooth' });
             });
-            document.getElementById("searchInput").addEventListener("keyup", function () {
+        });
+        document.getElementById("searchInput").addEventListener("keyup", function () {
             var input, filter, table, tr, td, i, j, txtValue;
             input = document.getElementById("searchInput");
             filter = input.value.toUpperCase();
@@ -229,6 +230,7 @@
 
         // Initial display
         displayPage(currentPage);
-        </script>     
-    </body>
+    </script>
+</body>
+
 </html>
