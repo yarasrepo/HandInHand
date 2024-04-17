@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale = 1">
+    <link rel = "shortcut icon" type = "x-icon" href="https://i.imgur.com/MoSHBZX.png">
+    <Title>HandInHand-About</Title>
+    <link rel = "stylesheet" type = "text/css" href = "about.css">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+    <!---header design-->
+    <header>
+        <img src="https://i.imgur.com/MoSHBZX.png" class = "logo" alt="HandinHand">
+
+        <ul class = "navbar">
+            <li><a href = "/homepage">Home</a></li>
+            <li><a href = "about.html">About</a></li>
+            <li><a href = "/Posts">Opportunities</a></li>
+            <li><a href="{{#if profileLink}}{{ profileLink }}{{else}}/signup{{/if}}">Profile</a></li>
+
+        </ul>
+        <div class = "h-right">
+            <!--{{#if signedIn}}-->
+            <a href="/logout">Logout</a>
+            <!--{{else}}-->
+            <li><a href="/signup">Register</a>|<a href="/login">Login</a></li>
+            <div class = "bx bx-menu" id = "menu-icon"></div>
+            <!--{{/if}}-->
+        </div>   
+    </header>
+    <!---about section design-->
+    <section class = "about">
+        <div class = "about-text"> 
+            <h1>About Us</h1>
+        </div>
+    </section>
+    <!--Introduction section design-->
+    <section class="introduction">
+        <div class="introduction-text">
+            <h5 class="hr-lines">OUR INTRODUCTION</h5>
+            <h1>HandinHand</h1>
+            <p>HandinHand is a platform, made by junior year computer science students from the American University of Beirut, used to connect with organizations seeking volunteers for various causes and interests. It serves as a centrailized hub for passionate indiviuals to explore volunteer positions, learn about different organizations' missions, and connect with fellow changemakers. HandinHand aims to bridge the gap between those who want to give back and those seeking dedicated volunteers.</p>
+        </div>
+        <div class="introduction-image">
+            <img src="https://media.licdn.com/dms/image/D5612AQG9kyNA_gJKQA/article-cover_image-shrink_720_1280/0/1654793377068?e=2147483647&v=beta&t=X4oj21kQQkDtBQW2_94Q0_9Y7tIhUFL69U9ltjkD9RY" alt="Introduction Image">
+        </div>
+    </section>
+    <!--Quote section design-->
+    <section class="quote">
+        <div class="quote-text">
+            <h1>"Alone, we can do so little;<br>   together, we can do so much."</h1>
+            <p>- Helen Keller</p>
+        </div>
+    </section>
+    <!--Involve section design-->
+    <section class="involve">
+        <div class="involve-text">
+            <h5>GET INVOLVED NOW</h5>
+            <h1>Make a difference today</h1>
+            <div class="register-button">
+                <button onclick="window.location.href='/signup'">REGISTER NOW!</button>
+            </div>
+        </div>
+    </section>
+    <!---Footer section design-->
+    <section class = "footer">
+        <div class = "footer-box">
+            <h3>Find Us</h3>
+            <p>American University of Beirut, Bliss St.<br>Beirut, Lebanon</p>
+            <p>customerservice@handinhand.com</p>
+            <div class="social">
+                <a href = "feedback.html"><i class="ri-star-line"></i></a>
+                <a href = "https://www.instagram.com/accounts/login/"><i class="ri-instagram-line"></i></a>
+                <a href = "https://www.facebook.com/login/"><i class="ri-facebook-line"></i></a>
+                <a href = "https://www.tiktok.com/login"><i class="ri-tiktok-fill"></i></a>
+                <a href = "https://twitter.com/login"><i class="ri-twitter-x-line"></i></a>
+            </div>
+        </div>
+    </section>
+    <!--- {{ !-- <script src = "js/script.js"></script> --}}-->
+    <script>
+        const header = document.querySelector("header");
+        window.addEventListener("scroll", function(){
+            header.classList.toggle("sticky", window.scrollY > 60)
+        });
+
+        let menu = document.querySelector('#menu-icon');
+        let navbar = document.querySelector('.navbar');
+
+        menu.onclick = () => {
+            menu.classList.toggle('bx-x');
+            navbar.classList.toggle('open');
+        };
+    </script>
+</body>
+</html>
