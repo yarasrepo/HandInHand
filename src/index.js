@@ -245,7 +245,12 @@ app.post('/checkout', async (req, res) => {
             console.log('Provided first name and last name do not match existing user details');
             return res.status(400).send('Provided first name and last name do not match existing user details. Please provide correct information.');
         }
-
+        //if user booked this job 
+        const isParticipant = job.participants.some(participant => participant.email === email);
+        if (isParticipant) {
+            console.log('User has already booked this job');
+            return res.status(400).send('You have already booked this job.');
+        }
 
         if (firstName && !user.firstName) {
             user.firstName = firstName;
@@ -267,6 +272,7 @@ app.post('/checkout', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 
 
