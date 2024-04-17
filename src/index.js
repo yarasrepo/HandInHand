@@ -832,6 +832,34 @@ app.get('/requests', async (req, res) => {
     }
 });
 
+app.get('/opp_profile', async (req, res) => {
+    // Extract the objectId parameter from the request query
+    const objectId = req.query.objectId;
+    try {
+        const job = await JobCollection.findById(objectId);
+        let participantEmails = [];
+
+        if (job && job.participants) {
+            participantEmails = job.participants.map(participant => participant.email);
+        } else {
+            res.status(404).send('Job or participants not found');
+            return;
+        }
+
+        const participants = await userProfCollection.find({ email: { $in: participantEmails } });
+
+        if (participants) {
+            res.render('opp_profile', { job, participants });
+        } else {
+            res.status(404).send('Participants not found');
+        }
+    } catch (error) {
+        console.error('Error fetching job and participants information:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
 app.post('/admindenyrequest', async (req, res) => {
     try {
         const objectId = req.body.objectId;
