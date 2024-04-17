@@ -602,6 +602,23 @@ app.post('/admindeletejob', async (req, res) => {
     }
 });
 
+app.delete('/deleteJob', async (req, res) => {
+    const jobId = req.query.jobId;
+
+    try {
+        const deletedJob = await JobCollection.findByIdAndDelete(jobId);
+        if (deletedJob) {
+            res.sendStatus(200); // Send success response
+        } else {
+            res.sendStatus(404); // Job not found
+        }
+    } catch (error) {
+        console.error('Error deleting job:', error);
+        res.sendStatus(500); // Internal server error
+    }
+});
+
+
 app.post('/admindeletefeedback', async (req, res) => {
     try {
         const fbId = req.body.fbId; // Assuming the entire job object is sent in the request body

@@ -76,7 +76,7 @@
             {{#each jobs}}
             <div class="box">
                 <img src="{{this.imageLink}}" alt="">
-                <button class="btn1">Read More</button>
+                <button class="btn1" onclick="redirectToOppProf('{{this._id}}')">Read More</button>
             </div>
             {{/each}}
         </div>

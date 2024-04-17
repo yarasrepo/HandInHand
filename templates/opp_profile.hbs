@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HandinHand-Opportunity Info</title>
-    <link rel="stylesheet" href="/opp_profile">
+    <link rel="stylesheet" href="/opp_profile.css">
     <link rel="shortcut icon" type="x-icon" href="/logonowords">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -24,7 +24,7 @@
                 </div>
                 <div class="detail">
                     <span class="title">Location:</span>
-                    <span class="info">{{job.Location}}</span>
+                    <span class="info">{{job.location}}</span>
                 </div>
                 <div class="detail">
                     <span class="title">Date Posted:</span>
@@ -46,7 +46,7 @@
             <div class="buttons">
                 <button class="view-volunteers-button">View Volunteers</button>
                 <button class="done-button">Close Opportunity</button>
-                <button class="delete-button">Delete</button>
+                <button class="delete-button" data-job-id="{{job._id}}">Delete</button>
             </div>
         </div>
         <div class="grid" id="grid">
@@ -146,6 +146,31 @@
                 }
             }
         });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const deleteButtons = document.querySelectorAll('.delete-button');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', async () => {
+                    const jobId = button.dataset.jobId;
+                    try {
+                        const response = await fetch(`/deleteJob?jobId=${jobId}`, {
+                            method: 'DELETE',
+                        });
+                        if (response.ok) {
+                            window.location.href = '/orgprofile'; // Redirect to organization profile after successful deletion
+                        } else {
+                            console.error('Failed to delete job');
+                            // Handle error or display a message
+                        }
+                    } catch (error) {
+                        console.error('Error deleting job:', error);
+                        // Handle error or display a message
+                    }
+                });
+            });
+        });
+
+
         function parseDate(dateString) {
             const months = {
                 "Jan.": 0, "Feb.": 1, "Mar.": 2, "Apr.": 3, "May": 4, "Jun.": 5,

@@ -54,6 +54,15 @@ main {
     border-radius: 5px;
     cursor: pointer;
 }
+.delete-button{
+    padding: 10px 50px;
+    margin-right: 10px;
+    background-color: #2685F5;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
 .Opportunity{
     background-color: #28a745 !important;
 }
