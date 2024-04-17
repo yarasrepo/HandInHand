@@ -76,13 +76,12 @@ app.post('/signup', async (req, res) => {
         }
 
         if (data.role === 'organization') {
-            const checkReq = await ReqCollection.findOne({ email: req.body.email });
-            if (checkReq && checkReq.flag === 'false') {
+            const org = await ReqCollection.findOne({ email: req.body.email });
+            if (org && org.flag === false) {
                 res.send("Request pending approval");
                 return;
-            }
-
-            if (!checkReq) {
+            } 
+            else if (!org) {
                 await ReqCollection.create(data);
                 res.send("Request submitted successfully");
                 return;
@@ -116,9 +115,10 @@ app.post('/signup', async (req, res) => {
         res.redirect(302, '/');
     } catch (error) {
         console.error("Error during signup:", error);
-        res.status(500).send("An error occurred during signup: " + error.message); // Include error message in response
+        res.status(500).send("An error occurred during signup: " + error.message);
     }
 });
+
 
 
 
@@ -774,7 +774,7 @@ app.post('/adminacceptrequest', async (req, res) => {
         }
 
         // Update the flag to 'true'
-        existingReq.flag = 'true';
+        existingReq.flag = true;
         await existingReq.save(); // Save the updated request
 
         res.send('Request accepted successfully'); // Send a success response
