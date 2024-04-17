@@ -288,9 +288,9 @@ app.get('/job_submission_form', (req, res) => {
 
 app.post('/job_submission_form', async (req, res) => {
     try {
-        const { jobName, description, openPositions, location, requiredHours, requiredSkills, imageLink } = req.body;
+        const { jobName, description, openPositions, location, startDate, requiredHours, requiredSkills, imageLink } = req.body;
 
-        if (!jobName || !description || !openPositions || !location || !requiredHours || !requiredSkills) {
+        if (!jobName || !description || !openPositions || !location || !startDate || !requiredHours || !requiredSkills) {
             return res.status(400).send('All fields are required');
         }
         const organizationName = req.session.user.name;
@@ -300,6 +300,7 @@ app.post('/job_submission_form', async (req, res) => {
             description,
             openPositions: parseInt(openPositions),
             location,
+            startDate, // Use the startDate directly since it's already formatted
             requiredHours: parseInt(requiredHours),
             requiredSkills,
             imageLink,
@@ -317,6 +318,7 @@ app.post('/job_submission_form', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 app.get('/userprofile', async (req, res) => {
     try {

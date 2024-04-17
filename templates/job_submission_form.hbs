@@ -29,6 +29,11 @@
                 <input type="text" id="location" name="location" required>
             </div>
             <div class="form-group">
+                <label for="startDate">Start Date</label>
+                <input type="text" id="startDate" name="startDate" placeholder="MM/DD/YYYY" required>
+            </div>
+
+            <div class="form-group">
                 <label for="requiredHours">Required Hours:</label>
                 <input type="number" id="requiredHours" name="requiredHours" required>
             </div>
@@ -54,13 +59,35 @@
             const jobName = document.getElementById("jobName").value;
             const description = document.getElementById("description").value;
             const openPositions = parseInt(document.getElementById("openPositions").value);
-            const location = document.getElementById("location").value;   
+            const location = document.getElementById("location").value;
             const requiredHours = parseInt(document.getElementById("requiredHours").value);
             const requiredSkills = document.getElementById("requiredSkills").value;
             const imageLink = document.getElementById("imageLink").value || null;
+            let startDateInput = document.getElementById("startDate").value;
+
+            const currentDate = new Date();
+            const formattedCurrentDate = `${currentDate.getMonth() + 1}/${currentDate.getDate()}/${currentDate.getFullYear()}`;
+            // Regular expression to validate and format the date input as "MM/DD/YYYY"
+            const datePattern = /^(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])\/\d{4}$/;
 
             if (!jobName || !description || !openPositions || !location || !requiredHours || !requiredSkills) {
                 alert("Please fill out all required fields.");
+                return;
+            }
+
+            if (!datePattern.test(startDateInput)) {
+                alert("Invalid date format. Please enter the date in MM/DD/YYYY format.");
+                return;
+            }
+
+            // Convert the date to text displaying month, date, and year only
+            const [month, day, year] = startDateInput.split('/');
+            const formattedStartDate = `${month}/${day}/${year}`;
+
+
+            const startDateObject = new Date(formattedStartDate);
+            if (startDateObject <= currentDate) {
+                alert("Start date must be after today's date.");
                 return;
             }
 
@@ -69,6 +96,7 @@
                 description: description,
                 openPositions: openPositions,
                 location: location,
+                startDate: formattedStartDate,
                 requiredHours: requiredHours,
                 requiredSkills: requiredSkills,
                 imageLink: imageLink
@@ -98,6 +126,7 @@
         };
 
         document.getElementById("jobForm").addEventListener("submit", submitJob);
+
     </script>
 
 </body>

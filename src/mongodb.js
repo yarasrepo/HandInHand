@@ -102,6 +102,10 @@ const jobSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    startDate: {
+        type: String,
+        required: true,
+    },
     requiredHours: {
         type: Number,
         required: true
