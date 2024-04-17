@@ -78,8 +78,19 @@ app.post('/signup', async (req, res) => {
         if (data.role === 'organization') {
             const org = await ReqCollection.findOne({ email: req.body.email });
             if (org && org.flag === false) {
-                res.send("Request pending approval");
-                return;
+                if (org.deniedCount == 3) {
+                    res.send("Your application request has been denied three times! You cannot create an account with this email.");
+                    return;
+                }
+                else if (org.reqCount == org.deniedCount) {
+                    res.send("Request pending approval");
+                    return;
+                } else {
+                    org.reqCount += 1;
+                    await org.save();
+                    res.send("Request submitted successfully");
+                    return;
+                }
             }
             else if (!org) {
                 await ReqCollection.create(data);
@@ -778,24 +789,25 @@ app.get('/requests', async (req, res) => {
 
 app.post('/admindenyrequest', async (req, res) => {
     try {
-        const objectId = req.body.objectId; // Assuming the entire object is sent in the request body
+        const objectId = req.body.objectId;
+        const org = await ReqCollection.findById(objectId);
 
-        // Use Mongoose to delete the object from ReqCollection based on objectId
-        const deleteResult = await ReqCollection.deleteOne({ _id: objectId });
-
-        // Check if deletion was successful
-        if (deleteResult.deletedCount) {
-            // Send a success response
-            res.json({ success: true });
-        } else {
-            // Send an error response if object not found or deletion failed
-            res.status(404).send('Object not found or deletion failed');
+        if (!org) {
+            return res.status(404).send('Organization not found');
         }
+
+        org.deniedCount += 1;
+        await org.save(); // Wait for the save operation to complete
+
+
+        return res.json({ success: true });
+
     } catch (error) {
         console.error('Error deleting object:', error);
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 
 app.post('/adminacceptrequest', async (req, res) => {

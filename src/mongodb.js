@@ -169,6 +169,16 @@ const reqOrg = new mongoose.Schema({
         default: 'false',
         required: true,
     },
+    deniedCount: {
+        type: Number,
+        default: 0,
+        required: true,
+    },
+    reqCount: {
+        type: Number,
+        default: 0,
+        required: true,
+    }
 });
 
 const ReqCollection = mongoose.model("ReqCollection", reqOrg)
