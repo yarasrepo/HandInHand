@@ -342,7 +342,7 @@ app.get('/userprofile', async (req, res) => {
             if (userProf) {
                 // Render the profile page if userProf is found
                 if (req.session.user.role == 'organization') {
-                    res.render('orgprofile', { userProf });
+                    res.redirect('/orgprofile');
                 }
                 else {
                     res.render('userprofile', { userProf });
@@ -371,30 +371,11 @@ app.get('/orgprofile', async (req, res) => {
             const userProf = await userProfCollection.findOne({ name: req.session.user.name });
 
             if (userProf) {
-                const jobs= await JobCollection.find();
+                const jobs = await JobCollection.find({ creator: orgName });
                 console.log(jobs);
                 res.render('orgprofile', { userProf, jobs });
             } else {
-                // Create the user profile if not found
-                const existingUser = await LogInCollection.findOne({ name: req.session.user.name });
-                if (existingUser) {
-                    const data = {
-                        name: req.session.user.name,
-                        email: existingUser.email,
-                        Description: "Let's make the world better together",
-                        role: "organization",
-                        PhoneNum: 0,
-                        Location: "Beirut",
-                        ProfilePic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR11lMafo-ZYohC2qYI1BJN80gzcC-7IpohIeUQT1RT0WgBttaZX7J1yEea92wMCcTXa9A&usqp=CAU",
-                    };
-                    await userProfCollection.create(data);
-
-                    // Redirect to the profile page after creating the profile
-                    res.redirect('/userprofile');
-                } else {
-                    console.log('user not found in LogInCollection');
-                    res.status(404).send('User not found');
-                }
+                res.redirect('/login');
             }
         } else {
             res.redirect('/login');
@@ -511,9 +492,9 @@ app.post('/edituserprof', async (req, res) => {
         const updatedProfile = await userProfCollection.findOneAndUpdate(query, update, { new: true });
 
         if (updatedProfile) {
-            if (req.session.user.role === 'organization'){
+            if (req.session.user.role === 'organization') {
                 res.redirect('/orgprofile');
-            } else{
+            } else {
                 res.redirect('/userprofile');
             }
         } else {
@@ -902,6 +883,30 @@ app.post('/adminacceptrequest', async (req, res) => {
     } catch (error) {
         console.error('Error accepting request:', error);
         res.status(500).send('Internal Server Error'); // Send a generic error response for internal server errors
+    }
+});
+
+app.delete('/delete-image', async (req, res) => {
+    try {
+        const imageUrlToDelete = req.body.imageUrl; // Extract the image URL from the request body
+
+        // Assuming userProfCollection is your Mongoose model for user profiles
+        const userProfile = await userProfCollection.findOneAndUpdate(
+            { "images": imageUrlToDelete }, // Find the user profile containing the image URL
+            { $pull: { "images": imageUrlToDelete } }, // Remove the image URL from the images array
+            { new: true } // Return the updated document after deletion
+        );
+
+        if (userProfile) {
+            // Image deleted successfully
+            res.status(200).json({ message: 'Image deleted successfully', userProfile });
+        } else {
+            // Image not found or deletion failed
+            res.status(404).json({ message: 'Image not found or deletion failed' });
+        }
+    } catch (error) {
+        console.error('Error deleting image:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
