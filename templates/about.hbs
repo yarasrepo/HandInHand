@@ -16,10 +16,9 @@
 
         <ul class = "navbar">
             <li><a href = "/homepage">Home</a></li>
-            <li><a href = "about.html">About</a></li>
+            <li><a href = "/about">About</a></li>
             <li><a href = "/Posts">Opportunities</a></li>
             <li><a href="{{#if profileLink}}{{ profileLink }}{{else}}/signup{{/if}}">Profile</a></li>
-
         </ul>
         <div class = "h-right">
             <!--{{#if signedIn}}-->
@@ -71,7 +70,7 @@
             <p>American University of Beirut, Bliss St.<br>Beirut, Lebanon</p>
             <p>customerservice@handinhand.com</p>
             <div class="social">
-                <a href = "feedback.html"><i class="ri-star-line"></i></a>
+                <a href = "/feedback"><i class="ri-star-line"></i></a>
                 <a href = "https://www.instagram.com/accounts/login/"><i class="ri-instagram-line"></i></a>
                 <a href = "https://www.facebook.com/login/"><i class="ri-facebook-line"></i></a>
                 <a href = "https://www.tiktok.com/login"><i class="ri-tiktok-fill"></i></a>
@@ -79,7 +78,6 @@
             </div>
         </div>
     </section>
-    <!--- {{ !-- <script src = "js/script.js"></script> --}}-->
     <script>
         const header = document.querySelector("header");
         window.addEventListener("scroll", function(){

@@ -9,7 +9,7 @@ const app = express()
 const hbs = require("hbs")
 const helpers = require("handlebars-helpers")();
 hbs.registerHelper(helpers);
-const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, ReqBookCollection } = require("./mongodb");
+const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, FeedbackCollection } = require("./mongodb");
 const port = process.env.PORT || 3000
 app.use(express.json())
 
@@ -836,6 +836,45 @@ app.post('/adminacceptrequest', async (req, res) => {
         res.status(500).send('Internal Server Error'); // Send a generic error response for internal server errors
     }
 });
+
+app.get('/about', (req, res)=>{
+    res.render('about');
+});
+
+app.get('/feedback', (req, res)=>{
+    res.render('feedback');
+});
+
+app.post('submitFeedback', (req,res)=>{
+
+});
+
+app.post('/submitFeedback', async (req, res) => {
+    const { name, email, feedback, selectedEmoji } = req.body;
+
+    try {
+        if (!name || !email || !feedback || !selectedEmoji) {
+            return res.status(400).send('All fields are required');
+        }
+
+        // Create a new feedback instance
+        const newFeedback = new FeedbackCollection({
+            name,
+            email,
+            feedbackMessage: feedback,
+            feedbackEmoji: selectedEmoji,
+        });
+
+        // Save the new feedback to the database
+        await newFeedback.save();
+
+        res.redirect('/');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error submitting feedback');
+    }
+});
+
 
 app.listen(port, () => {
     console.log('port connected');
