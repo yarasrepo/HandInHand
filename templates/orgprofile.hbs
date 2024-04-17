@@ -55,61 +55,17 @@
     <section class="current" id="current">
         <h1 class="heading"><span>Current</span> Opportunities</h1>
         <div id="currentOpps"></div>
-        <!-- <div class = "box-container">
-            <div class = "box">
-                <i class = "fa-solid fa-calendar-week"></i>
-                <span>DAY</span>
-                <h3>Opportunity 1</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio deserunt aspernatur
-                fugiat minus enim ullam repundiandae sint sed magnam tenetur!</p>
-                <button class = "btn1">Read More</button>
+        <div class="box-container">
+            {{#each jobs}}
+            <div class="box">
+                <i class="fa-solid fa-calendar-week"></i>
+                <span>{{this.startDate}}</span>
+                <h3>{{this.title}}</h3>
+                <p>{{this.description}}</p>
+                <button class="btn1">Read More</button>
             </div>
-
-            <div class = "box">
-                <i class = "fa-solid fa-calendar-week"></i>
-                <span>DAY</span>
-                <h3>Opportunity 2</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio deserunt aspernatur
-                fugiat minus enim ullam repundiandae sint sed magnam tenetur!</p>
-                <button class = "btn1">Read More</button>
-            </div>
-
-            <div class = "box">
-                <i class = "fa-solid fa-calendar-week"></i>
-                <span>DAY</span>
-                <h3>Opportunity 3</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio deserunt aspernatur
-                fugiat minus enim ullam repundiandae sint sed magnam tenetur!</p>
-                <button class = "btn1">Read More</button>
-            </div>
-
-            <div class = "box">
-                <i class = "fa-solid fa-calendar-week"></i>
-                <span>DAY</span>
-                <h3>Opportunity 4</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio deserunt aspernatur
-                fugiat minus enim ullam repundiandae sint sed magnam tenetur!</p>
-                <button class = "btn1">Read More</button>
-            </div>
-
-            <div class = "box">
-                <i class = "fa-solid fa-calendar-week"></i>
-                <span>DAY</span>
-                <h3>Opportunity 5</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio deserunt aspernatur
-                fugiat minus enim ullam repundiandae sint sed magnam tenetur!</p>
-                <button class = "btn1">Read More</button>
-            </div>
-
-            <div class = "box">
-                <i class = "fa-solid fa-calendar-week"></i>
-                <span>DAY</span>
-                <h3>Opportunity 6</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio deserunt aspernatur
-                fugiat minus enim ullam repundiandae sint sed magnam tenetur!</p>
-                <button class = "btn1">Read More</button>
-            </div>
-        </div> -->
+            {{/each}}
+        </div>
     </section>
 
     <!--Previous Opportunities design-->

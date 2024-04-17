@@ -371,8 +371,9 @@ app.get('/orgprofile', async (req, res) => {
             const userProf = await userProfCollection.findOne({ name: req.session.user.name });
 
             if (userProf) {
-                // Render the profile page if userProf is found
-                res.render('orgprofile', { userProf });
+                const jobs= await JobCollection.find();
+                console.log(jobs);
+                res.render('orgprofile', { userProf, jobs });
             } else {
                 // Create the user profile if not found
                 const existingUser = await LogInCollection.findOne({ name: req.session.user.name });
@@ -510,7 +511,11 @@ app.post('/edituserprof', async (req, res) => {
         const updatedProfile = await userProfCollection.findOneAndUpdate(query, update, { new: true });
 
         if (updatedProfile) {
-            res.redirect('/userprofile'); // Redirect after updating the profile
+            if (req.session.user.role === 'organization'){
+                res.redirect('/orgprofile');
+            } else{
+                res.redirect('/userprofile');
+            }
         } else {
             res.status(404).send('User profile not found');
         }
