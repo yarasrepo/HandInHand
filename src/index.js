@@ -9,7 +9,7 @@ const app = express()
 const hbs = require("hbs")
 const helpers = require("handlebars-helpers")();
 hbs.registerHelper(helpers);
-const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, ReqBookCollection } = require("./mongodb");
+const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, FeedbackCollection } = require("./mongodb");
 const port = process.env.PORT || 3000
 app.use(express.json())
 
@@ -621,6 +621,27 @@ app.post('/admindeletejob', async (req, res) => {
     }
 });
 
+app.post('/admindeletefeedback', async (req, res) => {
+    try {
+        const fbId = req.body.fbId; // Assuming the entire job object is sent in the request body
+
+        // Use Mongoose to delete the job from JobCollection based on jobId
+        const deleteFb = await FeedbackCollection.deleteOne({ _id: fbId });
+
+        // Check if deletion was successful
+        if (deleteFb.deletedCount) {
+            // Send a success response
+            res.json({ success: true });
+        } else {
+            // Send an error response if job not found or deletion failed
+            res.status(404).send('Feedback not found or deletion failed');
+        }
+    } catch (error) {
+        console.error('Error deleting feedback:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 
 app.get('/admin', async (req, res) => {
     // Check if the user is logged in
@@ -720,7 +741,26 @@ app.get('/opp_admin', async (req, res) => {
     }
 });
 
-
+app.get('/feedback_admin', async (req, res) => {
+    if (req.session.user && req.session.user.name) {
+        if (req.session.user.role !== 'admin') {
+            res.redirect('/');
+        }
+        const adName = req.session.user.name;
+        try {
+            // Fetch the number of volunteers and organizations
+            const fbs = await FeedbackCollection.find();
+            // Render the admin page with data
+            res.render('feedback_admin', { adName, fbs });
+        } catch (error) {
+            console.error('Error fetching data for admin page:', error);
+            res.status(500).send('Internal Server Error');
+        }
+    } else {
+        // Redirect to the login page if the user is not logged in
+        res.redirect('/login');
+    }
+});
 
 app.get('/vol_info', async (req, res) => {
     const objectId = req.query.objectId;
@@ -836,6 +876,45 @@ app.post('/adminacceptrequest', async (req, res) => {
         res.status(500).send('Internal Server Error'); // Send a generic error response for internal server errors
     }
 });
+
+app.get('/about', (req, res)=>{
+    res.render('about');
+});
+
+app.get('/feedback', (req, res)=>{
+    res.render('feedback');
+});
+
+app.post('submitFeedback', (req,res)=>{
+
+});
+
+app.post('/submitFeedback', async (req, res) => {
+    const { name, email, feedback, selectedEmoji } = req.body;
+
+    try {
+        if (!name || !email || !feedback || !selectedEmoji) {
+            return res.status(400).send('All fields are required');
+        }
+
+        // Create a new feedback instance
+        const newFeedback = new FeedbackCollection({
+            name,
+            email,
+            feedbackMessage: feedback,
+            feedbackEmoji: selectedEmoji,
+        });
+
+        // Save the new feedback to the database
+        await newFeedback.save();
+
+        res.redirect('/');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error submitting feedback');
+    }
+});
+
 
 app.listen(port, () => {
     console.log('port connected');
