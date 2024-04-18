@@ -1072,10 +1072,10 @@ app.put('/completeopportunity', async (req, res) => {
         await job.save();
 
         // Get all participants' IDs from the job
-        const participantIds = job.participants;
+        const participantEmails = job.participants.map(participant => participant.email);
 
         // Fetch participant accounts from UserProfCollection and update volunteered hours
-        const participants = await userProfCollection.find({ _id: { $in: participantIds } });
+        const participants = await userProfCollection.find({ email: { $in: participantEmails } });
         for (const participant of participants) {
             participant.HoursVolunteered += job.requiredHours;
             await participant.save();
@@ -1089,23 +1089,23 @@ app.put('/completeopportunity', async (req, res) => {
 });
 
 // Assuming you have a route handler set up for handling the report button click
-app.put('/reportparticipant', async (req, res) => {
-    const participantId = req.body.participantId; // Assuming you're sending the participant ID from the frontend
+app.post('/reportParticipant', async (req, res) => {
+    const participantEmail = req.body.participantEmail; // Assuming you're sending the participant ID from the frontend
 
     try {
-        // Assuming you have a MongoDB model for participants, replace 'ParticipantModel' with your actual model name
-        const participant = await userProfCollection.findById(participantId);
-        if (!participant) {
-            return res.status(404).json({ error: 'Participant not found' });
+  
+        const participantUser = await userProfCollection.findOne({ email: participantEmail});
+        if (!participantUser) {
+            return res.status(404).json({ error: 'Participant user not found' });
         }
 
-        // Increment the reports attribute by one
-        participant.reports += 1;
+        // Increment the reports attribute by one for the participant
+        participantUser.reports += 1;
 
-        // Save the updated participant data back to the database
-        await participant.save();
+        // Save the updated job data back to the database
+        await participantUser.save();
 
-        res.status(200).json({ message: 'Participant report incremented successfully', participant });
+        res.status(200).json({ message: 'Participant report incremented successfully', job });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Server error' });
@@ -1114,7 +1114,7 @@ app.put('/reportparticipant', async (req, res) => {
 
 
 // Assuming you have a route handler set up for handling participant deletion
-app.delete('/deleteParticipant', async (req, res) => {
+app.delete('/removeParticipant', async (req, res) => {
     const jobId = req.query.jobId;
     const participantId = req.query.participantId;
 
@@ -1129,7 +1129,6 @@ app.delete('/deleteParticipant', async (req, res) => {
         job.participants = job.participants.filter(participant => participant.toString() !== participantId);
         await job.save();
 
-
         res.status(200).json({ message: 'Participant removed from job successfully' });
     } catch (err) {
         console.error(err);
@@ -1140,14 +1139,14 @@ app.delete('/deleteParticipant', async (req, res) => {
 
 // Assuming you have an Express app instance named 'app'
 app.post('/highlightFeedback', async (req, res) => {
-    const { feedbackId, highlighted } = req.body;
+    const { fbId, isHighlight } = req.body;
 
     try {
         // Update the feedback document in your database to set 'highlighted' based on the request
         // For example, using Mongoose:
         const updatedFeedback = await FeedbackCollection.findByIdAndUpdate(
-            feedbackId,
-            { $set: { highlighted } },
+            fbId,
+            { $set: {highlighted: isHighlight } },
             { new: true } // To return the updated document
         );
 

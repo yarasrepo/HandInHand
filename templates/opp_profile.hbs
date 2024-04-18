@@ -48,7 +48,7 @@
             </div>
             <div class="buttons">
                 <button class="view-volunteers-button">View Volunteers</button>
-                {{#if (eq job.complete false)}}
+                {{#if (eq job.completed false)}}
                 <button class="done-button" data-job-id="{{job._id}}">Close Opportunity</button>
                 {{/if}}
                 <button class="delete-button" data-job-id="{{job._id}}">Delete Opportunity</button>
@@ -88,8 +88,9 @@
                                         <td>{{this.Location}}</td>
                                         <td>{{this.DateJoined}}</td>
                                         <td><button onclick="viewVolunteerInfo('{{this._id}}')">Review</button>
-                                        <td><button class="report-button"
-                                                data-participant-id="{{this._id}}">Report</button></td>
+                                            <td><button class="report-button"
+                                                onclick="reportParticipant('{{this.email}}')">Report</button></td>
+
                                         <td><button class="remove-button"
                                                 data-participant-id="{{this._id}}">Remove</button></td>
                                     </tr>
@@ -199,34 +200,7 @@
             });
         });
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const reportButtons = document.querySelectorAll('.report-button');
-            reportButtons.forEach(button => {
-                button.addEventListener('click', async () => {
-                    const participantId = button.dataset.participantId;
-                    try {
-                        const response = await fetch(`/reportParticipant?participantId=${participantId}`, {
-                            method: 'POST',
-                        });
-                        if (response.ok) {
-                            // Increment the reports locally after successful update
-                            const reportsElement = button.closest('tr').querySelector('.reports');
-                            const currentReports = parseInt(reportsElement.textContent);
-                            reportsElement.textContent = currentReports + 1;
-                            // Optionally, you can disable the button or change its appearance after reporting
-                            button.disabled = true;
-                            button.textContent = 'Reported';
-                        } else {
-                            console.error('Failed to report participant');
-                            // Handle error or display a message
-                        }
-                    } catch (error) {
-                        console.error('Error reporting participant:', error);
-                        // Handle error or display a message
-                    }
-                });
-            });
-        });
+
 
         document.addEventListener('DOMContentLoaded', function () {
             const removeButtons = document.querySelectorAll('.remove-button');
@@ -236,7 +210,7 @@
                     const participantId = button.dataset.participantId;
 
                     try {
-                        const response = await fetch(`/deleteParticipant?jobId=${jobId}&participantId=${participantId}`, {
+                        const response = await fetch(`/removeParticipant?jobId=${jobId}&participantId=${participantId}`, {
                             method: 'DELETE',
                         });
                         if (response.ok) {
@@ -338,6 +312,30 @@
         function viewVolunteerInfo(objectId) {
             window.location.href = `/vol_info?objectId=${objectId}`;
         }
+
+        function reportParticipant(participantEmail) {
+            // You can perform any necessary processing here before sending the email to the server
+            console.log('Participant Email:', participantEmail);
+
+            // Now you can make the fetch request to report the participant
+            fetch(`/reportParticipant?participantEmail=${encodeURIComponent(participantEmail)}`, {
+                method: 'POST',
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // Optionally, you can disable the button or change its appearance after reporting
+                        console.log('Participant reported successfully');
+                    } else {
+                        console.error('Failed to report participant');
+                        // Handle error or display a message
+                    }
+                })
+                .catch(error => {
+                    console.error('Error reporting participant:', error);
+                    // Handle error or display a message
+                });
+        }
+
 
         // Initial display
         displayPage(currentPage);

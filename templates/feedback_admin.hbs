@@ -82,7 +82,6 @@
                                             <th onclick="sortTable(0)">Name</th>
                                             <th>Email Address</th>
                                             <th>Feedback Message</th>
-                                            <th>Feedback Emoji</th>
                                             <th onclick="sortTable(4)">Date Posted</th>
                                             <th>Highlight</th>
                                             <th>Delete</th>
@@ -94,14 +93,16 @@
                                             <td>{{this.name}}</td>
                                             <td>{{this.email}}</td>
                                             <td>{{this.feedbackMessage}}</td>
-                                            <td>{{this.feedbackEmoji}}</td>
                                             <td>{{this.datePosted}}</td>
                                             <td>
                                                 {{#if (eq this.highlighted true)}}
-                                                <button onclick="RemoveHighlightFeedback('{{this._id}}')">Remove
+                                                <button onclick="RemoveHighlightFeedback('{{this._id}}')"
+                                                    class="highlight-button" data-user-id="{{this._id}}">Remove
                                                     Highlight</button>
                                                 {{else}}
-                                                <button onclick="HighlightFeedback('{{this._id}}')">Highlight</button>
+                                                <button onclick="HighlightFeedback('{{this._id}}')"
+                                                    class="highlight-button"
+                                                    data-user-id="{{this._id}}">Highlight</button>
                                                 {{/if}}
                                             </td>
 
@@ -174,43 +175,40 @@
             });
         });
 
-        async function HighlightFeedback(feedbackId) {
-            try {
-                const response = await fetch(`/highlightFeedback?feedbackId=${feedbackId}&highlighted=true`, {
-                    method: 'POST',
+        document.addEventListener('DOMContentLoaded', function () {
+            var highlightButtons = document.querySelectorAll('.highlight-button');
+            highlightButtons.forEach(function (highlightButton) {
+                highlightButton.addEventListener('click', async function () {
+                    const fbId = this.dataset.userId; // Get the feedback ID from the button's dataset
+                    const isHighlight = this.textContent === 'Highlight'; // Check if the button text is 'Highlight'
+                    try {
+                        const response = await fetch('/highlightFeedback', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ fbId, isHighlight }) // Send the feedback ID and highlight status in the request body
+                        });
+                        const data = await response.json();
+                        if (data.success) {
+                            // Optionally, update the UI to reflect the highlight status
+                            if (isHighlight) {
+                                this.textContent = 'Remove Highlight'; // Change button text to 'Remove Highlight'
+                            } else {
+                                this.textContent = 'Highlight'; // Change button text back to 'Highlight'
+                            }
+                        } else {
+                            console.error('Highlight operation failed');
+                            // Handle error or display a message
+                        }
+                    } catch (error) {
+                        console.error('Error highlighting feedback:', error);
+                        // Handle error or display a message
+                    }
                 });
-                const data = await response.json();
-                if (data.success) {
-                    // Optionally, update the UI to reflect the highlight (e.g., change button text)
-                    console.log('Feedback highlighted successfully');
-                } else {
-                    console.error('Highlight operation failed');
-                    // Handle error or display a message
-                }
-            } catch (error) {
-                console.error('Error highlighting feedback:', error);
-                // Handle error or display a message
-            }
-        }
+            });
+        });
 
-        async function RemoveHighlightFeedback(feedbackId) {
-            try {
-                const response = await fetch(`/highlightFeedback?feedbackId=${feedbackId}&highlighted=false`, {
-                    method: 'POST',
-                });
-                const data = await response.json();
-                if (data.success) {
-                    // Optionally, update the UI to reflect the removal of highlight (e.g., change button text)
-                    console.log('Highlight removed successfully');
-                } else {
-                    console.error('Remove highlight operation failed');
-                    // Handle error or display a message
-                }
-            } catch (error) {
-                console.error('Error removing highlight:', error);
-                // Handle error or display a message
-            }
-        }
 
     </script>
     <script>
