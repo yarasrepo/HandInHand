@@ -386,6 +386,10 @@ app.post('/job_submission_form', async (req, res) => {
         }
         const organizationName = req.session.user.name;
 
+        if (imageLink == null){
+            imageLink = "https://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg";
+        }
+
         const newJob = new JobCollection({
             title: jobName,
             description,
@@ -1038,6 +1042,25 @@ app.post('/submitFeedback', async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).send('Error submitting feedback');
+    }
+});
+
+app.post('/endopportunity', async (req, res) => {
+    try {
+        const userId = req.body.userId; // Assuming userId is sent in the request body
+
+        const job = await JobCollection.findById(userId);
+        if (!job) {
+            return res.status(404).json({ error: 'Job not found' });
+        }
+
+        job.completed = true;
+        await job.save();
+
+        res.status(200).json({ message: 'Job marked as completed', job });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
     }
 });
 

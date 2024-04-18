@@ -140,7 +140,12 @@ const jobSchema = new mongoose.Schema({
         email: String,
         firstName: String,
         lastName: String
-    }]
+    }],
+    completed: {
+        type: Boolean,
+        default: false,
+        required: true
+    },
 });
 
 const JobCollection = mongoose.model("JobCollection", jobSchema)
