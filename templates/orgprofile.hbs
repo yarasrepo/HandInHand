@@ -78,7 +78,11 @@
             {{#each jobs}}
             {{#if (eq this.completed true)}}
             <div class="box">
+                {{#if (eq this.imageLink null)}}
+                <img src="https://www.fivebranches.edu/wp-content/uploads/2021/08/default-image.jpg" alt="">
+                {{else}}
                 <img src="{{this.imageLink}}" alt="">
+                {{/if}}
                 <button class="btn1" onclick="redirectToOppProf('{{this._id}}')">Read More</button>
             </div>
             {{/if}}
