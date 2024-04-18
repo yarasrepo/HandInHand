@@ -185,7 +185,7 @@ app.post('/signup', async (req, res) => {
             role: req.body.role
         };
 
-
+        const newUser = await LogInCollection.find({email: req.body.email});
         const description = req.session.user.role === 'volunteer' ? "I love helping others" : "Let's make the world better together";
         const dateJoined = newUser.DateJoined || null;
         const profileData = {
