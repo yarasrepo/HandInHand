@@ -38,11 +38,11 @@
                         <span>Requests</span></a>
                 </li>
                 <li>
-                    <a href="/feedback_admin" class="active"><span class="fa-solid fa-message"></span>
+                    <a href="/feedback_admin"><span class="fa-solid fa-message"></span>
                         <span>Feedback</span></a>
                 </li>
                 <li>
-                    <a href="/reports_admin"><span class="fa-solid fa-flag"></span>
+                    <a href="/reports_admin" class="active"><span class="fa-solid fa-flag"></span>
                         <span>Reports</span></a>
                 </li>
                 <li>
@@ -68,7 +68,7 @@
                 <div class="volunteers">
                     <div class="card">
                         <div class="card-header">
-                            <h2>All Feedback</h2>
+                            <h2>All Reports</h2>
                             <div class="search-wrapper">
                                 <span class="fa-solid fa-magnifying-glass"></span>
                                 <input id="searchInput" type="search" placeholder="Search here" />
@@ -79,38 +79,40 @@
                                 <table class="table-sortable" id="volunteersTable" width="100%">
                                     <thead>
                                         <tr>
-                                            <th onclick="sortTable(0)">Name</th>
+                                            <th>Name</th>
+                                            <th>Role</th>
                                             <th>Email Address</th>
-                                            <th>Feedback Message</th>
-                                            <th>Feedback Emoji</th>
-                                            <th onclick="sortTable(4)">Date Posted</th>
-                                            <th>Highlight</th>
+                                            <th>Reports</th>
+                                            <th>Review</th>
                                             <th>Delete</th>
                                         </tr>
                                     </thead>
-                                    {{#each fbs}}
+                                    {{#each userprofs}}
+                                    {{#if (eq this.role 'volunteer')}}
                                     <tbody>
                                         <tr>
                                             <td>{{this.name}}</td>
+                                            <td>{{this.role}}</td>
                                             <td>{{this.email}}</td>
-                                            <td>{{this.feedbackMessage}}</td>
-                                            <td>{{this.feedbackEmoji}}</td>
-                                            <td>{{this.datePosted}}</td>
-                                            <td>
-                                                {{#if (eq this.highlighted true)}}
-                                                <button onclick="RemoveHighlightFeedback('{{this._id}}')">Remove
-                                                    Highlight</button>
-                                                {{else}}
-                                                <button onclick="HighlightFeedback('{{this._id}}')">Highlight</button>
-                                                {{/if}}
+                                            <td>{{this.reports}}</td>
+                                            {{#if (eq this.role 'volunteer')}}
+                                            <td><button onclick="viewVolunteerInfo('{{this._id}}')">Review</button>
                                             </td>
+                                            {{else}}
+                                            <td><button onclick="viewOrgInfo('{{this._id}}')">Review</button>
+                                            </td>
+                                            {{/if}}
+                                            <td><button onclick="ignoreReport('{{this._id}}')">Ignore</button></td>
 
-                                            <td>
-                                                <button id="deleteButton-{{this._id}}" class="delete-button"
-                                                    data-user-id="{{this._id}}">Delete</button>
-                                            </td>
+                                            {{!-- <form action="/admindeleteaccount" method="POST">
+                                                <input type="hidden" name="userId" value="{{this._id}}">
+                                                <td><button type="submit">Delete</button></td>
+                                            </form> --}}
+                                            <td><button id="deleteButton-{{this._id}}" class="delete-button"
+                                                    data-user-id="{{this._id}}">Delete</button></td>
                                         </tr>
                                     </tbody>
+                                    {{/if}}
                                     {{/each}}
                                 </table>
                                 <div class="pagination">
@@ -145,17 +147,17 @@
         });
 
         document.addEventListener('DOMContentLoaded', function () {
-            var deleteButtons = document.querySelectorAll('.delete-button');
+            var deleteButtons = document.querySelectorAll('[id^="deleteButton-"]');
             deleteButtons.forEach(function (deleteButton) {
                 deleteButton.addEventListener('click', async function () {
-                    const fbId = this.dataset.userId; // Get the job ID from the button's dataset
+                    const userId = this.dataset.userId; // Get the user ID from the button's dataset
                     try {
-                        const response = await fetch('/admindeletefeedback', {
+                        const response = await fetch('/admindeleteaccount', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
                             },
-                            body: JSON.stringify({ fbId }) // Send the job ID in the request body
+                            body: JSON.stringify({ userId }) // Send the user ID in the request body
                         });
                         const data = await response.json();
                         if (data.success) {
@@ -167,50 +169,12 @@
                             // Handle error or display a message
                         }
                     } catch (error) {
-                        console.error('Error deleting job:', error);
+                        console.error('Error deleting account:', error);
                         // Handle error or display a message
                     }
                 });
             });
         });
-
-        async function HighlightFeedback(feedbackId) {
-            try {
-                const response = await fetch(`/highlightFeedback?feedbackId=${feedbackId}&highlighted=true`, {
-                    method: 'POST',
-                });
-                const data = await response.json();
-                if (data.success) {
-                    // Optionally, update the UI to reflect the highlight (e.g., change button text)
-                    console.log('Feedback highlighted successfully');
-                } else {
-                    console.error('Highlight operation failed');
-                    // Handle error or display a message
-                }
-            } catch (error) {
-                console.error('Error highlighting feedback:', error);
-                // Handle error or display a message
-            }
-        }
-
-        async function RemoveHighlightFeedback(feedbackId) {
-            try {
-                const response = await fetch(`/highlightFeedback?feedbackId=${feedbackId}&highlighted=false`, {
-                    method: 'POST',
-                });
-                const data = await response.json();
-                if (data.success) {
-                    // Optionally, update the UI to reflect the removal of highlight (e.g., change button text)
-                    console.log('Highlight removed successfully');
-                } else {
-                    console.error('Remove highlight operation failed');
-                    // Handle error or display a message
-                }
-            } catch (error) {
-                console.error('Error removing highlight:', error);
-                // Handle error or display a message
-            }
-        }
 
     </script>
     <script>
@@ -321,6 +285,13 @@
         function prevPage() {
             goToPage(currentPage - 1);
         }
+        function viewVolunteerInfo(objectId) {
+            window.location.href = `/vol_info?objectId=${objectId}`;
+        }
+        function viewOrgInfo(objectId) {
+            window.location.href = `/org_info?objectId=${objectId}`;
+        }
+
         // Initial display
         displayPage(currentPage);
     </script>

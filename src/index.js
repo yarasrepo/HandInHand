@@ -1163,6 +1163,27 @@ app.post('/highlightFeedback', async (req, res) => {
     }
 });
 
+app.get('/reports_admin', async (req, res) => {
+    if (req.session.user && req.session.user.name) {
+        if (req.session.user.role !== 'admin') {
+            res.redirect('/');
+        }
+        const adName = req.session.user.name;
+        try {
+            // Fetch the number of volunteers and organizations
+            const userprofs = await userProfCollection.find({ reports: { $gt: 0 } });
+
+            // Render the admin page with data
+            res.render('reports_admin', { adName, userprofs });
+        } catch (error) {
+            console.error('Error fetching data for admin page:', error);
+            res.status(500).send('Internal Server Error');
+        }
+    } else {
+        // Redirect to the login page if the user is not logged in
+        res.redirect('/login');
+    }
+});
 
 app.listen(port, () => {
     console.log('port connected');
