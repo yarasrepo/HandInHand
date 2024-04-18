@@ -14,7 +14,6 @@ const LogInSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    
     firstName: {
         type: String
     },
@@ -37,6 +36,10 @@ const LogInSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    verified: {
+        type: Boolean,
+        default: false,
+    }
 })
 
 const collection = new mongoose.model("HandInHandcollection", LogInSchema)
@@ -168,6 +171,16 @@ const reqOrg = new mongoose.Schema({
     flag: {
         type: Boolean,
         default: 'false',
+        required: true,
+    },
+    deniedCount: {
+        type: Number,
+        default: 0,
+        required: true,
+    },
+    reqCount: {
+        type: Number,
+        default: 0,
         required: true,
     },
     deniedCount: {
