@@ -1128,8 +1128,6 @@ app.delete('/deleteParticipant', async (req, res) => {
         job.participants = job.participants.filter(participant => participant.toString() !== participantId);
         await job.save();
 
-        // Assuming you want to delete the participant data entirely, you can also delete it from the ParticipantModel
-        await userProfCollection.findByIdAndDelete(participantId);
 
         res.status(200).json({ message: 'Participant removed from job successfully' });
     } catch (err) {
