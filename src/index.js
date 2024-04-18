@@ -60,14 +60,81 @@ app.get('/', (req, res) => {
 });
 
 
-app.post('/signup', async (req, res) => {
-    const data = {
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password,
-        role: req.body.role
+const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+      user: process.env.EMAIL_ADDRESS,
+      pass: process.env.APP_PASSWORD
+    }
+  });
+  
+
+  const sendVerificationEmail = async (email, verificationToken) => {
+    const mailOptions = {
+        from: process.env.EMAIL_ADDRESS,
+        to: email,
+        subject: 'Email Verification',
+        html: `<p>Click <a href="http://localhost:3000/verify-email?token=${verificationToken}">here</a> to verify your email address.</p>` // Removed target="_blank"
     };
 
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log('Verification email sent');
+    } catch (error) {
+        console.error('Error sending verification email:', error);
+    }
+};
+  
+
+app.get('/verify-email', async (req, res) => {
+    const token = req.query.token;
+
+    try {
+        console.log('Received verification token:', token);
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        console.log('Decoded token:', decoded);
+
+        const userId = decoded.userId;
+
+        console.log('User ID from token:', userId);
+
+
+        const user = await LogInCollection.findById(userId);
+
+        console.log('User from database:', user); 
+
+
+        const result = await LogInCollection.updateOne({ _id: userId }, { $set: { verified: true } });
+
+        console.log('Update result:', result); 
+
+        if (user && user.name) {
+            req.session.user = {
+                name: user.name,
+                role: user.role
+            };
+        }
+
+        console.log('Session user after verification:', req.session.user); 
+
+        res.redirect('/');
+
+    } catch (error) {
+        console.error('Error verifying email:', error);
+        res.status(400).send('Invalid or expired token');
+    }
+});
+
+
+
+
+app.get('/email_sent', (req, res) => {
+    res.render('email_sent')
+})
+  
+app.post('/signup', async (req, res) => {
     try {
         const existingUser = await LogInCollection.findOne({ email: req.body.email });
         if (existingUser) {
@@ -75,6 +142,16 @@ app.post('/signup', async (req, res) => {
             return;
         }
 
+        const data = {
+            name: req.body.name,
+            email: req.body.email,
+            password: req.body.password,
+            role: req.body.role,
+            verified: false
+        };
+
+        // Handle organization requests
+        console.log('before if');
         if (data.role === 'organization') {
             const org = await ReqCollection.findOne({ email: req.body.email });
             if (org && org.flag === false) {
@@ -108,9 +185,9 @@ app.post('/signup', async (req, res) => {
             role: req.body.role
         };
 
+
         const description = req.session.user.role === 'volunteer' ? "I love helping others" : "Let's make the world better together";
-        const user = await LogInCollection.findOne({ name: req.session.user.name }); // Find the user by their name
-        const dateJoined = user ? user.DateJoined : null; // Get the DateJoined if the user exists, otherwise set to null
+        const dateJoined = newUser.DateJoined || null;
         const profileData = {
             name: req.session.user.name,
             email: req.body.email,
@@ -123,7 +200,10 @@ app.post('/signup', async (req, res) => {
         };
         await userProfCollection.create(profileData);
 
-        res.redirect(302, '/');
+        const verificationToken = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        await sendVerificationEmail(data.email, verificationToken);
+
+        res.redirect('/email_sent');
     } catch (error) {
         console.error("Error during signup:", error);
         res.status(500).send("An error occurred during signup: " + error.message);
