@@ -77,6 +77,10 @@ const userProfile = new mongoose.Schema({
         type: Date,
         ref: 'LogInSchema',
     },
+    HoursVolunteered: {
+        type: Number,
+        default: 0,
+    },
     JobsBooked: {
         type: Number,
         default: 0,
@@ -125,7 +129,8 @@ const jobSchema = new mongoose.Schema({
     },
     imageLink: {
         type: String,
-        ref: 'userProfileCollection'
+        ref: 'userProfileCollection',
+        maxlength: 1000
     },
     creator: {
         type: String,

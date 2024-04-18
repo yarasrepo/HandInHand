@@ -63,13 +63,13 @@ app.get('/', (req, res) => {
 const transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
-      user: process.env.EMAIL_ADDRESS,
-      pass: process.env.APP_PASSWORD
+        user: process.env.EMAIL_ADDRESS,
+        pass: process.env.APP_PASSWORD
     }
-  });
-  
+});
 
-  const sendVerificationEmail = async (email, verificationToken) => {
+
+const sendVerificationEmail = async (email, verificationToken) => {
     const mailOptions = {
         from: process.env.EMAIL_ADDRESS,
         to: email,
@@ -84,7 +84,7 @@ const transporter = nodemailer.createTransport({
         console.error('Error sending verification email:', error);
     }
 };
-  
+
 
 app.get('/verify-email', async (req, res) => {
     const token = req.query.token;
@@ -103,12 +103,12 @@ app.get('/verify-email', async (req, res) => {
 
         const user = await LogInCollection.findById(userId);
 
-        console.log('User from database:', user); 
+        console.log('User from database:', user);
 
 
         const result = await LogInCollection.updateOne({ _id: userId }, { $set: { verified: true } });
 
-        console.log('Update result:', result); 
+        console.log('Update result:', result);
 
         if (user && user.name) {
             req.session.user = {
@@ -117,7 +117,7 @@ app.get('/verify-email', async (req, res) => {
             };
         }
 
-        console.log('Session user after verification:', req.session.user); 
+        console.log('Session user after verification:', req.session.user);
 
         res.redirect('/');
 
@@ -133,7 +133,7 @@ app.get('/verify-email', async (req, res) => {
 app.get('/email_sent', (req, res) => {
     res.render('email_sent')
 })
-  
+
 app.post('/signup', async (req, res) => {
     try {
         const existingUser = await LogInCollection.findOne({ email: req.body.email });
@@ -185,7 +185,7 @@ app.post('/signup', async (req, res) => {
             role: req.body.role
         };
 
-        const newUser = await LogInCollection.find({email: req.body.email});
+        const newUser = await LogInCollection.find({ email: req.body.email });
         const description = req.session.user.role === 'volunteer' ? "I love helping others" : "Let's make the world better together";
         const dateJoined = newUser.DateJoined || null;
         const profileData = {
@@ -386,9 +386,10 @@ app.post('/job_submission_form', async (req, res) => {
         }
         const organizationName = req.session.user.name;
 
-        if (imageLink == null){
-            imageLink = "https://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg";
-        }
+        // let newImageLink = imageLink;
+        // if (imageLink == null) {
+        //     newImageLink = "https://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg";
+        // }
 
         const newJob = new JobCollection({
             title: jobName,
@@ -1011,11 +1012,11 @@ app.delete('/delete-image', async (req, res) => {
     }
 });
 
-app.get('/about', (req, res)=>{
+app.get('/about', (req, res) => {
     res.render('about');
 });
 
-app.get('/feedback', (req, res)=>{
+app.get('/feedback', (req, res) => {
     res.render('feedback');
 });
 
@@ -1045,17 +1046,28 @@ app.post('/submitFeedback', async (req, res) => {
     }
 });
 
-app.post('/endopportunity', async (req, res) => {
-    try {
-        const userId = req.body.userId; // Assuming userId is sent in the request body
+app.put('/completeopportunity', async (req, res) => {
+    const jobId = req.body.jobId;
 
-        const job = await JobCollection.findById(userId);
+    try {
+        const job = await JobCollection.findById(jobId);
         if (!job) {
             return res.status(404).json({ error: 'Job not found' });
         }
 
+        // Update job completion status
         job.completed = true;
         await job.save();
+
+        // Get all participants' IDs from the job
+        const participantIds = job.participants;
+
+        // Fetch participant accounts from UserProfCollection and update volunteered hours
+        const participants = await userProfCollection.find({ _id: { $in: participantIds } });
+        for (const participant of participants) {
+            participant.HoursVolunteered += job.requiredHours;
+            await participant.save();
+        }
 
         res.status(200).json({ message: 'Job marked as completed', job });
     } catch (err) {
@@ -1063,6 +1075,7 @@ app.post('/endopportunity', async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 });
+
 
 
 app.listen(port, () => {

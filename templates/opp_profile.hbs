@@ -15,7 +15,7 @@
         <a href="/orgprofile">
             <button class="back-button">Back</button>
         </a>
-        <h1>Opportunity name</h1>
+        <h1>{{job.title}}</h1>
     </header>
     <main>
         <div class="opp-details">
@@ -48,7 +48,9 @@
             </div>
             <div class="buttons">
                 <button class="view-volunteers-button">View Volunteers</button>
-                <button class="done-button" onclick="completeOpportunity('{{job._id}}')">Close Opportunity</button>
+                {{#if (eq job.complete false)}}
+                <button class="done-button" data-job-id="{{job._id}}">Close Opportunity</button>
+                {{/if}}
                 <button class="delete-button" data-job-id="{{job._id}}">Delete Opportunity</button>
             </div>
         </div>
@@ -105,14 +107,36 @@
     </main>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            var doneButton = document.querySelector('.done-button');
-            doneButton.addEventListener('click', function () {
-                doneButton.textContent = 'Opportunity Closed';
-                doneButton.style.backgroundColor = '#28a745'; // Change button color to green
-                doneButton.style.cursor = 'default'; // Change cursor to default
-                doneButton.disabled = true; // Disable the button after it's reviewed
+            const doneButton = document.querySelector('.done-button');
+            doneButton.addEventListener('click', async () => {
+                const jobId = '{{job._id}}'; // Replace '{{job._id}}' with the actual job ID from your template
+
+                try {
+                    const response = await fetch('/completeopportunity', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ jobId }),
+                    });
+
+                    if (response.ok) {
+                        doneButton.textContent = 'Opportunity Closed';
+                        doneButton.style.backgroundColor = '#28a745'; // Change button color to green
+                        doneButton.style.cursor = 'default'; // Change cursor to default
+                        doneButton.disabled = true; // Disable the button after it's reviewed
+                        window.location.href = '/orgprofile';
+                    } else {
+                        console.error('Failed to complete job');
+                        // Handle error or display a message
+                    }
+                } catch (error) {
+                    console.error('Error completing job:', error);
+                    // Handle error or display a message
+                }
             });
         });
+
         document.addEventListener('DOMContentLoaded', function () {
             var viewVolunteersButton = document.querySelector('.view-volunteers-button');
             viewVolunteersButton.addEventListener('click', function () {
@@ -172,30 +196,7 @@
                 });
             });
         });
-        function completeOpportunity(jobId) {
-            fetch('/completeopportunity', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ userId: jobId }),
-            })
-                .then(response => response.json())
-                .then(data => {
-                    // Handle response data if needed
-                    console.log(data);
-                    // Update UI or perform other actions
-                    const doneButton = document.querySelector('.done-button');
-                    doneButton.textContent = 'Opportunity Closed';
-                    doneButton.style.backgroundColor = '#28a745'; // Change button color to green
-                    doneButton.style.cursor = 'default'; // Change cursor to default
-                    doneButton.disabled = true; // Disable the button after it's marked as done
-                })
-                .catch(error => {
-                    console.error('Error completing opportunity:', error);
-                    // Handle error or display a message
-                });
-        }
+
 
         function parseDate(dateString) {
             const months = {
