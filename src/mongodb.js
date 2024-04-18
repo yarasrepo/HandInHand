@@ -92,8 +92,11 @@ const userProfile = new mongoose.Schema({
     images:
     {
         type: [String],
-    }
-
+    },
+    reports: {
+        type: Number,
+        default: 0,
+    },
 })
 
 const userProfCollection = mongoose.model("userProfCollection", userProfile)
@@ -257,6 +260,11 @@ const FbSchema = new mongoose.Schema({
     },
     feedbackEmoji: {
         type: Number,
+    },
+    highlighted: {
+        type: Boolean,
+        default: false,
+        required: true,
     }
 });
 

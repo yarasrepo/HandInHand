@@ -88,8 +88,10 @@
                                         <td>{{this.Location}}</td>
                                         <td>{{this.DateJoined}}</td>
                                         <td><button onclick="viewVolunteerInfo('{{this._id}}')">Review</button>
-                                        <td><button id="report-button" class="report-button">Report</button></td>
-                                        <td><button id="remove-button" class="removet-button">Remove</button></td>
+                                        <td><button class="report-button"
+                                                data-participant-id="{{this._id}}">Report</button></td>
+                                        <td><button class="remove-button"
+                                                data-participant-id="{{this._id}}">Remove</button></td>
                                     </tr>
                                 </tbody>
                                 {{/each}}
@@ -197,6 +199,62 @@
             });
         });
 
+        document.addEventListener('DOMContentLoaded', function () {
+            const reportButtons = document.querySelectorAll('.report-button');
+            reportButtons.forEach(button => {
+                button.addEventListener('click', async () => {
+                    const participantId = button.dataset.participantId;
+                    try {
+                        const response = await fetch(`/reportParticipant?participantId=${participantId}`, {
+                            method: 'POST',
+                        });
+                        if (response.ok) {
+                            // Increment the reports locally after successful update
+                            const reportsElement = button.closest('tr').querySelector('.reports');
+                            const currentReports = parseInt(reportsElement.textContent);
+                            reportsElement.textContent = currentReports + 1;
+                            // Optionally, you can disable the button or change its appearance after reporting
+                            button.disabled = true;
+                            button.textContent = 'Reported';
+                        } else {
+                            console.error('Failed to report participant');
+                            // Handle error or display a message
+                        }
+                    } catch (error) {
+                        console.error('Error reporting participant:', error);
+                        // Handle error or display a message
+                    }
+                });
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const removeButtons = document.querySelectorAll('.remove-button');
+            removeButtons.forEach(button => {
+                button.addEventListener('click', async () => {
+                    const jobId = '{{job._id}}'; // Replace '{{job._id}}' with the actual job ID from your template
+                    const participantId = button.dataset.participantId;
+
+                    try {
+                        const response = await fetch(`/deleteParticipant?jobId=${jobId}&participantId=${participantId}`, {
+                            method: 'DELETE',
+                        });
+                        if (response.ok) {
+                            // Remove the participant's row from the table
+                            const row = button.closest('tr');
+                            row.parentNode.removeChild(row);
+                        } else {
+                            console.error('Failed to remove participant');
+                            // Handle error or display a message
+                        }
+                    } catch (error) {
+                        console.error('Error removing participant:', error);
+                        // Handle error or display a message
+                    }
+                });
+            });
+        });
+
 
         function parseDate(dateString) {
             const months = {
@@ -239,6 +297,7 @@
                 tbody.appendChild(row);
             });
         }
+
         const pageSize = 10; // Number of entries per page
         let currentPage = 1; // Current page being displayed
         function displayPage(pageNumber) {

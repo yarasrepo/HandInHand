@@ -80,7 +80,7 @@
                                             <th>Feedback Message</th>
                                             <th>Feedback Emoji</th>
                                             <th onclick="sortTable(4)">Date Posted</th>
-                                            {{!-- <th>Highlight</th> --}}
+                                            <th>Highlight</th>
                                             <th>Delete</th>
                                         </tr>
                                     </thead>
@@ -92,11 +92,19 @@
                                             <td>{{this.feedbackMessage}}</td>
                                             <td>{{this.feedbackEmoji}}</td>
                                             <td>{{this.datePosted}}</td>
-                                            {{!-- <td><button onclick="viewVolunteerInfo('{{this._id}}')">Highlight</button>
-                                            </td> --}}
                                             <td>
-                                            <button id="deleteButton-{{this._id}}" class="delete-button"
-                                                    data-user-id="{{this._id}}">Delete</button></td>
+                                                {{#if (eq this.highlighted true)}}
+                                                <button onclick="RemoveHighlightFeedback('{{this._id}}')">Remove
+                                                    Highlight</button>
+                                                {{else}}
+                                                <button onclick="HighlightFeedback('{{this._id}}')">Highlight</button>
+                                                {{/if}}
+                                            </td>
+
+                                            <td>
+                                                <button id="deleteButton-{{this._id}}" class="delete-button"
+                                                    data-user-id="{{this._id}}">Delete</button>
+                                            </td>
                                         </tr>
                                     </tbody>
                                     {{/each}}
@@ -161,6 +169,44 @@
                 });
             });
         });
+
+        async function HighlightFeedback(feedbackId) {
+            try {
+                const response = await fetch(`/highlightFeedback?feedbackId=${feedbackId}&highlighted=true`, {
+                    method: 'POST',
+                });
+                const data = await response.json();
+                if (data.success) {
+                    // Optionally, update the UI to reflect the highlight (e.g., change button text)
+                    console.log('Feedback highlighted successfully');
+                } else {
+                    console.error('Highlight operation failed');
+                    // Handle error or display a message
+                }
+            } catch (error) {
+                console.error('Error highlighting feedback:', error);
+                // Handle error or display a message
+            }
+        }
+
+        async function RemoveHighlightFeedback(feedbackId) {
+            try {
+                const response = await fetch(`/highlightFeedback?feedbackId=${feedbackId}&highlighted=false`, {
+                    method: 'POST',
+                });
+                const data = await response.json();
+                if (data.success) {
+                    // Optionally, update the UI to reflect the removal of highlight (e.g., change button text)
+                    console.log('Highlight removed successfully');
+                } else {
+                    console.error('Remove highlight operation failed');
+                    // Handle error or display a message
+                }
+            } catch (error) {
+                console.error('Error removing highlight:', error);
+                // Handle error or display a message
+            }
+        }
 
     </script>
     <script>

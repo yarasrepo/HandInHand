@@ -226,6 +226,11 @@ app.post('/login', async (req, res) => {
 
         if (check && check.password === req.body.password) {
             // Set user information in session
+            const user= await userProfCollection.findOne({name: req.body.name});
+            if (user && user.reports >= 5){
+                res.send("your account is temporarily banned");
+                return;
+            }
             req.session.user = {
                 name: check.name,
                 role: check.role
@@ -1012,8 +1017,14 @@ app.delete('/delete-image', async (req, res) => {
     }
 });
 
-app.get('/about', (req, res) => {
-    res.render('about');
+app.get('/about', async(req, res) => {
+    try {
+        const fb = await FeedbackCollection.find({}); // Fetch all feedback data
+        res.render('about', { fb }); // Pass feedbackData to the 'about' template
+    } catch (error) {
+        console.error('Error fetching feedback data:', error);
+        res.status(500).send('Internal Server Error'); // Handle error gracefully
+    }
 });
 
 app.get('/feedback', (req, res) => {
@@ -1021,10 +1032,10 @@ app.get('/feedback', (req, res) => {
 });
 
 app.post('/submitFeedback', async (req, res) => {
-    const { name, email, feedback, selectedEmoji } = req.body;
+    const { name, email, feedback } = req.body;
 
     try {
-        if (!name || !email || !feedback || !selectedEmoji) {
+        if (!name || !email || !feedback) {
             return res.status(400).send('All fields are required');
         }
 
@@ -1033,7 +1044,6 @@ app.post('/submitFeedback', async (req, res) => {
             name,
             email,
             feedbackMessage: feedback,
-            feedbackEmoji: selectedEmoji,
         });
 
         // Save the new feedback to the database
@@ -1046,6 +1056,7 @@ app.post('/submitFeedback', async (req, res) => {
     }
 });
 
+//participats hsould already contain the userprof if we are passing it in js but are not maybe fix if doesnt work
 app.put('/completeopportunity', async (req, res) => {
     const jobId = req.body.jobId;
 
@@ -1076,6 +1087,81 @@ app.put('/completeopportunity', async (req, res) => {
     }
 });
 
+// Assuming you have a route handler set up for handling the report button click
+app.put('/reportparticipant', async (req, res) => {
+    const participantId = req.body.participantId; // Assuming you're sending the participant ID from the frontend
+
+    try {
+        // Assuming you have a MongoDB model for participants, replace 'ParticipantModel' with your actual model name
+        const participant = await userProfCollection.findById(participantId);
+        if (!participant) {
+            return res.status(404).json({ error: 'Participant not found' });
+        }
+
+        // Increment the reports attribute by one
+        participant.reports += 1;
+
+        // Save the updated participant data back to the database
+        await participant.save();
+
+        res.status(200).json({ message: 'Participant report incremented successfully', participant });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+
+// Assuming you have a route handler set up for handling participant deletion
+app.delete('/deleteParticipant', async (req, res) => {
+    const jobId = req.query.jobId;
+    const participantId = req.query.participantId;
+
+    try {
+        // Assuming you have a MongoDB model for jobs and participants, replace 'JobModel' and 'ParticipantModel' with your actual model names
+        const job = await JobCollection.findById(jobId);
+        if (!job) {
+            return res.status(404).json({ error: 'Job not found' });
+        }
+
+        // Remove the participant from the job's participant list
+        job.participants = job.participants.filter(participant => participant.toString() !== participantId);
+        await job.save();
+
+        // Assuming you want to delete the participant data entirely, you can also delete it from the ParticipantModel
+        await userProfCollection.findByIdAndDelete(participantId);
+
+        res.status(200).json({ message: 'Participant removed from job successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+
+// Assuming you have an Express app instance named 'app'
+app.post('/highlightFeedback', async (req, res) => {
+    const { feedbackId, highlighted } = req.body;
+
+    try {
+        // Update the feedback document in your database to set 'highlighted' based on the request
+        // For example, using Mongoose:
+        const updatedFeedback = await FeedbackCollection.findByIdAndUpdate(
+            feedbackId,
+            { $set: { highlighted } },
+            { new: true } // To return the updated document
+        );
+
+        if (updatedFeedback) {
+            res.json({ success: true, updatedFeedback });
+        } else {
+            res.status(404).json({ success: false, message: 'Feedback not found' });
+        }
+    } catch (error) {
+        console.error('Error updating feedback:', error);
+        res.status(500).json({ success: false, message: 'Error updating feedback' });
+    }
+});
 
 
 app.listen(port, () => {
