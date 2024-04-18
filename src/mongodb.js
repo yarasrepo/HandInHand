@@ -183,6 +183,16 @@ const reqOrg = new mongoose.Schema({
         default: 0,
         required: true,
     }
+    deniedCount: {
+        type: Number,
+        default: 0,
+        required: true,
+    },
+    reqCount: {
+        type: Number,
+        default: 0,
+        required: true,
+    }
 });
 
 const ReqCollection = mongoose.model("ReqCollection", reqOrg)
@@ -219,7 +229,28 @@ const reqBook = new mongoose.Schema({
 
 const ReqBookCollection = mongoose.model("ReqBookCollection", reqBook)
 
+const FbSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
+    datePosted: {
+        type: Date,
+        default: Date.now
+    },
+    feedbackMessage: {
+        type: String,
+    },
+    feedbackEmoji: {
+        type: String,
+    }
+});
 
+const FeedbackCollection = mongoose.model("FeedbackCollection", FbSchema)
 
 module.exports = {
     collection,
@@ -227,4 +258,5 @@ module.exports = {
     JobCollection,
     ReqCollection,
     ReqBookCollection,
+    FeedbackCollection
 }

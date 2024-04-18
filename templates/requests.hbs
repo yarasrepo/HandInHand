@@ -38,6 +38,10 @@
                         <span>Requests</span></a>
                 </li>
                 <li>
+                    <a href="/feedback_admin"><span class="fa-solid fa-message"></span>
+                        <span>Feedback</span></a>
+                </li>
+                <li>
                     <a href="/"><span class="fa-solid fa-house"></span>
                         <span>Homepage</span></a>
                 </li>
@@ -60,7 +64,7 @@
                 <div class="organizations">
                     <div class="card">
                         <div class="card-header">
-                            <h2>All Organizations</h2>
+                            <h2>All Requests</h2>
                             <div class="search-wrapper">
                                 <span class="fa-solid fa-magnifying-glass"></span>
                                 <input id="searchInput" type="search" placeholder="Search here" />
@@ -82,6 +86,7 @@
                                         </tr>
                                     </thead>
                                     {{#each reqOrgs}}
+                                    {{#if (eq this.reqCount this.deniedCount)}}
                                     <tbody>
                                         <tr>
                                             <td>{{this.name}}</td>
@@ -100,6 +105,7 @@
                                             </td>
                                         </tr>
                                     </tbody>
+                                    {{/if}}
                                     {{/each}}
                                 </table>
                                 <div class="pagination">

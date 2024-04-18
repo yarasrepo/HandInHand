@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HandinHand-Opportunity Info</title>
+    <link rel="stylesheet" href="/opp_profile.css">
+    <link rel="shortcut icon" type="x-icon" href="/logonowords">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+    <header>
+        <h1>Opportunity name</h1>
+    </header>
+    <main>
+        <div class="opp-details">
+            <h2>Opportunity Details</h2>
+            <div class="details-container">
+                <div class="detail">
+                    <span class="title">Event Name:</span>
+                    <span class="info">{{job.title}}</span>
+                </div>
+                <div class="detail">
+                    <span class="title">Location:</span>
+                    <span class="info">{{job.location}}</span>
+                </div>
+                <div class="detail">
+                    <span class="title">Date Posted:</span>
+                    <span class="info">{{job.datePosted}}</span>
+                </div>
+                <div class="detail">
+                    <span class="title">Date:</span>
+                    <span class="info">{{job.startDate}}</span>
+                </div>
+                <div class="detail">
+                    <span class="title">Total Number of Hours:</span>
+                    <span class="info">{{job.requiredHours}}</span>
+                </div>
+                <div class="detail">
+                    <span class="title">Number of Volunteers Needed:</span>
+                    <span class="info">{{job.openPositions}}</span>
+                </div>
+            </div>
+            <div class="buttons">
+                <button class="view-volunteers-button">View Volunteers</button>
+                <button class="done-button">Close Opportunity</button>
+                <button class="delete-button" data-job-id="{{job._id}}">Delete</button>
+            </div>
+        </div>
+        <div class="grid" id="grid">
+            <div class="volunteers">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>All Volunteers</h2>
+                        <div class="search-wrapper">
+                            <span class="fa-solid fa-magnifying-glass"></span>
+                            <input id="searchInput" type="search" placeholder="Search here" />
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table-sortable" id="volunteersTable" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th onclick="sortTable(0)">Volunteer Name</th>
+                                        <th>Email Address</th>
+                                        <th>Phone Number</th>
+                                        <th>Location</th>
+                                        <th onclick="sortTable(4)">Date Joined</th>
+                                        <th>Review</th>
+                                        <th>Report</th>
+                                        <th>Remove</th>
+                                    </tr>
+                                </thead>
+                                {{#each participants}}
+                                <tbody>
+                                    <tr>
+                                        <td>{{this.name}}</td>
+                                        <td>{{this.email}}</td>
+                                        <td>{{this.PhoneNum}}</td>
+                                        <td>{{this.Location}}</td>
+                                        <td>{{this.DateJoined}}</td>
+                                        <td><button onclick="viewVolunteerInfo('{{this._id}}')">Review</button>
+                                        <td><button id="report-button" class="report-button">Report</button></td>
+                                        <td><button id="remove-button" class="removet-button">Remove</button></td>
+                                    </tr>
+                                </tbody>
+                                {{/each}}
+                            </table>
+                            <div class="pagination">
+                                <button id="prevPageBtn" onclick="prevPage()">Previous</button>
+                                <span id="currentPage"></span>
+                                <button id="nextPageBtn" onclick="nextPage()">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var doneButton = document.querySelector('.done-button');
+            doneButton.addEventListener('click', function () {
+                doneButton.textContent = 'Opportunity Closed';
+                doneButton.style.backgroundColor = '#28a745'; // Change button color to green
+                doneButton.style.cursor = 'default'; // Change cursor to default
+                doneButton.disabled = true; // Disable the button after it's reviewed
+            });
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            var viewVolunteersButton = document.querySelector('.view-volunteers-button');
+            viewVolunteersButton.addEventListener('click', function () {
+                var volunteersSection = document.getElementById('grid');
+                volunteersSection.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+        document.getElementById("searchInput").addEventListener("keyup", function () {
+            var input, filter, table, tr, td, i, j, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("volunteersTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 1; i < tr.length; i++) {
+                // Initialize flag to false
+                var rowVisible = false;
+                // Loop through all cells in current row
+                for (j = 0; j < tr[i].cells.length; j++) {
+                    td = tr[i].cells[j];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        // If any cell matches the filter, set rowVisible to true and break loop
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            rowVisible = true;
+                            break;
+                        }
+                    }
+                }
+                // Show/hide row based on rowVisible flag
+                if (rowVisible) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const deleteButtons = document.querySelectorAll('.delete-button');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', async () => {
+                    const jobId = button.dataset.jobId;
+                    try {
+                        const response = await fetch(`/deleteJob?jobId=${jobId}`, {
+                            method: 'DELETE',
+                        });
+                        if (response.ok) {
+                            window.location.href = '/orgprofile'; // Redirect to organization profile after successful deletion
+                        } else {
+                            console.error('Failed to delete job');
+                            // Handle error or display a message
+                        }
+                    } catch (error) {
+                        console.error('Error deleting job:', error);
+                        // Handle error or display a message
+                    }
+                });
+            });
+        });
+
+
+        function parseDate(dateString) {
+            const months = {
+                "Jan.": 0, "Feb.": 1, "Mar.": 2, "Apr.": 3, "May": 4, "Jun.": 5,
+                "Jul.": 6, "Aug.": 7, "Sep.": 8, "Oct.": 9, "Nov.": 10, "Dec.": 11
+            };
+            const [month, day, year] = dateString.split(" ");
+            return new Date(year, months[month], parseInt(day.slice(0, -1))); // Slicing "Day" to remove the comma
+        }
+        function sortTable(columnIndex) {
+            const table = document.getElementById("volunteersTable");
+            const tbody = table.getElementsByTagName("tbody")[0];
+            const rows = Array.from(tbody.getElementsByTagName("tr"));
+            let ascending = true; // Flag to indicate sorting direction
+            // Toggle sorting direction
+            if (table.dataset.sortColumnIndex === columnIndex.toString()) {
+                ascending = !table.dataset.sortAscending;
+            }
+            // Store sorting state in table attributes
+            table.dataset.sortColumnIndex = columnIndex;
+            table.dataset.sortAscending = ascending;
+            const sortedRows = rows.sort((a, b) => {
+                let aValue = a.getElementsByTagName("td")[columnIndex].innerText.trim();
+                let bValue = b.getElementsByTagName("td")[columnIndex].innerText.trim();
+                // For date column (index 4), parse the dates manually before comparison
+                if (columnIndex === 4) {
+                    aValue = parseDate(aValue);
+                    bValue = parseDate(bValue);
+                    // Reverse the comparison if sorting in descending order
+                    return ascending ? aValue - bValue : bValue - aValue;
+                }
+                // Compare values based on sorting direction
+                const comparison = aValue.localeCompare(bValue);
+                return ascending ? comparison : -comparison;
+            });
+            while (tbody.firstChild) {
+                tbody.removeChild(tbody.firstChild);
+            }
+            sortedRows.forEach(row => {
+                tbody.appendChild(row);
+            });
+        }
+        const pageSize = 10; // Number of entries per page
+        let currentPage = 1; // Current page being displayed
+        function displayPage(pageNumber) {
+            const table = document.getElementById("volunteersTable");
+            const tbody = table.getElementsByTagName("tbody")[0];
+            const rows = Array.from(tbody.getElementsByTagName("tr"));
+            // Calculate the start and end indices for the current page
+            const startIndex = (pageNumber - 1) * pageSize;
+            const endIndex = pageNumber * pageSize;
+            // Hide all rows
+            rows.forEach(row => {
+                row.style.display = "none";
+            });
+            // Show rows for the current page
+            for (let i = startIndex; i < Math.min(endIndex, rows.length); i++) {
+                rows[i].style.display = "";
+            }
+        }
+        function goToPage(pageNumber) {
+            if (pageNumber < 1 || pageNumber > getTotalPages()) {
+                return; // Page number out of range
+            }
+            currentPage = pageNumber;
+            displayPage(currentPage);
+        }
+        function getTotalPages() {
+            const table = document.getElementById("volunteersTable");
+            const tbody = table.getElementsByTagName("tbody")[0];
+            const rowCount = tbody.getElementsByTagName("tr").length;
+            return Math.ceil(rowCount / pageSize);
+        }
+        function nextPage() {
+            goToPage(currentPage + 1);
+        }
+        function prevPage() {
+            goToPage(currentPage - 1);
+        }
+        function viewVolunteerInfo(objectId) {
+            window.location.href = `/vol_info?objectId=${objectId}`;
+        }
+
+        // Initial display
+        displayPage(currentPage);
+    </script>
+</body>
+
+</html>

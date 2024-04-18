@@ -9,7 +9,7 @@ const app = express()
 const hbs = require("hbs")
 const helpers = require("handlebars-helpers")();
 hbs.registerHelper(helpers);
-const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, ReqBookCollection } = require("./mongodb");
+const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, FeedbackCollection } = require("./mongodb");
 const port = process.env.PORT || 3000
 app.use(express.json())
 
@@ -154,33 +154,32 @@ app.post('/signup', async (req, res) => {
         console.log('before if');
         if (data.role === 'organization') {
             const org = await ReqCollection.findOne({ email: req.body.email });
-            console.log('after first  if');
-            if (org) {
-                console.log('inside  if');
-                if (org.flag === false) {
-                    if (org.deniedCount === 3) {
-                        res.send("Your application request has been denied three times! You cannot create an account with this email.");
-                        return;
-                    } else if (org.reqCount === org.deniedCount) {
-                        res.send("Request pending approval");
-                        return;
-                    } else {
-                        org.reqCount += 1;
-                        await org.save();
-                        console.log("request sent");
-                        res.send("Request submitted successfully");
-                        return;
-                    }
-                } else {
-                    // If organization exists and is approved, proceed with signup
-                    await ReqCollection.deleteOne({ email: req.body.email });
+            if (org && org.flag === false) {
+                if (org.deniedCount == 3) {
+                    res.send("Your application request has been denied three times! You cannot create an account with this email.");
+                    return;
                 }
+                else if (org.reqCount == org.deniedCount) {
+                    res.send("Request pending approval");
+                    return;
+                } else {
+                    org.reqCount += 1;
+                    await org.save();
+                    res.send("Request submitted successfully");
+                    return;
+                }
+            }
+            else if (!org) {
+                await ReqCollection.create(data);
+                res.send("Request submitted successfully");
+                return;
             }
         }
 
-
-        const newUser = await LogInCollection.create(data);
-
+        await LogInCollection.create(data);
+        if (data.role === 'organization') {
+            await ReqCollection.deleteOne({ email: req.body.email });
+        }
         req.session.user = {
             name: req.body.name,
             role: req.body.role
@@ -423,7 +422,7 @@ app.get('/userprofile', async (req, res) => {
             if (userProf) {
                 // Render the profile page if userProf is found
                 if (req.session.user.role == 'organization') {
-                    res.render('orgprofile', { userProf });
+                    res.redirect('/orgprofile');
                 }
                 else {
                     res.render('userprofile', { userProf });
@@ -452,29 +451,11 @@ app.get('/orgprofile', async (req, res) => {
             const userProf = await userProfCollection.findOne({ name: req.session.user.name });
 
             if (userProf) {
-                // Render the profile page if userProf is found
-                res.render('orgprofile', { userProf });
+                const jobs = await JobCollection.find({ creator: orgName });
+                console.log(jobs);
+                res.render('orgprofile', { userProf, jobs });
             } else {
-                // Create the user profile if not found
-                const existingUser = await LogInCollection.findOne({ name: req.session.user.name });
-                if (existingUser) {
-                    const data = {
-                        name: req.session.user.name,
-                        email: existingUser.email,
-                        Description: "Let's make the world better together",
-                        role: "organization",
-                        PhoneNum: 0,
-                        Location: "Beirut",
-                        ProfilePic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR11lMafo-ZYohC2qYI1BJN80gzcC-7IpohIeUQT1RT0WgBttaZX7J1yEea92wMCcTXa9A&usqp=CAU",
-                    };
-                    await userProfCollection.create(data);
-
-                    // Redirect to the profile page after creating the profile
-                    res.redirect('/userprofile');
-                } else {
-                    console.log('user not found in LogInCollection');
-                    res.status(404).send('User not found');
-                }
+                res.redirect('/login');
             }
         } else {
             res.redirect('/login');
@@ -591,7 +572,11 @@ app.post('/edituserprof', async (req, res) => {
         const updatedProfile = await userProfCollection.findOneAndUpdate(query, update, { new: true });
 
         if (updatedProfile) {
-            res.redirect('/userprofile'); // Redirect after updating the profile
+            if (req.session.user.role === 'organization') {
+                res.redirect('/orgprofile');
+            } else {
+                res.redirect('/userprofile');
+            }
         } else {
             res.status(404).send('User profile not found');
         }
@@ -697,6 +682,44 @@ app.post('/admindeletejob', async (req, res) => {
     }
 });
 
+app.delete('/deleteJob', async (req, res) => {
+    const jobId = req.query.jobId;
+
+    try {
+        const deletedJob = await JobCollection.findByIdAndDelete(jobId);
+        if (deletedJob) {
+            res.sendStatus(200); // Send success response
+        } else {
+            res.sendStatus(404); // Job not found
+        }
+    } catch (error) {
+        console.error('Error deleting job:', error);
+        res.sendStatus(500); // Internal server error
+    }
+});
+
+
+app.post('/admindeletefeedback', async (req, res) => {
+    try {
+        const fbId = req.body.fbId; // Assuming the entire job object is sent in the request body
+
+        // Use Mongoose to delete the job from JobCollection based on jobId
+        const deleteFb = await FeedbackCollection.deleteOne({ _id: fbId });
+
+        // Check if deletion was successful
+        if (deleteFb.deletedCount) {
+            // Send a success response
+            res.json({ success: true });
+        } else {
+            // Send an error response if job not found or deletion failed
+            res.status(404).send('Feedback not found or deletion failed');
+        }
+    } catch (error) {
+        console.error('Error deleting feedback:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 
 app.get('/admin', async (req, res) => {
     // Check if the user is logged in
@@ -796,7 +819,26 @@ app.get('/opp_admin', async (req, res) => {
     }
 });
 
-
+app.get('/feedback_admin', async (req, res) => {
+    if (req.session.user && req.session.user.name) {
+        if (req.session.user.role !== 'admin') {
+            res.redirect('/');
+        }
+        const adName = req.session.user.name;
+        try {
+            // Fetch the number of volunteers and organizations
+            const fbs = await FeedbackCollection.find();
+            // Render the admin page with data
+            res.render('feedback_admin', { adName, fbs });
+        } catch (error) {
+            console.error('Error fetching data for admin page:', error);
+            res.status(500).send('Internal Server Error');
+        }
+    } else {
+        // Redirect to the login page if the user is not logged in
+        res.redirect('/login');
+    }
+});
 
 app.get('/vol_info', async (req, res) => {
     const objectId = req.query.objectId;
@@ -868,6 +910,34 @@ app.get('/requests', async (req, res) => {
     }
 });
 
+app.get('/opp_profile', async (req, res) => {
+    // Extract the objectId parameter from the request query
+    const objectId = req.query.objectId;
+    try {
+        const job = await JobCollection.findById(objectId);
+        let participantEmails = [];
+
+        if (job && job.participants) {
+            participantEmails = job.participants.map(participant => participant.email);
+        } else {
+            res.status(404).send('Job or participants not found');
+            return;
+        }
+
+        const participants = await userProfCollection.find({ email: { $in: participantEmails } });
+
+        if (participants) {
+            res.render('opp_profile', { job, participants });
+        } else {
+            res.status(404).send('Participants not found');
+        }
+    } catch (error) {
+        console.error('Error fetching job and participants information:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
 app.post('/admindenyrequest', async (req, res) => {
     try {
         const objectId = req.body.objectId;
@@ -912,6 +982,69 @@ app.post('/adminacceptrequest', async (req, res) => {
         res.status(500).send('Internal Server Error'); // Send a generic error response for internal server errors
     }
 });
+
+app.delete('/delete-image', async (req, res) => {
+    try {
+        const imageUrlToDelete = req.body.imageUrl; // Extract the image URL from the request body
+
+        // Assuming userProfCollection is your Mongoose model for user profiles
+        const userProfile = await userProfCollection.findOneAndUpdate(
+            { "images": imageUrlToDelete }, // Find the user profile containing the image URL
+            { $pull: { "images": imageUrlToDelete } }, // Remove the image URL from the images array
+            { new: true } // Return the updated document after deletion
+        );
+
+        if (userProfile) {
+            // Image deleted successfully
+            res.status(200).json({ message: 'Image deleted successfully', userProfile });
+        } else {
+            // Image not found or deletion failed
+            res.status(404).json({ message: 'Image not found or deletion failed' });
+        }
+    } catch (error) {
+        console.error('Error deleting image:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+app.get('/about', (req, res)=>{
+    res.render('about');
+});
+
+app.get('/feedback', (req, res)=>{
+    res.render('feedback');
+});
+
+app.post('submitFeedback', (req,res)=>{
+
+});
+
+app.post('/submitFeedback', async (req, res) => {
+    const { name, email, feedback, selectedEmoji } = req.body;
+
+    try {
+        if (!name || !email || !feedback || !selectedEmoji) {
+            return res.status(400).send('All fields are required');
+        }
+
+        // Create a new feedback instance
+        const newFeedback = new FeedbackCollection({
+            name,
+            email,
+            feedbackMessage: feedback,
+            feedbackEmoji: selectedEmoji,
+        });
+
+        // Save the new feedback to the database
+        await newFeedback.save();
+
+        res.redirect('/');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error submitting feedback');
+    }
+});
+
 
 app.listen(port, () => {
     console.log('port connected');
