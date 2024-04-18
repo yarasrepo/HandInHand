@@ -63,6 +63,16 @@ main {
     border-radius: 5px;
     cursor: pointer;
 }
+.back-button{
+    padding: 10px 50px;
+    /* margin-right: 1px; */
+    color: #2685F5;
+    background-color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align:left;
+}
 .Opportunity{
     background-color: #28a745 !important;
 }
