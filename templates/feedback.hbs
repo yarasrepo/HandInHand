@@ -7,6 +7,7 @@
     <link rel="shortcut icon" type="x-icon" href="https://i.imgur.com/MoSHBZX.png">
     <title>HandInHand-Feedback</title>
     <link rel="stylesheet" type="text/css" href="feedback.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body style="background-image: url('https://logincdn.msauth.net/shared/5/js/../images/2_bc3d32a696895f78c19d.svg');">
@@ -17,13 +18,14 @@
         <h1>Give us your valuable feedback</h1>
         <p>Your feedback is very important to us</p>
         <form id="feedbackForm" action="/submitFeedback" method="POST">
-            <div class="emoji-box">
-                <button class="btn-normal" type="button">&#128578;</button>
-                <button class="btn-normal" type="button">&#128515;</button>
-                <button class="btn-normal" type="button">&#128531;</button>
-                <button class="btn-normal" type="button">&#128532;</button>
-                <button class="btn-normal" type="button">&#128545;</button>
-                <input type="hidden" id="selectedEmoji" name="selectedEmoji">
+            <div class="rating-box">
+                <div class="stars">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                </div>
             </div>
             <p class="question">Your feedback:</p>
             <textarea id="textarea" name="feedback" cols="20" rows="5"></textarea>
@@ -48,17 +50,23 @@
     </div>
 
     <script>
-        const btns = document.querySelectorAll(".emoji-box .btn-normal");
-        const feedbackForm = document.getElementById("feedbackForm");
-        const selectedEmojiInput = document.getElementById("selectedEmoji");
-
-        btns.forEach(btn => {
-            btn.addEventListener("click", () => {
-                btns.forEach(b => b.classList.remove("selected"));
-                btn.classList.add("selected");
-                selectedEmojiInput.value = btn.textContent;
+        // select all elements with the "i" tag and store them in a NodeList called "stars"
+        const stars = document.querySelectorAll(".stars i");
+        
+        // loop through the "stars" NodeList
+        stars.forEach((star, index1) => {
+            // add an event listener that runs a function when the "click" event is triggered
+            star.addEventListener("click", () => {
+                // loop through the "stars" NodeList again
+                stars.forEach((star, index2) => {
+                    // add the "active" class to the clicked star and any stars with a lower index
+                    // and remove the "active" class from any stars with a higher index
+                    index1 >= index2 ? star.classList.add("active") : star.classList.remove("active");
+                });
             });
         });
+
+        const feedbackForm = document.getElementById("feedbackForm");
 
         feedbackForm.addEventListener("submit", (event) => {
             const textareaValue = document.getElementById("textarea").value.trim();
