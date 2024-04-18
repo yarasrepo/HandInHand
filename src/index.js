@@ -151,9 +151,12 @@ app.post('/signup', async (req, res) => {
         };
 
         // Handle organization requests
+        console.log('before if');
         if (data.role === 'organization') {
             const org = await ReqCollection.findOne({ email: req.body.email });
+            console.log('after first  if');
             if (org) {
+                console.log('inside  if');
                 if (org.flag === false) {
                     if (org.deniedCount === 3) {
                         res.send("Your application request has been denied three times! You cannot create an account with this email.");
@@ -164,6 +167,7 @@ app.post('/signup', async (req, res) => {
                     } else {
                         org.reqCount += 1;
                         await org.save();
+                        console.log("request sent");
                         res.send("Request submitted successfully");
                         return;
                     }
