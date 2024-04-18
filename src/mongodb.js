@@ -14,6 +14,7 @@ const LogInSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    
     firstName: {
         type: String
     },
