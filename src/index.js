@@ -1015,10 +1015,6 @@ app.get('/feedback', (req, res)=>{
     res.render('feedback');
 });
 
-app.post('submitFeedback', (req,res)=>{
-
-});
-
 app.post('/submitFeedback', async (req, res) => {
     const { name, email, feedback, selectedEmoji } = req.body;
 

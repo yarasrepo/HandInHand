@@ -26,19 +26,20 @@
                     <i class="fa-solid fa-star"></i>
                     <i class="fa-solid fa-star"></i>
                 </div>
+                <input type="hidden" id="starRating" name="starRating" value="">
             </div>
             <p class="question">Your feedback:</p>
             <textarea id="textarea" name="feedback" cols="20" rows="5"></textarea>
             <div class="info-field">
                 <div class="name">
                     <label>
-                        <input type="text" name="name" placeholder=" ">
+                        <input type="text" name="name" placeholder=" " required>
                         <span>Name</span>
                     </label>
                 </div>
                 <div class="email">
                     <label>
-                        <input type="email" name="email" placeholder=" ">
+                        <input type="email" name="email" placeholder=" " required>
                         <span>Email Address (will not be published)</span>
                     </label>
                 </div>
@@ -50,9 +51,13 @@
     </div>
 
     <script>
+        const starRatingInput = document.getElementById("starRating");
+
         // select all elements with the "i" tag and store them in a NodeList called "stars"
         const stars = document.querySelectorAll(".stars i");
-        
+        const feedbackForm = document.getElementById("feedbackForm");
+
+
         // loop through the "stars" NodeList
         stars.forEach((star, index1) => {
             // add an event listener that runs a function when the "click" event is triggered
@@ -63,6 +68,7 @@
                     // and remove the "active" class from any stars with a higher index
                     index1 >= index2 ? star.classList.add("active") : star.classList.remove("active");
                 });
+                starRatingInput.value = index1 + 1;
             });
         });
 

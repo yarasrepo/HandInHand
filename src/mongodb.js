@@ -246,7 +246,7 @@ const FbSchema = new mongoose.Schema({
         type: String,
     },
     feedbackEmoji: {
-        type: String,
+        type: Number,
     }
 });
 
