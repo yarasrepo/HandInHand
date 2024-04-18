@@ -182,7 +182,7 @@ const reqOrg = new mongoose.Schema({
         type: Number,
         default: 0,
         required: true,
-    }
+    },
     deniedCount: {
         type: Number,
         default: 0,
