@@ -437,7 +437,8 @@ app.get('/userprofile', async (req, res) => {
                     res.redirect('/orgprofile');
                 }
                 else {
-                    res.render('userprofile', { userProf });
+                    const jobs = await JobCollection.find({ 'participants.email': userProf.email });
+                    res.render('userprofile', { userProf, jobs });
                 }
             } else {
                 // Handle the case where the user profile is not found
