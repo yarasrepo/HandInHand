@@ -475,11 +475,26 @@ app.get('/home', (req, res) => {
 })
 
 
+const sendPasswordResetEmail = async (email, resetLink) => {
+    const mailOptions = {
+        from: process.env.EMAIL_ADDRESS, 
+        to: email, 
+        subject: 'Password Reset', 
+        html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>`
+    };
 
+    try {
+        await transporter.sendMail(mailOptions); 
+        console.log('Password reset email sent');
+    } catch (error) {
+        console.error('Error sending password reset email:', error);
+    }
+};
 
 app.get('/forgot-password', (req, res) => {
     res.render('forgot-password');
 });
+
 
 app.post('/forgot-password', async (req, res) => {
     const { email } = req.body;
@@ -491,10 +506,12 @@ app.post('/forgot-password', async (req, res) => {
             return res.send('User not registered');
         }
 
-        const resetToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '5m' });
+        const resetToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '10m' });
 
         // change after hosting the website
         const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
+
+        await sendPasswordResetEmail(email, resetLink); 
 
         return res.send('Password reset link has been sent to your email');
     } catch (error) {
@@ -506,6 +523,10 @@ app.post('/forgot-password', async (req, res) => {
 app.get('/reset-password', async (req, res) => {
     const { token } = req.query;
 
+    if (!token) {
+        return res.status(400).send('Token is missing');
+    }
+
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         return res.render('reset-password', { token });
@@ -516,16 +537,23 @@ app.get('/reset-password', async (req, res) => {
 });
 
 app.post('/reset-password', async (req, res) => {
-    const { token, newPassword } = req.body;
+    const { token, password } = req.body;
+
+    if (!token) {
+        return res.status(400).send('Token is missing');
+    }
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await LogInCollection.findById(decoded.userId);
+        const userId = decoded.userId;
+        const user = await LogInCollection.findById(userId);
+
         if (!user) {
             return res.status(404).send('User not found');
         }
 
-        user.password = newPassword;
+        // Update user's password
+        user.password = password;
         await user.save();
 
         return res.send('Password reset successful');
@@ -534,6 +562,7 @@ app.post('/reset-password', async (req, res) => {
         return res.status(400).send('Invalid or expired token');
     }
 });
+
 
 
 app.get('/editable', async (req, res) => {
