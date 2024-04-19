@@ -84,6 +84,7 @@
                                             <th>Email Address</th>
                                             <th>Reports</th>
                                             <th>Review</th>
+                                            <th>Ignore</th>
                                             <th>Delete</th>
                                         </tr>
                                     </thead>
@@ -102,12 +103,7 @@
                                             <td><button onclick="viewOrgInfo('{{this._id}}')">Review</button>
                                             </td>
                                             {{/if}}
-                                            <td><button onclick="ignoreReport('{{this._id}}')">Ignore</button></td>
-
-                                            {{!-- <form action="/admindeleteaccount" method="POST">
-                                                <input type="hidden" name="userId" value="{{this._id}}">
-                                                <td><button type="submit">Delete</button></td>
-                                            </form> --}}
+                                            <td><button onclick="ignoreReport('{{this.email}}', this)">Ignore</button></td>
                                             <td><button id="deleteButton-{{this._id}}" class="delete-button"
                                                     data-user-id="{{this._id}}">Delete</button></td>
                                         </tr>
@@ -292,6 +288,34 @@
             window.location.href = `/org_info?objectId=${objectId}`;
         }
 
+        function ignoreReport(email, buttonElement) {
+            // Prepare the data to send in the request body
+            const data = { email };
+
+            // Make a POST request using fetch or XMLHttpRequest
+            fetch('/ignorereport', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // Change the button appearance or disable it after reporting
+                        buttonElement.textContent = 'Ignored';
+                        buttonElement.disabled = true; // Optionally, disable the button
+                        buttonElement.classList.add('ignored'); // Add a class for styling
+                        console.log('Ignored report successfully');
+                    } else {
+                        console.error('Failed to ignore report');
+                        // Handle the error or display a message to the user
+                    }
+                })
+                .catch(error => {
+                    console.error('Error reporting participant:', error);
+                });
+        }
         // Initial display
         displayPage(currentPage);
     </script>

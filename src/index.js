@@ -1124,28 +1124,54 @@ app.put('/completeopportunity', async (req, res) => {
 
 // Assuming you have a route handler set up for handling the report button click
 app.post('/reportParticipant', async (req, res) => {
-    const participantEmail = req.body.participantEmail; // Assuming you're sending the participant ID from the frontend
+    const participantEmail = req.body.email; // Assuming you're sending the participant email from the frontend
 
     try {
-  
-        const participantUser = await userProfCollection.findOne({ email: participantEmail});
+        // Find the participant user by email
+        const participantUser = await userProfCollection.findOne({ email: participantEmail });
+
         if (!participantUser) {
-            return res.status(404).json({ error: 'Participant user not found' });
+            return res.status(404).json({ error: ' user not found' });
         }
 
         // Increment the reports attribute by one for the participant
         participantUser.reports += 1;
 
-        // Save the updated job data back to the database
+        // Save the updated participant data back to the database
         await participantUser.save();
 
-        res.status(200).json({ message: 'Participant report incremented successfully', job });
+        // Send a success response
+        res.status(200).json({ message: 'report incremented successfully', participantUser });
     } catch (err) {
-        console.error(err);
+        console.error('Error reporting user:', err);
         res.status(500).json({ error: 'Server error' });
     }
 });
 
+app.post('/ignorereport', async (req, res) => {
+    const participantEmail = req.body.email; // Assuming you're sending the participant email from the frontend
+
+    try {
+        // Find the participant user by email
+        const participantUser = await userProfCollection.findOne({ email: participantEmail });
+
+        if (!participantUser) {
+            return res.status(404).json({ error: 'user not found' });
+        }
+
+        // Increment the reports attribute by one for the participant
+        participantUser.reports =0;
+
+        // Save the updated participant data back to the database
+        await participantUser.save();
+
+        // Send a success response
+        res.status(200).json({ message: 'report count reset', participantUser });
+    } catch (err) {
+        console.error('Error reseting report count:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
 
 // Assuming you have a route handler set up for handling participant deletion
 app.delete('/removeParticipant', async (req, res) => {

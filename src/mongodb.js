@@ -143,6 +143,7 @@ const jobSchema = new mongoose.Schema({
     imageLink: {
         type: String,
         ref: 'userProfileCollection',
+        maxlength: 1000
     },
     creator: {
         type: String,
