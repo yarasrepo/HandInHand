@@ -13,7 +13,7 @@
 <body>
     <header>
         <a href="/">
-        <img src="https://i.imgur.com/MoSHBZX.png" class="logo" alt="HandinHand">
+            <img src="https://i.imgur.com/MoSHBZX.png" class="logo" alt="HandinHand">
         </a>
         <ul class="navbar">
             <li><a href="/">Home</a></li>
@@ -71,12 +71,16 @@
                         <p>{{this.description}}</p>
                         <p>{{this.startDate}}</p>
 
+
                         {{#if this.openPositions}}
                         <span class="seats-left">Seats Left: {{this.openPositions}}</span>
+                        {{#unless ../isOrganization }}
                         <a href="/checkout?jobId={{this._id}}" class="book-button">Book</a>
+                        {{/unless}}
                         {{else}}
                         <p class="seats-left">No seats left</p>
                         {{/if}}
+
 
                         <div class="more-details" style="display: none;">
                             <p><strong>Location:</strong> {{this.location}}</p>
