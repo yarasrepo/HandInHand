@@ -437,7 +437,8 @@ app.get('/userprofile', async (req, res) => {
                     res.redirect('/orgprofile');
                 }
                 else {
-                    res.render('userprofile', { userProf });
+                    const jobs = await JobCollection.find({ 'participants.email': userProf.email });
+                    res.render('userprofile', { userProf, jobs });
                 }
             } else {
                 // Handle the case where the user profile is not found
@@ -604,8 +605,8 @@ app.post('/edituserprof', async (req, res) => {
             }
         };
 
-        // Check if the user is an organization
-        if (req.session.user.role === 'organization') {
+        // Check if the user is an organization and add photos not null
+        if (req.session.user.role === 'organization' && req.body.AddPhotos) {
             // Add to the images array only if the user is an organization
             update.$addToSet = { images: req.body.AddPhotos };
         }

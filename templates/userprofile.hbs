@@ -23,8 +23,8 @@
         </div>
 
         <div class="user">
-        {{!-- <img src="http://localhost:3000{{userProf.ProfilePic}}" id="profilePic" alt="Profile Picture"> --}}
-        <img src="{{userProf.ProfilePic}}" id="profilePic" alt="Profile Picture">
+            {{!-- <img src="http://localhost:3000{{userProf.ProfilePic}}" id="profilePic" alt="Profile Picture"> --}}
+            <img src="{{userProf.ProfilePic}}" id="profilePic" alt="Profile Picture">
 
 
             <h3 class="name">{{ userProf.name }}</h3>
@@ -34,6 +34,7 @@
         <nav class="navbar">
             <ul>
                 <li><a href="#About">About</a></li>
+                <li><a href="#current">Current Opportunities</a></li>
                 <li><a href="#prevvolunteer">Previous Volunteering Experience</a></li>
                 <li><a href="#contact">Contact</a></li>
                 <li><a href="/editable">Edit</a></li>
@@ -59,10 +60,43 @@
     <!-- abt section ends -->
 
     <!-- prev vol exps starts -->
+    <section class="current" id="current">
+        <h1 class="heading"><span>Current</span> Opportunities</h1>
+        <div id="currentOpps"></div>
+        <div class="box-container">
+            {{#each jobs}}
+            {{#if (eq this.completed false)}}
+            <div class="box">
+                <i class="fa-solid fa-calendar-week"></i>
+                <span>{{this.startDate}}</span>
+                <h3>{{this.title}}</h3>
+                <p>{{this.description}}</p>
+            </div>
+            {{/if}}
+            {{/each}}
+        </div>
+    </section>
 
-    <section class="prevvolunteer" id="prevvolunteer">
+        <section class="current" id="prevvolunteer">
+        <h1 class="heading"><span>Previous</span> Opportunities</h1>
+        <div id="currentOpps"></div>
+        <div class="box-container">
+            {{#each jobs}}
+            {{#if (eq this.completed true)}}
+            <div class="box">
+                <i class="fa-solid fa-calendar-week"></i>
+                <span>{{this.startDate}}</span>
+                <h3>{{this.title}}</h3>
+                <p>{{this.description}}</p>
+            </div>
+            {{/if}}
+            {{/each}}
+        </div>
+    </section>
+
+    {{!-- <section class="prevvolunteer" id="prevvolunteer">
         <h1 class="heading"><span>Previous </span>Volunteering Experience</h1>
-        <div id="userPrevVolExp"></div>
+        <div id="userPrevVolExp"></div> --}}
 
         <!--     <div class="box-container">
 
@@ -74,30 +108,6 @@
             <p>20 hours</p>
         </div>
 
-        <div class="box">
-            <i class="fa-solid fa-person-cane"></i>
-            <span>Jul 2023 - Aug 2023</span>
-            <h3>Retirement Home</h3>
-            <p>Helped elderly people perform day-to-day activities</p>
-            <p>60 hours</p>
-        </div>
-
-        <div class="box">
-            <i class="fa-solid fa-tree"></i>
-            <span>Jun 2022 - Jul 2022</span>
-            <h3>Community Tree Planting</h3>
-            <p>Planted multiple trees around the neighborhood</p>
-            <p>10 hours</p>
-        </div>
-
-        <div class="box">
-            <i class="fa-solid fa-socks"></i>
-            <span>Jan 2022 - Feb 2022</span>
-            <h3>Clothing Drive</h3>
-            <p>Collected clothing donations for the poor and homeless</p>
-            <p>25 hours</p>
-        </div> -->
-        <!--     </div> -->
 
     </section>
 
@@ -166,6 +176,7 @@
             });
 
         });
+
     </script>
 
 </body>
