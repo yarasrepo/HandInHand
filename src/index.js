@@ -75,7 +75,7 @@ const transporter = nodemailer.createTransport({
         from: process.env.EMAIL_ADDRESS,
         to: email,
         subject: 'Email Verification',
-        html: `<p>Click <a href="http://localhost:3000/verify-email?token=${verificationToken}">here</a> to verify your email address.</p>` // Removed target="_blank"
+        html: `<p>Click <a href="https://handinhand-o60q.onrender.com/verify-email?token=${verificationToken}">here</a> to verify your email address.</p>` // Removed target="_blank"
     };
 
     try {
@@ -510,7 +510,7 @@ app.post('/forgot-password', async (req, res) => {
         const resetToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '10m' });
 
         // change after hosting the website
-        const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
+        const resetLink = `https://handinhand-o60q.onrender.com/reset-password?token=${resetToken}`;
 
         await sendPasswordResetEmail(email, resetLink); 
 
