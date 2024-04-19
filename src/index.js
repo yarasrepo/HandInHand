@@ -605,7 +605,7 @@ app.post('/edituserprof', async (req, res) => {
             }
         };
 
-        // Check if the user is an organization and add photos not null
+        // Check if the user is an organization and add photos not
         if (req.session.user.role === 'organization' && req.body.AddPhotos) {
             // Add to the images array only if the user is an organization
             update.$addToSet = { images: req.body.AddPhotos };
