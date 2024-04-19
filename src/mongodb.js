@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 
-mongoose.connect("mongodb://t:27017/HandInHand")
+mongoose.connect("mongodb://localhost:27017/HandInHand")
     .then(() => {
         console.log("mongodb connected");
     })
@@ -281,7 +281,7 @@ const FbSchema = new mongoose.Schema({
 const FeedbackCollection = mongoose.model("FeedbackCollection", FbSchema)
 
 module.exports = {
-    connectDB,
+    // connectDB,
     collection,
     userProfCollection,
     JobCollection,
