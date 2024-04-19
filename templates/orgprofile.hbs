@@ -57,6 +57,7 @@
         <div id="currentOpps"></div>
         <div class="box-container">
             {{#each jobs}}
+            {{#if (eq this.completed false)}}
             <div class="box">
                 <i class="fa-solid fa-calendar-week"></i>
                 <span>{{this.startDate}}</span>
@@ -64,6 +65,7 @@
                 <p>{{this.description}}</p>
                 <button class="btn1" onclick="redirectToOppProf('{{this._id}}')">Read More</button>
             </div>
+            {{/if}}
             {{/each}}
         </div>
     </section>
@@ -74,10 +76,16 @@
         <div id="PreviousOpps"></div>
         <div class="box-container">
             {{#each jobs}}
+            {{#if (eq this.completed true)}}
             <div class="box">
+                {{#if (eq this.imageLink null)}}
+                <img src="https://www.fivebranches.edu/wp-content/uploads/2021/08/default-image.jpg" alt="">
+                {{else}}
                 <img src="{{this.imageLink}}" alt="">
+                {{/if}}
                 <button class="btn1" onclick="redirectToOppProf('{{this._id}}')">Read More</button>
             </div>
+            {{/if}}
             {{/each}}
         </div>
     </section>
