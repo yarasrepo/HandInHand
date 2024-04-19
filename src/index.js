@@ -9,7 +9,8 @@ const app = express()
 const hbs = require("hbs")
 const helpers = require("handlebars-helpers")();
 hbs.registerHelper(helpers);
-const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, FeedbackCollection } = require("./mongodb");
+const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, FeedbackCollection, connectDB } = require("./mongodb");
+connectDB();
 const port = process.env.PORT || 3000
 app.use(express.json())
 
@@ -1075,7 +1076,7 @@ app.post('/submitFeedback', async (req, res) => {
     }
 });
 
-
-app.listen(port, () => {
-    console.log('port connected');
+const PORT = process.env.PORT
+app.listen(PORT, () => {
+    console.log('Server is running on port ' + PORT);
 })
