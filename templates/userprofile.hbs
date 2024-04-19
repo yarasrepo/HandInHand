@@ -38,6 +38,8 @@
                 <li><a href="#prevvolunteer">Previous Volunteering Experience</a></li>
                 <li><a href="#contact">Contact</a></li>
                 <li><a href="/editable">Edit</a></li>
+                <li><a href="#" onclick="window.history.back();" class="back-button">Back</a></li>
+
 
             </ul>
         </nav>
@@ -77,7 +79,7 @@
         </div>
     </section>
 
-        <section class="current" id="prevvolunteer">
+    <section class="current" id="prevvolunteer">
         <h1 class="heading"><span>Previous</span> Opportunities</h1>
         <div id="currentOpps"></div>
         <div class="box-container">
@@ -113,71 +115,71 @@
 
     <!-- prev vol exps ends -->
 
-    <!-- contact start -->
+        <!-- contact start -->
 
-    <section class="contact" id="contact">
+        <section class="contact" id="contact">
 
-        <h1 class="heading"> my <span>contact</span> info </h1>
-        <div id="userContactInfo"></div>
-        <div class="row">
-            <div class="content">
-                <h3 class="title">contact info</h3>
-                <div class="info">
-                    <h3> <i class="fas fa-envelope"></i> {{userProf.email}}</h3>
-                    <h3><i class="fas fa-phone"></i> {{userProf.PhoneNum}}</h3>
-                    <h3><i class="fas fa-map-marker-alt"></i> {{userProf.Location}} </h3>
+            <h1 class="heading"> my <span>contact</span> info </h1>
+            <div id="userContactInfo"></div>
+            <div class="row">
+                <div class="content">
+                    <h3 class="title">contact info</h3>
+                    <div class="info">
+                        <h3> <i class="fas fa-envelope"></i> {{userProf.email}}</h3>
+                        <h3><i class="fas fa-phone"></i> {{userProf.PhoneNum}}</h3>
+                        <h3><i class="fas fa-map-marker-alt"></i> {{userProf.Location}} </h3>
 
+                    </div>
                 </div>
             </div>
-        </div>
 
-    </section>
+        </section>
 
-    <!-- contact end -->
+        <!-- contact end -->
 
-    <!-- scroll top -->
-    <a href="About" class="top"></a>
+        <!-- scroll top -->
+        <a href="About" class="top"></a>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-    <script>
-        $(document).ready(function () {
-            $('#menu').click(function () {
-                $(this).toggleClass('fa-times');
-                $('header').toggleClass('toggle');
+        <script>
+            $(document).ready(function () {
+                $('#menu').click(function () {
+                    $(this).toggleClass('fa-times');
+                    $('header').toggleClass('toggle');
+                });
+
+                $(window).on('scroll load', function () {
+                    $('#menu').removeClass('fa-times');
+                    $('header').removeClass('toggle');
+
+                    if ($(window).scrollTop() > 0) {
+                        $('.top').show();
+                    } else {
+                        $('.top').hide();
+
+                    }
+                });
+
+                // smooth scrolling
+
+                $('a[href*="#"]').on('click', function (e) {
+
+                    e.preventDefault();
+
+                    $('html, body').animate({
+                        scrollTop: $($(this).attr('href')).offset().top,
+                    },
+                        500,
+                        'linear'
+
+                    );
+
+                });
+
             });
 
-            $(window).on('scroll load', function () {
-                $('#menu').removeClass('fa-times');
-                $('header').removeClass('toggle');
-
-                if ($(window).scrollTop() > 0) {
-                    $('.top').show();
-                } else {
-                    $('.top').hide();
-
-                }
-            });
-
-            // smooth scrolling
-
-            $('a[href*="#"]').on('click', function (e) {
-
-                e.preventDefault();
-
-                $('html, body').animate({
-                    scrollTop: $($(this).attr('href')).offset().top,
-                },
-                    500,
-                    'linear'
-
-                );
-
-            });
-
-        });
-
-    </script>
+        </script>
 
 </body>
 

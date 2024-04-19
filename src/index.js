@@ -304,6 +304,8 @@ app.get('/checkout', async (req, res) => {
                 profileLink = '/orgprofile';
                 isOrganization = true;
             }
+        }else{
+            res.redirect('/signup');
         }
 
         res.render('checkout', { job, signedIn, userRole, profileLink, isOrganization });
@@ -1214,6 +1216,24 @@ app.get('/reports_admin', async (req, res) => {
         res.redirect('/login');
     }
 });
+
+app.get('/vieworgprofile', async (req, res) => {
+    const creatorName = req.query.creator; // Get the creator name from the query parameter
+
+    try {
+        // Find the user profile using the creator name
+        const userProf = await userProfCollection.findOne({ name: creatorName });
+        const jobs= await JobCollection.find({creator: req.query.creator});
+
+        // Render the view with the user profile data
+        res.render('vieworgprofile', { userProf, jobs });
+    } catch (error) {
+        console.error('Error fetching user profile:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
 const PORT = process.env.PORT
 // const PORT = 3000;
 app.listen(PORT, () => {
