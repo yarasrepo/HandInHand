@@ -7,6 +7,7 @@
     <link rel="shortcut icon" type="x-icon" href="https://i.imgur.com/MoSHBZX.png">
     <title>HandInHand-Feedback</title>
     <link rel="stylesheet" type="text/css" href="feedback.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body style="background-image: url('https://logincdn.msauth.net/shared/5/js/../images/2_bc3d32a696895f78c19d.svg');">
@@ -16,27 +17,18 @@
     <div class="feedback-container">
         <h1>Give us your valuable feedback</h1>
         <p>Your feedback is very important to us</p>
-        <form id="feedbackForm" action="/submitFeedback" method="POST">
-            <div class="emoji-box">
-                <button class="btn-normal" type="button">&#128578;</button>
-                <button class="btn-normal" type="button">&#128515;</button>
-                <button class="btn-normal" type="button">&#128531;</button>
-                <button class="btn-normal" type="button">&#128532;</button>
-                <button class="btn-normal" type="button">&#128545;</button>
-                <input type="hidden" id="selectedEmoji" name="selectedEmoji">
-            </div>
-            <p class="question">Your feedback:</p>
-            <textarea id="textarea" name="feedback" cols="20" rows="5"></textarea>
+        <form id="feedbackForm" action="/submitFeedback" method="POST">            
+            <textarea id="textarea" name="feedback" cols="20" rows="5" placeholder="Write your feedback here"></textarea>
             <div class="info-field">
                 <div class="name">
                     <label>
-                        <input type="text" name="name" placeholder=" ">
+                        <input type="text" name="name" placeholder=" " required>
                         <span>Name</span>
                     </label>
                 </div>
                 <div class="email">
                     <label>
-                        <input type="email" name="email" placeholder=" ">
+                        <input type="email" name="email" placeholder=" " required>
                         <span>Email Address (will not be published)</span>
                     </label>
                 </div>
@@ -48,17 +40,8 @@
     </div>
 
     <script>
-        const btns = document.querySelectorAll(".emoji-box .btn-normal");
-        const feedbackForm = document.getElementById("feedbackForm");
-        const selectedEmojiInput = document.getElementById("selectedEmoji");
 
-        btns.forEach(btn => {
-            btn.addEventListener("click", () => {
-                btns.forEach(b => b.classList.remove("selected"));
-                btn.classList.add("selected");
-                selectedEmojiInput.value = btn.textContent;
-            });
-        });
+        const feedbackForm = document.getElementById("feedbackForm");
 
         feedbackForm.addEventListener("submit", (event) => {
             const textareaValue = document.getElementById("textarea").value.trim();

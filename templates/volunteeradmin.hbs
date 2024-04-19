@@ -42,6 +42,10 @@
                         <span>Feedback</span></a>
                 </li>
                 <li>
+                    <a href="/reports_admin"><span class="fa-solid fa-flag"></span>
+                        <span>Reports</span></a>
+                </li>
+                <li>
                     <a href="/"><span class="fa-solid fa-house"></span>
                         <span>Homepage</span></a>
                 </li>
@@ -75,7 +79,7 @@
                                 <table class="table-sortable" id="volunteersTable" width="100%">
                                     <thead>
                                         <tr>
-                                            <th onclick="sortTable(0)">Volunteer Name</th>
+                                            <th>Volunteer Name</th>
                                             <th>Email Address</th>
                                             <th>Phone Number</th>
                                             <th>Location</th>
@@ -103,7 +107,6 @@
                                             </form> --}}
                                             <td><button id="deleteButton-{{this._id}}" class="delete-button"
                                                     data-user-id="{{this._id}}">Delete</button></td>
-
                                         </tr>
                                     </tbody>
                                     {{/if}}

@@ -36,6 +36,10 @@ const LogInSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    verified: {
+        type: Boolean,
+        default: false,
+    }
 })
 
 const collection = new mongoose.model("HandInHandcollection", LogInSchema)
@@ -73,6 +77,10 @@ const userProfile = new mongoose.Schema({
         type: Date,
         ref: 'LogInSchema',
     },
+    HoursVolunteered: {
+        type: Number,
+        default: 0,
+    },
     JobsBooked: {
         type: Number,
         default: 0,
@@ -84,8 +92,11 @@ const userProfile = new mongoose.Schema({
     images:
     {
         type: [String],
-    }
-
+    },
+    reports: {
+        type: Number,
+        default: 0,
+    },
 })
 
 const userProfCollection = mongoose.model("userProfCollection", userProfile)
@@ -121,7 +132,8 @@ const jobSchema = new mongoose.Schema({
     },
     imageLink: {
         type: String,
-        ref: 'userProfileCollection'
+        ref: 'userProfileCollection',
+        maxlength: 1000
     },
     creator: {
         type: String,
@@ -136,7 +148,12 @@ const jobSchema = new mongoose.Schema({
         email: String,
         firstName: String,
         lastName: String
-    }]
+    }],
+    completed: {
+        type: Boolean,
+        default: false,
+        required: true
+    },
 });
 
 const JobCollection = mongoose.model("JobCollection", jobSchema)
@@ -167,6 +184,16 @@ const reqOrg = new mongoose.Schema({
     flag: {
         type: Boolean,
         default: 'false',
+        required: true,
+    },
+    deniedCount: {
+        type: Number,
+        default: 0,
+        required: true,
+    },
+    reqCount: {
+        type: Number,
+        default: 0,
         required: true,
     },
     deniedCount: {
@@ -232,7 +259,12 @@ const FbSchema = new mongoose.Schema({
         type: String,
     },
     feedbackEmoji: {
-        type: String,
+        type: Number,
+    },
+    highlighted: {
+        type: Boolean,
+        default: false,
+        required: true,
     }
 });
 

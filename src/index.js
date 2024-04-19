@@ -60,14 +60,81 @@ app.get('/', (req, res) => {
 });
 
 
-app.post('/signup', async (req, res) => {
-    const data = {
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password,
-        role: req.body.role
+const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+        user: process.env.EMAIL_ADDRESS,
+        pass: process.env.APP_PASSWORD
+    }
+});
+
+
+const sendVerificationEmail = async (email, verificationToken) => {
+    const mailOptions = {
+        from: process.env.EMAIL_ADDRESS,
+        to: email,
+        subject: 'Email Verification',
+        html: `<p>Click <a href="http://localhost:3000/verify-email?token=${verificationToken}">here</a> to verify your email address.</p>` // Removed target="_blank"
     };
 
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log('Verification email sent');
+    } catch (error) {
+        console.error('Error sending verification email:', error);
+    }
+};
+
+
+app.get('/verify-email', async (req, res) => {
+    const token = req.query.token;
+
+    try {
+        console.log('Received verification token:', token);
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        console.log('Decoded token:', decoded);
+
+        const userId = decoded.userId;
+
+        console.log('User ID from token:', userId);
+
+
+        const user = await LogInCollection.findById(userId);
+
+        console.log('User from database:', user);
+
+
+        const result = await LogInCollection.updateOne({ _id: userId }, { $set: { verified: true } });
+
+        console.log('Update result:', result);
+
+        if (user && user.name) {
+            req.session.user = {
+                name: user.name,
+                role: user.role
+            };
+        }
+
+        console.log('Session user after verification:', req.session.user);
+
+        res.redirect('/');
+
+    } catch (error) {
+        console.error('Error verifying email:', error);
+        res.status(400).send('Invalid or expired token');
+    }
+});
+
+
+
+
+app.get('/email_sent', (req, res) => {
+    res.render('email_sent')
+})
+
+app.post('/signup', async (req, res) => {
     try {
         const existingUser = await LogInCollection.findOne({ email: req.body.email });
         if (existingUser) {
@@ -75,6 +142,16 @@ app.post('/signup', async (req, res) => {
             return;
         }
 
+        const data = {
+            name: req.body.name,
+            email: req.body.email,
+            password: req.body.password,
+            role: req.body.role,
+            verified: false
+        };
+
+        // Handle organization requests
+        console.log('before if');
         if (data.role === 'organization') {
             const org = await ReqCollection.findOne({ email: req.body.email });
             if (org && org.flag === false) {
@@ -108,9 +185,10 @@ app.post('/signup', async (req, res) => {
             role: req.body.role
         };
 
+        const newUser = await LogInCollection.find({email: req.body.email});
+
         const description = req.session.user.role === 'volunteer' ? "I love helping others" : "Let's make the world better together";
-        const user = await LogInCollection.findOne({ name: req.session.user.name }); // Find the user by their name
-        const dateJoined = user ? user.DateJoined : null; // Get the DateJoined if the user exists, otherwise set to null
+        const dateJoined = newUser.DateJoined || null;
         const profileData = {
             name: req.session.user.name,
             email: req.body.email,
@@ -123,7 +201,10 @@ app.post('/signup', async (req, res) => {
         };
         await userProfCollection.create(profileData);
 
-        res.redirect(302, '/');
+        const verificationToken = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        await sendVerificationEmail(data.email, verificationToken);
+
+        res.redirect('/email_sent');
     } catch (error) {
         console.error("Error during signup:", error);
         res.status(500).send("An error occurred during signup: " + error.message);
@@ -146,6 +227,11 @@ app.post('/login', async (req, res) => {
 
         if (check && check.password === req.body.password) {
             // Set user information in session
+            const user= await userProfCollection.findOne({name: req.body.name});
+            if (user && user.reports >= 5){
+                res.send("your account is temporarily banned");
+                return;
+            }
             req.session.user = {
                 name: check.name,
                 role: check.role
@@ -305,6 +391,11 @@ app.post('/job_submission_form', async (req, res) => {
             return res.status(400).send('All fields are required');
         }
         const organizationName = req.session.user.name;
+
+        // let newImageLink = imageLink;
+        // if (imageLink == null) {
+        //     newImageLink = "https://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg";
+        // }
 
         const newJob = new JobCollection({
             title: jobName,
@@ -927,23 +1018,25 @@ app.delete('/delete-image', async (req, res) => {
     }
 });
 
-app.get('/about', (req, res)=>{
-    res.render('about');
+app.get('/about', async(req, res) => {
+    try {
+        const fb = await FeedbackCollection.find({}); // Fetch all feedback data
+        res.render('about', { fb }); // Pass feedbackData to the 'about' template
+    } catch (error) {
+        console.error('Error fetching feedback data:', error);
+        res.status(500).send('Internal Server Error'); // Handle error gracefully
+    }
 });
 
-app.get('/feedback', (req, res)=>{
+app.get('/feedback', (req, res) => {
     res.render('feedback');
 });
 
-app.post('submitFeedback', (req,res)=>{
-
-});
-
 app.post('/submitFeedback', async (req, res) => {
-    const { name, email, feedback, selectedEmoji } = req.body;
+    const { name, email, feedback } = req.body;
 
     try {
-        if (!name || !email || !feedback || !selectedEmoji) {
+        if (!name || !email || !feedback) {
             return res.status(400).send('All fields are required');
         }
 
@@ -952,7 +1045,6 @@ app.post('/submitFeedback', async (req, res) => {
             name,
             email,
             feedbackMessage: feedback,
-            feedbackEmoji: selectedEmoji,
         });
 
         // Save the new feedback to the database
@@ -965,6 +1057,131 @@ app.post('/submitFeedback', async (req, res) => {
     }
 });
 
+//participats hsould already contain the userprof if we are passing it in js but are not maybe fix if doesnt work
+app.put('/completeopportunity', async (req, res) => {
+    const jobId = req.body.jobId;
+
+    try {
+        const job = await JobCollection.findById(jobId);
+        if (!job) {
+            return res.status(404).json({ error: 'Job not found' });
+        }
+
+        // Update job completion status
+        job.completed = true;
+        await job.save();
+
+        // Get all participants' IDs from the job
+        const participantEmails = job.participants.map(participant => participant.email);
+
+        // Fetch participant accounts from UserProfCollection and update volunteered hours
+        const participants = await userProfCollection.find({ email: { $in: participantEmails } });
+        for (const participant of participants) {
+            participant.HoursVolunteered += job.requiredHours;
+            await participant.save();
+        }
+
+        res.status(200).json({ message: 'Job marked as completed', job });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// Assuming you have a route handler set up for handling the report button click
+app.post('/reportParticipant', async (req, res) => {
+    const participantEmail = req.body.participantEmail; // Assuming you're sending the participant ID from the frontend
+
+    try {
+  
+        const participantUser = await userProfCollection.findOne({ email: participantEmail});
+        if (!participantUser) {
+            return res.status(404).json({ error: 'Participant user not found' });
+        }
+
+        // Increment the reports attribute by one for the participant
+        participantUser.reports += 1;
+
+        // Save the updated job data back to the database
+        await participantUser.save();
+
+        res.status(200).json({ message: 'Participant report incremented successfully', job });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+
+// Assuming you have a route handler set up for handling participant deletion
+app.delete('/removeParticipant', async (req, res) => {
+    const jobId = req.query.jobId;
+    const participantId = req.query.participantId;
+
+    try {
+        // Assuming you have a MongoDB model for jobs and participants, replace 'JobModel' and 'ParticipantModel' with your actual model names
+        const job = await JobCollection.findById(jobId);
+        if (!job) {
+            return res.status(404).json({ error: 'Job not found' });
+        }
+
+        // Remove the participant from the job's participant list
+        job.participants = job.participants.filter(participant => participant.toString() !== participantId);
+        await job.save();
+
+        res.status(200).json({ message: 'Participant removed from job successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+
+// Assuming you have an Express app instance named 'app'
+app.post('/highlightFeedback', async (req, res) => {
+    const { fbId, isHighlight } = req.body;
+
+    try {
+        // Update the feedback document in your database to set 'highlighted' based on the request
+        // For example, using Mongoose:
+        const updatedFeedback = await FeedbackCollection.findByIdAndUpdate(
+            fbId,
+            { $set: {highlighted: isHighlight } },
+            { new: true } // To return the updated document
+        );
+
+        if (updatedFeedback) {
+            res.json({ success: true, updatedFeedback });
+        } else {
+            res.status(404).json({ success: false, message: 'Feedback not found' });
+        }
+    } catch (error) {
+        console.error('Error updating feedback:', error);
+        res.status(500).json({ success: false, message: 'Error updating feedback' });
+    }
+});
+
+app.get('/reports_admin', async (req, res) => {
+    if (req.session.user && req.session.user.name) {
+        if (req.session.user.role !== 'admin') {
+            res.redirect('/');
+        }
+        const adName = req.session.user.name;
+        try {
+            // Fetch the number of volunteers and organizations
+            const userprofs = await userProfCollection.find({ reports: { $gt: 0 } });
+
+            // Render the admin page with data
+            res.render('reports_admin', { adName, userprofs });
+        } catch (error) {
+            console.error('Error fetching data for admin page:', error);
+            res.status(500).send('Internal Server Error');
+        }
+    } else {
+        // Redirect to the login page if the user is not logged in
+        res.redirect('/login');
+    }
+});
 
 app.listen(port, () => {
     console.log('port connected');
