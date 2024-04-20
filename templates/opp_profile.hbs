@@ -12,7 +12,10 @@
 
 <body>
     <header>
-        <h1>Opportunity name</h1>
+        <a href="/orgprofile">
+            <button class="back-button">Back</button>
+        </a>
+        <h1>{{job.title}}</h1>
     </header>
     <main>
         <div class="opp-details">
@@ -45,8 +48,10 @@
             </div>
             <div class="buttons">
                 <button class="view-volunteers-button">View Volunteers</button>
-                <button class="done-button">Close Opportunity</button>
-                <button class="delete-button" data-job-id="{{job._id}}">Delete</button>
+                {{#if (eq job.completed false)}}
+                <button class="done-button" data-job-id="{{job._id}}">Close Opportunity</button>
+                {{/if}}
+                <button class="delete-button" data-job-id="{{job._id}}">Delete Opportunity</button>
             </div>
         </div>
         <div class="grid" id="grid">
@@ -83,8 +88,10 @@
                                         <td>{{this.Location}}</td>
                                         <td>{{this.DateJoined}}</td>
                                         <td><button onclick="viewVolunteerInfo('{{this._id}}')">Review</button>
-                                        <td><button id="report-button" class="report-button">Report</button></td>
-                                        <td><button id="remove-button" class="removet-button">Remove</button></td>
+                                        <td> <button class="report-button"
+                                                onclick="reportParticipant('{{this.email}}', this)">Report</button></td>
+                                        <td><button class="remove-button"
+                                                data-participant-id="{{this._id}}">Remove</button></td>
                                     </tr>
                                 </tbody>
                                 {{/each}}
@@ -102,14 +109,36 @@
     </main>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            var doneButton = document.querySelector('.done-button');
-            doneButton.addEventListener('click', function () {
-                doneButton.textContent = 'Opportunity Closed';
-                doneButton.style.backgroundColor = '#28a745'; // Change button color to green
-                doneButton.style.cursor = 'default'; // Change cursor to default
-                doneButton.disabled = true; // Disable the button after it's reviewed
+            const doneButton = document.querySelector('.done-button');
+            doneButton.addEventListener('click', async () => {
+                const jobId = '{{job._id}}'; // Replace '{{job._id}}' with the actual job ID from your template
+
+                try {
+                    const response = await fetch('/completeopportunity', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ jobId }),
+                    });
+
+                    if (response.ok) {
+                        doneButton.textContent = 'Opportunity Closed';
+                        doneButton.style.backgroundColor = '#28a745'; // Change button color to green
+                        doneButton.style.cursor = 'default'; // Change cursor to default
+                        doneButton.disabled = true; // Disable the button after it's reviewed
+                        window.location.href = '/orgprofile';
+                    } else {
+                        console.error('Failed to complete job');
+                        // Handle error or display a message
+                    }
+                } catch (error) {
+                    console.error('Error completing job:', error);
+                    // Handle error or display a message
+                }
             });
         });
+
         document.addEventListener('DOMContentLoaded', function () {
             var viewVolunteersButton = document.querySelector('.view-volunteers-button');
             viewVolunteersButton.addEventListener('click', function () {
@@ -171,6 +200,35 @@
         });
 
 
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const removeButtons = document.querySelectorAll('.remove-button');
+            removeButtons.forEach(button => {
+                button.addEventListener('click', async () => {
+                    const jobId = '{{job._id}}'; // Replace '{{job._id}}' with the actual job ID from your template
+                    const participantId = button.dataset.participantId;
+
+                    try {
+                        const response = await fetch(`/removeParticipant?jobId=${jobId}&participantId=${participantId}`, {
+                            method: 'DELETE',
+                        });
+                        if (response.ok) {
+                            // Remove the participant's row from the table
+                            const row = button.closest('tr');
+                            row.parentNode.removeChild(row);
+                        } else {
+                            console.error('Failed to remove participant');
+                            // Handle error or display a message
+                        }
+                    } catch (error) {
+                        console.error('Error removing participant:', error);
+                        // Handle error or display a message
+                    }
+                });
+            });
+        });
+
+
         function parseDate(dateString) {
             const months = {
                 "Jan.": 0, "Feb.": 1, "Mar.": 2, "Apr.": 3, "May": 4, "Jun.": 5,
@@ -212,6 +270,7 @@
                 tbody.appendChild(row);
             });
         }
+
         const pageSize = 10; // Number of entries per page
         let currentPage = 1; // Current page being displayed
         function displayPage(pageNumber) {
@@ -252,6 +311,38 @@
         function viewVolunteerInfo(objectId) {
             window.location.href = `/vol_info?objectId=${objectId}`;
         }
+
+        function reportParticipant(email, buttonElement) {
+            // Prepare the data to send in the request body
+            const data = { email };
+
+            // Make a POST request using fetch or XMLHttpRequest
+            fetch('/reportParticipant', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // Change the button appearance or disable it after reporting
+                        buttonElement.textContent = 'Reported';
+                        buttonElement.disabled = true; // Optionally, disable the button
+                        buttonElement.classList.add('reported'); // Add a class for styling
+                        console.log('Reported participant successfully');
+                    } else {
+                        console.error('Failed to report participant');
+                        // Handle the error or display a message to the user
+                    }
+                })
+                .catch(error => {
+                    console.error('Error reporting participant:', error);
+                });
+        }
+
+
+
 
         // Initial display
         displayPage(currentPage);

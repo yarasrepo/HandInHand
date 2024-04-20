@@ -8,6 +8,16 @@ mongoose.connect("mongodb://localhost:27017/HandInHand")
         console.log("failed to connect");
     })
 
+// console.log('test');
+//     const connectDB = async () => {
+//         try {
+//             await mongoose.connect(MONGODB_CONNECT_URI = "mongodb+srv://Stale:rW9dLPcz90M7aio8@handinhandcluster.yqdkk26.mongodb.net/HandInHandCluster?retryWrites=true&w=majority&appName=HandInHandCluster")
+//             console.log("Connect to MongoDB successfully")
+//         } catch (error) {
+//             console.log("connect failed" + error.message)
+//         }
+//     }
+
 const LogInSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -34,8 +44,13 @@ const LogInSchema = new mongoose.Schema({
     },
     DateJoined: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        required: true,
     },
+    verified: {
+        type: Boolean,
+        default: false,
+    }
 })
 
 const collection = new mongoose.model("HandInHandcollection", LogInSchema)
@@ -71,7 +86,12 @@ const userProfile = new mongoose.Schema({
     },
     DateJoined: {
         type: Date,
-        ref: 'LogInSchema',
+        default: Date.now(),
+        required: true,
+    },
+    HoursVolunteered: {
+        type: Number,
+        default: 0,
     },
     JobsBooked: {
         type: Number,
@@ -84,8 +104,11 @@ const userProfile = new mongoose.Schema({
     images:
     {
         type: [String],
-    }
-
+    },
+    reports: {
+        type: Number,
+        default: 0,
+    },
 })
 
 const userProfCollection = mongoose.model("userProfCollection", userProfile)
@@ -121,7 +144,8 @@ const jobSchema = new mongoose.Schema({
     },
     imageLink: {
         type: String,
-        ref: 'userProfileCollection'
+        ref: 'userProfileCollection',
+        maxlength: 1000
     },
     creator: {
         type: String,
@@ -136,7 +160,12 @@ const jobSchema = new mongoose.Schema({
         email: String,
         firstName: String,
         lastName: String
-    }]
+    }],
+    completed: {
+        type: Boolean,
+        default: false,
+        required: true
+    },
 });
 
 const JobCollection = mongoose.model("JobCollection", jobSchema)
@@ -167,6 +196,16 @@ const reqOrg = new mongoose.Schema({
     flag: {
         type: Boolean,
         default: 'false',
+        required: true,
+    },
+    deniedCount: {
+        type: Number,
+        default: 0,
+        required: true,
+    },
+    reqCount: {
+        type: Number,
+        default: 0,
         required: true,
     },
     deniedCount: {
@@ -232,13 +271,19 @@ const FbSchema = new mongoose.Schema({
         type: String,
     },
     feedbackEmoji: {
-        type: String,
+        type: Number,
+    },
+    highlighted: {
+        type: Boolean,
+        default: false,
+        required: true,
     }
 });
 
 const FeedbackCollection = mongoose.model("FeedbackCollection", FbSchema)
 
 module.exports = {
+    // connectDB,
     collection,
     userProfCollection,
     JobCollection,

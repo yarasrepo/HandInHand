@@ -12,7 +12,9 @@
 
 <body>
     <header>
-        <img src="https://i.imgur.com/MoSHBZX.png" class="logo" alt="HandinHand">
+        <a href="/">
+            <img src="https://i.imgur.com/MoSHBZX.png" class="logo" alt="HandinHand">
+        </a>
         <ul class="navbar">
             <li><a href="/">Home</a></li>
             <li><a href="/about">About</a></li>
@@ -54,6 +56,7 @@
             <section class="opportunities-page" id="opportunitiesPage">
 
                 {{#each jobs}}
+                {{#if (eq this.completed false)}}
                 <div class="opportunity-card">
                     {{#if this.imageLink}}
                     <div class="opportunity-image">
@@ -62,18 +65,24 @@
                     {{/if}}
                     <div class="opportunity-details">
                         <div class="creator">
-                            <p>{{this.creator}}</p>
+                            <a href="/vieworgprofile?creator={{this.creator}}">
+                                <p>{{this.creator}}</p>
+                            </a>
                         </div>
                         <h3>{{this.title}}</h3>
                         <p>{{this.description}}</p>
                         <p>{{this.startDate}}</p>
 
+
                         {{#if this.openPositions}}
                         <span class="seats-left">Seats Left: {{this.openPositions}}</span>
-                        <a href="/checkout?jobId={{this._id}}" class="book-button">Book</a> 
+                        {{#unless ../isOrganization }}
+                        <a href="/checkout?jobId={{this._id}}" class="book-button">Book</a>
+                        {{/unless}}
                         {{else}}
                         <p class="seats-left">No seats left</p>
                         {{/if}}
+
 
                         <div class="more-details" style="display: none;">
                             <p><strong>Location:</strong> {{this.location}}</p>
@@ -81,8 +90,8 @@
                             <p><strong>Required Skills:</strong> {{this.requiredSkills}}</p>
                         </div>
                     </div>
-
                 </div>
+                {{/if}}
                 {{/each}}
 
             </section>

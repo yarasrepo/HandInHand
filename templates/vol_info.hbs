@@ -1,61 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name = "viewport" content = "width=device-width, initial-scale = 1.0">
-        <title>HandinHand Admin</title>
-        <link rel="stylesheet" href="opp_info.css">
-        <link rel = "shortcut icon" type = "x-icon" href="logonowords.png">
-    </head>
-    <body>
-        <header>
-            <h1>Volunteer Review</span></h1>
-        </header>
-        <main>
-            <div class="opp-details">
-                <h2>Volunteer Details</h2>
-                <div class="details-container">
-                    <div class="detail">
-                        <span class="title">Volunteer Name:</span>
-                        <span class="info">{{volunteer.name}}</span>
-                    </div>
-                    {{!-- <div class="detail">
-                        <span class="title">Date of Birth:</span>
-                        <span class="info">Sample</span>
-                    </div> --}}
-                    <div class="detail">
-                        <span class="title">Email Address:</span>
-                        <span class="info">{{volunteer.email}}</span>
-                    </div>
-                    <div class="detail">
-                        <span class="title">Phone Number:</span>
-                        <span class="info">{{volunteer.PhoneNum}}</span>
-                    </div>
-                    <div class="detail">
-                        <span class="title">Location:</span>
-                        <span class="info">{{volunteer.Location}}</span>
-                    </div>
-                    <div class="detail">
-                        <span class="title">Date Joined:</span>
-                        <span class="info">{{volunteer.DateJoined}}</span>
-                    </div>
-                    <div class="detail">
-                        <span class="title">Number of Hours Volunteered:</span>
-                        <span class="info">{{volunteer.Hours}}</span>
-                    </div>
-                    <div class="detail">
-                        <span class="title">Number of Opportunities Booked:</span>
-                        <span class="info">{{volunteer.JobsBooked}}</span>
-                    </div>
-                    {{!-- <div class="detail">
-                        <span class="title">List of Events:</span>
-                        <span class="info">Sample</span>
-                    </div> --}}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale = 1.0">
+    <title>HandinHand Admin</title>
+    <link rel="stylesheet" href="opp_info.css">
+    <link rel="shortcut icon" type="x-icon" href="logonowords.png">
+</head>
+
+<body>
+    <header>
+        <h1>Volunteer Review</span></h1>
+    </header>
+    <main>
+        <div class="opp-details">
+            <h2>Volunteer Details</h2>
+            <div class="details-container">
+                <div class="detail">
+                    <span class="title">Volunteer Name:</span>
+                    <span class="info">{{volunteer.name}}</span>
                 </div>
-                <div class="buttons">
-                    <button onclick="window.location.href='/volunteeradmin'" class="back-button">Back</button>
+                {{!-- <div class="detail">
+                    <span class="title">Date of Birth:</span>
+                    <span class="info">Sample</span>
+                </div> --}}
+                <div class="detail">
+                    <span class="title">Email Address:</span>
+                    <span class="info">{{volunteer.email}}</span>
                 </div>
+                <div class="detail">
+                    <span class="title">Phone Number:</span>
+                    <span class="info">{{volunteer.PhoneNum}}</span>
+                </div>
+                <div class="detail">
+                    <span class="title">Location:</span>
+                    <span class="info">{{volunteer.Location}}</span>
+                </div>
+                <div class="detail">
+                    <span class="title">Date Joined:</span>
+                    <span class="info">{{volunteer.DateJoined}}</span>
+                </div>
+                <div class="detail">
+                    <span class="title">Number of Hours Volunteered:</span>
+                    <span class="info">{{volunteer.HoursVolunteered}}</span>
+                </div>
+                <div class="detail">
+                    <span class="title">Number of Opportunities Booked:</span>
+                    <span class="info">{{volunteer.JobsBooked}}</span>
+                </div>
+                {{!-- <div class="detail">
+                    <span class="title">List of Events:</span>
+                    <span class="info">Sample</span>
+                </div> --}}
             </div>
-        </main>                 
-    </body>
+            <div class="buttons">
+                <button onclick="window.history.back()" class="back-button">Back</button>
+            </div>
+        </div>
+    </main>
+</body>
+
 </html>
