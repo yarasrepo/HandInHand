@@ -7,6 +7,7 @@ const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
 const app = express()
 const hbs = require("hbs")
+const bcrypt = require('bcrypt');
 const helpers = require("handlebars-helpers")();
 hbs.registerHelper(helpers);
 const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, FeedbackCollection} = require("./mongodb");
@@ -156,7 +157,7 @@ app.post('/signup', async (req, res) => {
         const data = {
             name: req.body.name,
             email: req.body.email,
-            password: req.body.password,
+            password: await bcrypt.hash(req.body.password, 10),
             role: req.body.role,
             verified: false
         };
@@ -230,36 +231,35 @@ app.get('/login', (req, res) => {
     res.render('login')
 })
 
+
 app.post('/login', async (req, res) => {
     try {
-        const check = await LogInCollection.findOne({ name: req.body.name })
+        const user = await LogInCollection.findOne({ name: req.body.name });
 
-        if (check && check.password === req.body.password) {
-            // Set user information in session
-            const user= await userProfCollection.findOne({name: req.body.name});
-            if (user && user.reports >= 5){
-                res.send("your account is temporarily banned");
+        if (user && (await bcrypt.compare(req.body.password, user.password))) { 
+            const userProfile = await userProfCollection.findOne({ name: req.body.name });
+            if (userProfile && userProfile.reports >= 5) {
+                res.send("Your account is temporarily banned");
                 return;
             }
             req.session.user = {
-                name: check.name,
-                role: check.role
+                name: user.name,
+                role: user.role
             };
-            // Redirect to the homepage after successful login
-            if (req.session.user.role == 'admin') {
-                res.redirect('/admin')
+            if (req.session.user.role === 'admin') {
+                res.redirect('/admin');
             } else {
-                res.redirect(302, '/');
+                res.redirect('/');
             }
         } else {
-            //if user is not found or passwords do not match 
             res.send("Incorrect username or password");
         }
-    } catch (e) {
-        console.error("Error during login:", e);
+    } catch (error) {
+        console.error("Error during login:", error);
         res.status(500).send("An error occurred during login");
     }
 });
+
 
 
 app.get('/logout', (req, res) => {
