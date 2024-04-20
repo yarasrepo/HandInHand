@@ -684,6 +684,7 @@ app.post('/deleteaccount', async (req, res) => {
         const jobs = await JobCollection.find({ 'participants.email': user.email });
         for (const job of jobs) {
             job.participants = job.participants.filter(participant => participant.email !== user.email);
+            job.openPositions += 1;
             await job.save();
         }
 
