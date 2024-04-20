@@ -1062,8 +1062,22 @@ app.delete('/delete-image', async (req, res) => {
 
 app.get('/about', async(req, res) => {
     try {
+        const signedIn = !!req.session.user;
+        let userRole;
+        let profileLink;
+        let isOrganization;
+        if (signedIn) {
+            userRole = req.session.user.role;
+            if (userRole === 'volunteer') {
+                isOrganization = false;
+                profileLink = '/userprofile';
+            } else if (userRole === 'organization') {
+                profileLink = '/orgprofile';
+                isOrganization = true;
+            }
+        }
         const fb = await FeedbackCollection.find({}); // Fetch all feedback data
-        res.render('about', { fb }); // Pass feedbackData to the 'about' template
+        res.render('about', { fb, signedIn, profileLink, userRole, isOrganization }); // Pass feedbackData to the 'about' template
     } catch (error) {
         console.error('Error fetching feedback data:', error);
         res.status(500).send('Internal Server Error'); // Handle error gracefully
