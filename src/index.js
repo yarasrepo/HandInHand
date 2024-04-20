@@ -31,6 +31,16 @@ app.use(session({
     saveUninitialized: false
 }));
 
+
+
+function sessionChecker(req, res, next) {
+    if (req.session && req.session.user) {
+        next(); // Continue processing the route if the session is valid
+    } else {
+        res.redirect('/login'); // Redirect to login page if session is not valid
+    }
+}
+
 app.get('/signup', (req, res) => {
     res.render('signup')
 })
@@ -385,7 +395,7 @@ app.get('/job_submission_form', (req, res) => {
 })
 
 
-app.post('/job_submission_form', async (req, res) => {
+app.post('/job_submission_form', sessionChecker, async (req, res) => {
     try {
         const { jobName, description, openPositions, location, startDate, requiredHours, requiredSkills, imageLink } = req.body;
 
@@ -394,10 +404,7 @@ app.post('/job_submission_form', async (req, res) => {
         }
         const organizationName = req.session.user.name;
 
-        // let newImageLink = imageLink;
-        // if (imageLink == null) {
-        //     newImageLink = "https://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg";
-        // }
+        // Ensure that the session contains user information before proceeding
 
         const newJob = new JobCollection({
             title: jobName,
