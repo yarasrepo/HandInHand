@@ -1,22 +1,22 @@
 const mongoose = require("mongoose")
 
-mongoose.connect("mongodb://localhost:27017/HandInHand")
-    .then(() => {
-        console.log("mongodb connected");
-    })
-    .catch(() => {
-        console.log("failed to connect");
-    })
+// mongoose.connect("mongodb://localhost:27017/HandInHand")
+//     .then(() => {
+//         console.log("mongodb connected");
+//     })
+//     .catch(() => {
+//         console.log("failed to connect");
+//     })
 
-// console.log('test');
-//     const connectDB = async () => {
-//         try {
-//             await mongoose.connect(MONGODB_CONNECT_URI = "mongodb+srv://Stale:rW9dLPcz90M7aio8@handinhandcluster.yqdkk26.mongodb.net/HandInHandCluster?retryWrites=true&w=majority&appName=HandInHandCluster")
-//             console.log("Connect to MongoDB successfully")
-//         } catch (error) {
-//             console.log("connect failed" + error.message)
-//         }
-//     }
+console.log('test');
+    const connectDB = async () => {
+        try {
+            await mongoose.connect(MONGODB_CONNECT_URI = "mongodb+srv://Stale:rW9dLPcz90M7aio8@handinhandcluster.yqdkk26.mongodb.net/HandInHandCluster?retryWrites=true&w=majority&appName=HandInHandCluster")
+            console.log("Connect to MongoDB successfully")
+        } catch (error) {
+            console.log("connect failed" + error.message)
+        }
+    }
 
 const LogInSchema = new mongoose.Schema({
     name: {
@@ -283,7 +283,7 @@ const FbSchema = new mongoose.Schema({
 const FeedbackCollection = mongoose.model("FeedbackCollection", FbSchema)
 
 module.exports = {
-    // connectDB,
+    connectDB,
     collection,
     userProfCollection,
     JobCollection,
