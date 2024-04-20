@@ -526,14 +526,14 @@ app.post('/forgot-password', async (req, res) => {
             return res.send('User not registered');
         }
 
-        const resetToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '10m' });
+        const resetToken = jwt.sign({ userId: user._id, email }, process.env.JWT_SECRET, { expiresIn: '10m' });
 
         // change after hosting the website
-        const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
+        const resetLink = `http://localhost:3000/reset-password?token=${resetToken}&email=${email}`;
 
         await sendPasswordResetEmail(email, resetLink); 
 
-        return res.send('Password reset link has been sent to your email');
+        res.redirect('/email_sent');
     } catch (error) {
         console.error('Error in forgot-password endpoint:', error);
         return res.status(500).send('Internal Server Error');
@@ -541,7 +541,9 @@ app.post('/forgot-password', async (req, res) => {
 });
 
 app.get('/reset-password', async (req, res) => {
-    const { token } = req.query;
+    const { token, email } = req.query;
+
+    console.log('Token:', token); // Add this line for debugging
 
     if (!token) {
         return res.status(400).send('Token is missing');
@@ -549,7 +551,7 @@ app.get('/reset-password', async (req, res) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        return res.render('reset-password', { token });
+        return res.render('reset-password', { token, email });
     } catch (error) {
         console.error('Error in reset-password route:', error);
         return res.status(400).send('Invalid or expired token');
@@ -557,16 +559,39 @@ app.get('/reset-password', async (req, res) => {
 });
 
 app.post('/reset-password', async (req, res) => {
-    const { token, password } = req.body;
+    const { email, password, confirmPassword } = req.body;
+    console.log(req.body);
 
-    if (!token) {
-        return res.status(400).send('Token is missing');
+
+    console.log(email);
+
+
+    if (password !== confirmPassword) {
+        return res.status(400).send('Passwords do not match');
+    }
+
+    const strongPasswordRequirements = [
+        { regex: /^(?=.*[a-z])/, message: "At least one lowercase letter (a-z)" },
+        { regex: /^(?=.*[A-Z])/, message: "At least one uppercase letter (A-Z)" },
+        { regex: /^(?=.*[0-9])/, message: "At least one digit (0-9)" },
+        { regex: /^(?=.*[!@#\$%\^&\*])/, message: "At least one special character" },
+        { regex: /^(?=.{8,})/, message: "At least 8 characters long" }
+    ];
+
+    const isValidPassword = strongPasswordRequirements.every(rule => rule.regex.test(password));
+
+    if (!isValidPassword) {
+        const errorMessage = strongPasswordRequirements
+            .filter(rule => !rule.regex.test(password))
+            .map(rule => rule.message)
+            .join(", ");
+
+        return res.status(400).send(errorMessage);
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const userId = decoded.userId;
-        const user = await LogInCollection.findById(userId);
+        // Find the user by email again
+        const user = await LogInCollection.findOne({ email });
 
         if (!user) {
             return res.status(404).send('User not found');
@@ -576,10 +601,10 @@ app.post('/reset-password', async (req, res) => {
         user.password = password;
         await user.save();
 
-        return res.send('Password reset successful');
+        return res.redirect('/login');
     } catch (error) {
         console.error('Error in reset-password route:', error);
-        return res.status(400).send('Invalid or expired token');
+        return res.status(500).send('Internal Server Error');
     }
 });
 
