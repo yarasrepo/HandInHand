@@ -9,8 +9,8 @@ const app = express()
 const hbs = require("hbs")
 const helpers = require("handlebars-helpers")();
 hbs.registerHelper(helpers);
-const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, FeedbackCollection, connectDB } = require("./mongodb");
-connectDB();
+const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, FeedbackCollection,  } = require("./mongodb");//connectDB
+//connectDB();
 // connectDB in list
 const port = process.env.PORT || 3000
 app.use(express.json())
@@ -31,6 +31,16 @@ app.use(session({
     saveUninitialized: false
 }));
 
+
+function sessionChecker(req, res, next) {
+    if(req.session && req.session.user) {
+        next();
+    } else {
+        res.redirect('/login');
+    }
+}
+
+
 app.get('/signup', (req, res) => {
     res.render('signup')
 })
@@ -45,7 +55,6 @@ app.get('/', (req, res) => {
         if (signedIn) {
             const userRole = req.session.user.role;
             let profileLink;
-
             // if (userRole === 'volunteer') {
             profileLink = '/userprofile';
             // } else if (userRole === 'organization') {
@@ -76,9 +85,9 @@ const sendVerificationEmail = async (email, verificationToken) => {
         from: process.env.EMAIL_ADDRESS,
         to: email,
         subject: 'Email Verification',
-        html: `<p>Click <a href="https://handinhand-o60q.onrender.com/verify-email?token=${verificationToken}">here</a> to verify your email address.</p>` // Removed target="_blank"
+        html: `<p>Click <a href="http://localhost:3000/verify-email?token=${verificationToken}">here</a> to verify your email address.</p>` // Removed target="_blank"
     };
-
+// https://handinhand-o60q.onrender.com/
     try {
         await transporter.sendMail(mailOptions);
         console.log('Verification email sent');
@@ -387,14 +396,15 @@ app.get('/job_submission_form', (req, res) => {
 })
 
 
-app.post('/job_submission_form', async (req, res) => {
+app.post('/job_submission_form', sessionChecker, async (req, res) => {
     try {
         const { jobName, description, openPositions, location, startDate, requiredHours, requiredSkills, imageLink } = req.body;
 
-        if (!jobName || !description || !openPositions || !location || !startDate || !requiredHours || !requiredSkills) {
+        if(!jobName || !description || !openPositions || !location || !startDate || !requiredHours || !requiredSkills) {
             return res.status(400).send('All fields are required');
         }
-        const organizationName = req.session.user.name;
+       const organizationName = req.session.user.name;
+        
 
         // let newImageLink = imageLink;
         // if (imageLink == null) {
@@ -524,7 +534,7 @@ app.post('/forgot-password', async (req, res) => {
         const resetToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '10m' });
 
         // change after hosting the website
-        const resetLink = `https://handinhand-o60q.onrender.com/reset-password?token=${resetToken}`;
+        const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
 
         await sendPasswordResetEmail(email, resetLink); 
 
@@ -1260,8 +1270,8 @@ app.get('/vieworgprofile', async (req, res) => {
 });
 
 
-const PORT = process.env.PORT
-// const PORT = 3000;
+//const PORT = process.env.PORT
+ const PORT = 3000;
 app.listen(PORT, () => {
     console.log('Server is running on port ' + PORT);
 })
