@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale = 1">
+    <link rel="shortcut icon" type="x-icon" href="https://i.imgur.com/MoSHBZX.png">
+    <Title>HandInHand-Organization</Title>
+    <link rel="stylesheet" type="text/css" href="org-list.css">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+    <!---header design-->
+    <header>
+        <img src="https://i.imgur.com/MoSHBZX.png" class="logo" alt="HandinHand">
+        <ul class="navbar">
+            <li><a href="/homepage">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/Posts">Opportunities</a></li>
+            <li><a href="{{#if profileLink}}{{ profileLink }}{{else}}/signup{{/if}}">Profile</a></li>
+        </ul>
+        <div class="h-right">
+            {{#if signedIn}}
+            <a href="/logout">Logout</a>
+            {{else}}
+            <li><a href="/signup">Register</a>|<a href="/login">Login</a></li>
+            <div class="bx bx-menu" id="menu-icon"></div>
+            {{/if}}
+        </div>
+    </header>
+
+    <section class="center-text">
+        <div class = "text">
+            <h1>All Organizations</h1>
+        </div>
+    </section>
+
+    <section class = "organizations">
+        <div class = "organizations-content">
+            <div class = "org-logo">
+                <img src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy2OZWgV07yR3XYdur5RoIqHXyQ03vWkNrhv_2aCO1JA&s"> 
+            </div>
+
+            <div class = "org-logo">
+                <img src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy2OZWgV07yR3XYdur5RoIqHXyQ03vWkNrhv_2aCO1JA&s"> 
+            </div>
+
+            <div class = "org-logo">
+                <img src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy2OZWgV07yR3XYdur5RoIqHXyQ03vWkNrhv_2aCO1JA&s"> 
+            </div>
+
+            <div class = "org-logo">
+                <img src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy2OZWgV07yR3XYdur5RoIqHXyQ03vWkNrhv_2aCO1JA&s"> 
+            </div>
+
+            <div class = "org-logo">
+                <img src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy2OZWgV07yR3XYdur5RoIqHXyQ03vWkNrhv_2aCO1JA&s"> 
+            </div>
+
+            <div class = "org-logo">
+                <img src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy2OZWgV07yR3XYdur5RoIqHXyQ03vWkNrhv_2aCO1JA&s"> 
+            </div>
+
+            <div class = "org-logo">
+                <img src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy2OZWgV07yR3XYdur5RoIqHXyQ03vWkNrhv_2aCO1JA&s"> 
+            </div>
+
+            <div class = "org-logo">
+                <img src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy2OZWgV07yR3XYdur5RoIqHXyQ03vWkNrhv_2aCO1JA&s"> 
+            </div>
+
+            <div class = "org-logo">
+                <img src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy2OZWgV07yR3XYdur5RoIqHXyQ03vWkNrhv_2aCO1JA&s"> 
+            </div>
+
+            <div class = "org-logo">
+                <img src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy2OZWgV07yR3XYdur5RoIqHXyQ03vWkNrhv_2aCO1JA&s"> 
+            </div>
+
+            <div class = "org-logo">
+                <img src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy2OZWgV07yR3XYdur5RoIqHXyQ03vWkNrhv_2aCO1JA&s"> 
+            </div>
+
+            <div class = "org-logo">
+                <img src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy2OZWgV07yR3XYdur5RoIqHXyQ03vWkNrhv_2aCO1JA&s"> 
+            </div>
+
+            <div class = "org-logo">
+                <img src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy2OZWgV07yR3XYdur5RoIqHXyQ03vWkNrhv_2aCO1JA&s"> 
+            </div>
+        </div>
+
+        <!---Footer section design-->
+        <section class="footer">
+            <div class="footer-box">
+                <h3>Find Us</h3>
+                <p>American University of Beirut, Bliss St.<br>Beirut, Lebanon</p>
+                <p>customerservice@handinhand.com</p>
+                <div class="social">
+                    <a href="/feedback"><i class="ri-star-line"></i></a>
+                    <a href="https://www.instagram.com/accounts/login/"><i class="ri-instagram-line"></i></a>
+                    <a href="https://www.facebook.com/login/"><i class="ri-facebook-line"></i></a>
+                    <a href="https://www.tiktok.com/login"><i class="ri-tiktok-fill"></i></a>
+                    <a href="https://twitter.com/login"><i class="ri-twitter-x-line"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <script>
+            const header = document.querySelector("header");
+            window.addEventListener("scroll", function () {
+                header.classList.toggle("sticky", window.scrollY > 30)
+            });
+    
+            let menu = document.querySelector('#menu-icon');
+            let navbar = document.querySelector('.navbar');
+    
+            menu.onclick = () => {
+                menu.classList.toggle('bx-x');
+                navbar.classList.toggle('open');
+            };
+        </script>
+</body>
+</html>
+
