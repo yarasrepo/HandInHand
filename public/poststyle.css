@@ -10,6 +10,44 @@
     z-index: 999; 
 }
 
+.sort-options {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.sort-options button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+    margin-bottom: 16px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.sort-options button:hover {
+    background-color: #0056b3;
+}
+
+.sort-options button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+    margin-bottom: 16px;
+    font-size: 16px;
+    width: 200px; /* Set a fixed width for all sorting buttons */
+    transition: background-color 0.3s ease;
+}
+
 .filter-category {
     margin-bottom: 20px;
 }
@@ -57,6 +95,7 @@ header {
     top: 0;
     z-index: 1000;
 }
+
 
 
 .logo {
@@ -117,6 +156,23 @@ header {
 .h-right a:hover {
     color: var(--main-color); 
     transform: translateY(-3px);
+}
+
+.post-button {
+    background-color: #007bff;
+    color: white; 
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+    margin-top: 0px;
+    margin-left: 50px;
+    margin-right: 20px;
+}
+
+.post-button:hover {
+    background-color: #0056b3;
 }
 
 #menu-icon {

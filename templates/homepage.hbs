@@ -41,32 +41,33 @@
     <!---feature section design-->
     <section class = "features">
         <div class = "feature-content">
-            <div class = "row">
-                <div class = "row-img">
-                    <img src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRquiM_tO8DY6n_I83UWtL2cS5YCHp9xdnaegiwxgM9UVldnAbI1GHXtRVxPRaiKr9aLMs&usqp=CAU">
-                </div>
-                <h4>Animal Shelter</h4>
+            <div class = "row" onclick="handleFilterSelection('Animal-Shelter')">
+                    <div class = "row-img">
+                        <img src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRquiM_tO8DY6n_I83UWtL2cS5YCHp9xdnaegiwxgM9UVldnAbI1GHXtRVxPRaiKr9aLMs&usqp=CAU">
+                    </div>
+                    <h4>Animal Shelter</h4>
             </div>
 
-            <div class = "row">
-                <div class = "row-img">
-                    <img src = "https://www.shutterstock.com/image-photo/multi-ethnic-businesswomen-talking-meet-600nw-2220172119.jpg">
-                </div>
-                <h4>Counseling</h4>
+            <div class = "row" onclick="handleFilterSelection('Counseling')">
+                    <div class = "row-img">
+                        <img src = "https://www.shutterstock.com/image-photo/multi-ethnic-businesswomen-talking-meet-600nw-2220172119.jpg">
+                    </div>
+                    <h4>Counseling</h4>
             </div>
 
-            <div class = "row">
-                <div class = "row-img">
-                    <img src = "https://www.redcross.org.lb/wp-content/themes/savelives/assets-landing/img/how-delivered.jpg">
-                </div>
-                <h4>Healthcare</h4>
+            <div class = "row" onclick="handleFilterSelection('Healthcare')">
+                    <div class = "row-img">
+                        <img src = "https://www.redcross.org.lb/wp-content/themes/savelives/assets-landing/img/how-delivered.jpg">
+                    </div>
+                    <h4>Healthcare</h4>
             </div>
 
-            <div class = "row">
-                <div class = "row-img">
-                    <img src = "https://thumbs.dreamstime.com/b/elevated-view-infant-school-children-circle-classroom-giving-high-fives-to-their-smiling-female-teacher-vertical-close-136308463.jpg">
-                </div>
-                <h4>Tutoring</h4>
+            <div class = "row" onclick="handleFilterSelection('Tutoring')">
+                    <div class = "row-img">
+                        <img src = "https://thumbs.dreamstime.com/b/elevated-view-infant-school-children-circle-classroom-giving-high-fives-to-their-smiling-female-teacher-vertical-close-136308463.jpg">
+                    </div>
+                    <h4>Tutoring</h4>
+                    </div>
             </div>
         </div>
     </section>
@@ -101,7 +102,7 @@
             </div>
         </div>
         <div class = "center-btn">
-            <a href = "#" class = "btn">See Organizations</a>
+            <a href = "/org-list" class = "btn">See Organizations</a>
         </div>
     </section>
     <!---Opp section design-->
@@ -138,17 +139,52 @@
     <script>
         const header = document.querySelector("header");
 
-window.addEventListener("scroll", function(){
-    header.classList.toggle("sticky", window.scrollY > 60)
-});
+        window.addEventListener("scroll", function(){
+            header.classList.toggle("sticky", window.scrollY > 60)
+        });
 
-let menu = document.querySelector('#menu-icon');
-let navbar = document.querySelector('.navbar');
+        let menu = document.querySelector('#menu-icon');
+        let navbar = document.querySelector('.navbar');
 
-menu.onclick = () => {
-    menu.classList.toggle('bx-x');
-    navbar.classList.toggle('open');
-};
+        menu.onclick = () => {
+            menu.classList.toggle('bx-x');
+            navbar.classList.toggle('open');
+        };
+
+        // Function to handle the filter selection
+        function handleFilterSelection(filter) {
+            // Redirect to the Posts page with the selected filter
+            window.location.href = 'Posts.hbs?filter=' + filter;
+        }
+        
+        // Function to get the value of a URL parameter by name
+        function getUrlParameter(name) {
+            name = name.replace(/[[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        };
+
+        // Function to handle the filter selection on the Posts page
+        function handleFilterSelectionOnPostsPage() {
+            // Get the filter value from the URL
+            var filter = getUrlParameter('filter');
+
+            // Check if a filter is specified in the URL
+            if (filter) {
+                // Select the corresponding filter element
+                var filterElement = document.getElementById(filter);
+                if (filterElement) {
+                    // Add a class to indicate that the filter is selected
+                    filterElement.classList.add('selected');
+                }
+            }
+        }
+
+        // Call the function when the page is loaded
+        window.onload = function () {
+            handleFilterSelectionOnPostsPage();
+        };
     </script>
 </body>
 </html>
