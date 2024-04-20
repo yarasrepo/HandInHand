@@ -1,66 +1,49 @@
-.navbar {
-    margin-top: 0px;
-    text-align: center;
-}
-
-.navbar a {
-    text-decoration: none;
-    color: #005cce;
-    display: inline-block;
-    margin-top: 0px;
-}
-
-
-*{
+* {
     margin: 0;
     padding: 0;
-    font-family: 'Poppins', sans-serif;
     box-sizing: border-box;
 }
 
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f4;
+}
+
+.logo {
+    width: 50px;
+    height: auto;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
 .container {
+    position: relative;
     width: 100%;
     height: 100vh;
-    background-image: linear-gradient(rgba(13, 73, 157, 0.4), rgba(13, 73, 157, 0.4)), url(https://img.freepik.com/free-photo/abstract-luxury-gradient-blue-background-smooth-dark-blue-with-black-vignette-studio-banner_1258-54055.jpg);
-    background-position: center;
-    background-size: cover;
-    position: relative;
-
+    background-image: url('https://logincdn.msauth.net/shared/5/js/../images/2_bc3d32a696895f78c19d.svg');
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-
-.form-box{
-    width:90%;
-    max-width: 500px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
+.form-box {
+    width: 90%;
+    max-width: 450px;
     background: #ffffff;
-    padding: 50px 60px 70px;
+    padding: 30px 60px 30px;
     text-align: center;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.391);
 }
 
-.form-box h1{
+.form-box h1 {
     font-size: 30px;
-    margin-bottom: 60px;
+    margin-bottom: 40px;
     color: #005cce;
     position: relative;
 }
 
-.form-box h2 {
-    font-size: 20px;
-    margin-bottom: 30px;
-    position: relative;
-}
-
-.form-box h3 {
-    font-size: 15px;
-    margin-bottom: 0px;
-    position: relative;
-}
-
-.form-box h1::after{
+.form-box h1::after {
     content: '';
     width: 30px;
     height: 4px;
@@ -69,12 +52,12 @@
     position: absolute;
     bottom: -12px;
     left: 50%;
-    transform: translatex(-50%);
+    transform: translateX(-50%);
 }
 
-.input-container{
+.input-container {
     background: #eaeaea;
-    margin: 15px 10px;
+    margin: 15px 0;
     border-radius: 3px;
     display: flex;
     align-items: center;
@@ -83,106 +66,66 @@
     overflow: hidden;
 }
 
-.input-container label{
-    margin-left: 2px;
-}
-
-input{
-    width: 100%;
+input {
+    width: calc(100% - 20px);
     background: transparent;
     border: 0;
     outline: 0;
     padding: 18px 15px;
+    margin-right: 10px;
 }
 
-form p{
+form p {
     text-align: left;
     font-size: 13px;
+    margin-bottom: 15px;
 }
 
-form p a{
+form p a {
     text-decoration: none;
     color: #005cce;
 }
 
-.btn-field{
+.btn-field {
     width: 100%;
     display: flex;
-    flex-direction:row;
-    justify-content:center;
-    align-items:flex-end;
-    margin-top: 100px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 50px;
 }
 
-.btn-field button{
-    flex-basis: 48%;
-    background: #005cce;
+.deletebtn-field {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-end;
+    margin-top: 20px;
+}
+
+.btn-field button,
+.deletebtn-field button {
+    flex-basis: calc(50% - 10px);
+    background: #007c6b;
     color: #fff;
     height: 40px;
-    width: 100%;
-    max-width: 500px;
-    margin-bottom: 10px;
-    border-radius: 500px;
     border: 0;
     outline: 0;
     cursor: pointer;
+    border-radius: 20px;
     transition: background 1s;
 }
 
-.input-group{
-    height: 230px;
-
-}
-.input-field label {
-    color: #333;
-}
-.form-box p {
-    /* margin-top: 20px;  */
-    /* Add space above the 'Forgot Password' link */
-    font-size: 14px; /* Adjust font size as needed */
-}
-.form-box p a {
-    text-decoration: none;
-    color: #005cce;
+.btn-field button:hover,
+.deletebtn-field button:hover {
+    background-color: #024234;
 }
 
-button[type="submit"] {
-    background-color: #007c6b; /* Green background color */
-    color: white; /* White text color */
-    padding: 10px 50px; /* Padding */
-    border: none; /* No border */
-    border-radius: 500px; /* Rounded corners */
-    cursor: pointer; /* Cursor style */
-    margin-top: 20px;
-    transition: background-color 0.3s ease; /* Smooth transition for background color */
+#DiscardBtn {
+    background-color: #005cce;
 }
 
-button[type="submit"]:hover {
-    background-color: #024234; /* Darker green background color on hover */
-}
-
-.btn-field button.Discard {
-    background-color: #2686f5; 
-    color: white; /* White text color */
-    padding: 10px 50px; /* Padding */
-    border: none; /* No border */
-    border-radius: 500px; /* Rounded corners */
-    cursor: pointer; /* Cursor style */
-    margin-top: 20px;
-    transition: background-color 0.3s ease;
-}
-
-.btn-field button.Discard:hover {
-    background-color: #053771; /* Darker green background color on hover */
-}
-
-.deletebtn-field button.Delete {
-    background-color: #a50000; 
-    color: white; /* White text color */
-    padding: 10px 50px; /* Padding */
-    border: none; /* No border */
-    border-radius: 500px; /* Rounded corners */
-    cursor: pointer; /* Cursor style */
-    margin-top: 20px;
-    transition: background-color 0.3s ease;
+#Deletebtn {
+    background-color: #a50000;
 }
