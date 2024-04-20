@@ -9,8 +9,8 @@ const app = express()
 const hbs = require("hbs")
 const helpers = require("handlebars-helpers")();
 hbs.registerHelper(helpers);
-const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, FeedbackCollection,  } = require("./mongodb");//connectDB
-//connectDB();
+const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, FeedbackCollection} = require("./mongodb");
+// connectDB();
 // connectDB in list
 const port = process.env.PORT || 3000
 app.use(express.json())
@@ -199,7 +199,6 @@ app.post('/signup', async (req, res) => {
         const newUser = await LogInCollection.find({email: req.body.email});
 
         const description = req.session.user.role === 'volunteer' ? "I love helping others" : "Let's make the world better together";
-        const dateJoined = newUser.DateJoined || null;
         const profileData = {
             name: req.session.user.name,
             email: req.body.email,
@@ -208,7 +207,6 @@ app.post('/signup', async (req, res) => {
             PhoneNum: 0,
             Location: "Beirut",
             ProfilePic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR11lMafo-ZYohC2qYI1BJN80gzcC-7IpohIeUQT1RT0WgBttaZX7J1yEea92wMCcTXa9A&usqp=CAU",
-            DateJoined: dateJoined,
         };
         await userProfCollection.create(profileData);
 
@@ -1270,8 +1268,8 @@ app.get('/vieworgprofile', async (req, res) => {
 });
 
 
-//const PORT = process.env.PORT
- const PORT = 3000;
+// const PORT = process.env.PORT
+const PORT = 3000;
 app.listen(PORT, () => {
     console.log('Server is running on port ' + PORT);
 })
