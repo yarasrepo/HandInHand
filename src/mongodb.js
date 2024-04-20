@@ -7,13 +7,6 @@ mongoose.connect("mongodb://localhost:27017/HandInHand")
     .catch(() => {
         console.log("failed to connect");
     })
-mongoose.connect("mongodb://localhost:27017/HandInHand")
-    .then(() => {
-        console.log("mongodb connected");
-    })
-    .catch(() => {
-        console.log("failed to connect");
-    })
 
 // console.log('test');
 //     const connectDB = async () => {
