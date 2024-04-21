@@ -1303,6 +1303,7 @@ app.get('/org-list', async (req, res) => {
 
 app.get('/vieworgprofile', async (req, res) => {
     const creatorName = req.query.creator; // Get the creator name from the query parameter
+    console.log(creatorName);
 
     try {
         // Find the user profile using the creator name

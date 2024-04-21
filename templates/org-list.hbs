@@ -15,9 +15,11 @@
 <body>
     <!---header design-->
     <header>
-        <img src="https://i.imgur.com/MoSHBZX.png" class="logo" alt="HandinHand">
+        <a href="/">
+            <img src="https://i.imgur.com/MoSHBZX.png" class="logo" alt="HandinHand">
+        </a>
         <ul class="navbar">
-            <li><a href="/homepage">Home</a></li>
+            <li><a href="/">Home</a></li>
             <li><a href="/about">About</a></li>
             <li><a href="/Posts">Opportunities</a></li>
             <li><a href="{{#if profileLink}}{{ profileLink }}{{else}}/signup{{/if}}">Profile</a></li>
@@ -33,17 +35,20 @@
     </header>
 
     <section class="center-text">
-        <div class = "text">
+        <div class="text">
             <h1>All Organizations</h1>
         </div>
     </section>
 
-    <section class = "organizations">
-        <div class = "organizations-content">
-            <a href="/vieworg"
-            <div class = "org-logo">
-                <img src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy2OZWgV07yR3XYdur5RoIqHXyQ03vWkNrhv_2aCO1JA&s"> 
+    <section class="organizations">
+        <div class="organizations-content">
+            {{#each orgs}}
+            <div class="org-logo">
+                <a href="/vieworgprofile?creator={{this.name}}">
+                    <img src={{this.ProfilePic}} class="org-img">
+                </a>
             </div>
+            {{/each}}
         </div>
 
         <!---Footer section design-->
@@ -67,15 +72,15 @@
             window.addEventListener("scroll", function () {
                 header.classList.toggle("sticky", window.scrollY > 30)
             });
-    
+
             let menu = document.querySelector('#menu-icon');
             let navbar = document.querySelector('.navbar');
-    
+
             menu.onclick = () => {
                 menu.classList.toggle('bx-x');
                 navbar.classList.toggle('open');
             };
         </script>
 </body>
-</html>
 
+</html>
