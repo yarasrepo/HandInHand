@@ -285,7 +285,7 @@ const FbSchema = new mongoose.Schema({
 const FeedbackCollection = mongoose.model("FeedbackCollection", FbSchema)
 
 module.exports = {
-   // connectDB,
+    connectDB,
     collection,
     userProfCollection,
     JobCollection,
