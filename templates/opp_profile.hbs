@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HandinHand-Opportunity Info</title>
     <link rel="stylesheet" href="/opp_profile.css">
+     <link rel="shortcut icon" type="x-icon" href="https://i.imgur.com/MoSHBZX.png">
     <link rel="shortcut icon" type="x-icon" href="/logonowords">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -88,9 +89,8 @@
                                         <td>{{this.Location}}</td>
                                         <td>{{this.DateJoined}}</td>
                                         <td><button onclick="viewVolunteerInfo('{{this._id}}')">Review</button>
-                                            <td><button class="report-button"
-                                                onclick="reportParticipant('{{this.email}}')">Report</button></td>
-
+                                        <td> <button class="report-button"
+                                                onclick="reportParticipant('{{this.email}}', this)">Report</button></td>
                                         <td><button class="remove-button"
                                                 data-participant-id="{{this._id}}">Remove</button></td>
                                     </tr>
@@ -313,28 +313,36 @@
             window.location.href = `/vol_info?objectId=${objectId}`;
         }
 
-        function reportParticipant(participantEmail) {
-            // You can perform any necessary processing here before sending the email to the server
-            console.log('Participant Email:', participantEmail);
+        function reportParticipant(email, buttonElement) {
+            // Prepare the data to send in the request body
+            const data = { email };
 
-            // Now you can make the fetch request to report the participant
-            fetch(`/reportParticipant?participantEmail=${encodeURIComponent(participantEmail)}`, {
+            // Make a POST request using fetch or XMLHttpRequest
+            fetch('/reportParticipant', {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
             })
                 .then(response => {
                     if (response.ok) {
-                        // Optionally, you can disable the button or change its appearance after reporting
-                        console.log('Participant reported successfully');
+                        // Change the button appearance or disable it after reporting
+                        buttonElement.textContent = 'Reported';
+                        buttonElement.disabled = true; // Optionally, disable the button
+                        buttonElement.classList.add('reported'); // Add a class for styling
+                        console.log('Reported participant successfully');
                     } else {
                         console.error('Failed to report participant');
-                        // Handle error or display a message
+                        // Handle the error or display a message to the user
                     }
                 })
                 .catch(error => {
                     console.error('Error reporting participant:', error);
-                    // Handle error or display a message
                 });
         }
+
+
 
 
         // Initial display

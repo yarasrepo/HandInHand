@@ -1,41 +1,44 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
-    <meta name = "viewport" content = "width=device-width, initial-scale = 1">
-    <link rel = "shortcut icon" type = "x-icon" href="https://i.imgur.com/MoSHBZX.png">
+    <meta name="viewport" content="width=device-width, initial-scale = 1">
+    <link rel="shortcut icon" type="x-icon" href="https://i.imgur.com/MoSHBZX.png">
     <Title>HandInHand</Title>
-    <link rel = "stylesheet" type = "text/css" href = "style.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
 </head>
+
 <body>
     <!---header design-->
     <header>
-        <img src="https://i.imgur.com/MoSHBZX.png" class = "logo" alt="HandinHand">
+        <img src="https://i.imgur.com/MoSHBZX.png" class="logo" alt="HandinHand">
 
-        <ul class = "navbar">
-            <li><a href = "/">Home</a></li>
-            <li><a href = "/about">About</a></li>
-            <li><a href = "/Posts">Opportunities</a></li>
+        <ul class="navbar">
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/Posts">Opportunities</a></li>
             <li><a href="{{#if profileLink}}{{ profileLink }}{{else}}/signup{{/if}}">Profile</a></li>
 
         </ul>
-        <div class = "h-right">
+        <div class="h-right">
             {{#if signedIn}}
-             <a href="/logout">Logout</a>
-             {{else}}
+            <a href="/logout">Logout</a>
+            {{else}}
             <li><a href="/signup">Register</a>|<a href="/login">Login</a></li>
-            <div class = "bx bx-menu" id = "menu-icon"></div>
+            <div class="bx bx-menu" id="menu-icon"></div>
             {{/if}}
-        </div>   
+        </div>
     </header>
     <!---home section design-->
-    <section class = "home">
-        <div class = "home-text"> 
+    <section class="home">
+        <div class="home-text">
             <h1>Empower Change, <br> Volunteer Today!</h1>
-            <p>Join a community of difference-makers dedicated to creating <br> a positive impact one volunteer at a time.</p>
-            <a href = "/Posts" class = "btn">Find Opportunities</a>
+            <p>Join a community of difference-makers dedicated to creating <br> a positive impact one volunteer at a
+                time.</p>
+            <a href="/Posts" class="btn">Find Opportunities</a>
         </div>
     </section>
     <!---feature section design-->
@@ -73,32 +76,38 @@
     </section>
     <!---Opportunities section design-->
     <section class="opportunities">
-        <div class = "opportunities-img">
-            <img src = "https://img.freepik.com/premium-photo/vertical-full-length-portrait-female-nurse-helping-senior-woman-retirement-home_236854-34458.jpg">
+        <div class="opportunities-img">
+            <img
+                src="https://img.freepik.com/premium-photo/vertical-full-length-portrait-female-nurse-helping-senior-woman-retirement-home_236854-34458.jpg">
         </div>
-        <div class = "opportunities-text">
+        <div class="opportunities-text">
             <h5>Retirement House</h5>
             <h2>Volunteering Opportunity</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. <br> Ullamcorper a lacus vestibulum sed. Scelerisque eleifend donec pretium vulputate sapien. Eu lobortis elementum nibh tellus molestie.</p>
-            <a href = "#" class = "btn">Read more</a>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+                dolore magna aliqua. <br> Ullamcorper a lacus vestibulum sed. Scelerisque eleifend donec pretium
+                vulputate sapien. Eu lobortis elementum nibh tellus molestie.</p>
+            <a href="/Posts" class="btn">Read more</a>
         </div>
     </section>
     <!---Organizations section design-->
-    <section class = "Organizations">
-        <div class = "center-text">
+    <section class="Organizations">
+        <div class="center-text">
             <h2>Popular Organizations</h2>
         </div>
-        <div class = "Organizations-content">
-            <div class = "box">
-                <img src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy2OZWgV07yR3XYdur5RoIqHXyQ03vWkNrhv_2aCO1JA&s"> 
+        <div class="Organizations-content">
+            <div class="box">
+                <img
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy2OZWgV07yR3XYdur5RoIqHXyQ03vWkNrhv_2aCO1JA&s">
             </div>
 
-            <div class = "box">
-                <img src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrdgSGx1IuCEogYAeHtOgmqUrUQVDWBCZkS-VuCt1lWw&s">
+            <div class="box">
+                <img
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrdgSGx1IuCEogYAeHtOgmqUrUQVDWBCZkS-VuCt1lWw&s">
             </div>
 
-            <div class = "box">
-                <img src = "data:image/png;base64,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">
+            <div class="box">
+                <img
+                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAABC1BMVEX///+Ssyj/uT2FOYQAl9kAk9iQsiGBMID+/vvX7PinwVzo2+jp3umWx+qENIOALH/DosJmt+SNsBYAj9b/ti95GXj/tzXL2p33+/+Jx+r19fXT37O/4fPo9vzYwdegZ5+8mLzdzN2UUpLY2NiJrQDm5uahoaGQkJD/+vL/tCSgoKCsrKyIiIi9vb3Ly8v/+Ov/9OP/zn//yXP/7M7/4LEen9zs7Oz/2Jn/36z/xF+zynP/vUj/6siivk/A0pCYtzU/qN+3zH7n7tH/wFPu89//04yLRorb8PmyibKZXZis1/Cpeqj/xGbb5cGrw2b/68p0AHNgtuWAwejWwNOv3fPBoMCnc6avgq53d3eKS5hKAAAOBUlEQVR4nO2be1/iOBfHo1Ao6gIWKFgQuUoBEeQqAyhiveFlHplZZ9//K3lyLS204LhDgf3kN3/QtCHmy0nOSU46AHBxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxbZMa3Xqn2aip6+7H6tQvynI4vHv7ctHp16obAyp+URZNdeRdLJmA1jcE9GrvSxq8zjdVp4S7DDQMQbv1u8t+TbX6RRzSN8nzFeXi803dmgkNBi3udi/uLr9X1wL6zbPzFUnzhKIF3zwo9EWq5RjfAsLaIkIr0K0jbFgN0iWglw6A/jnCfvjThDoo5CzWt4aw83kbGhXubA1h/YuEza0h7H0JcDfc2BZC8Wsm3C1Wt4Ww9kXC8IoB/xzh9992pUS3W0PYLIa/YkV51cFiOaHHssI8oVq7fJF/n1FedbAAN0sIpcHAqoaFL4XOpnb324grDxbLCKWoKMYtqlgSQvV7v8m48mCxjDAHq6jXnycEtd8MiysPFssIr2GVqgWh5+0qGh9Z7YIaJp8qh5fMzeKqAT9DCKxmokeSpJz0TZtv8cKAJN/2axcLEVceLJaO0lcA4jnbx57c1VyLTaMRa/DG7QJA+WLdhBI0UjS3oE7u22yLhl2UfIduQCPCbZK1JcOX6yX05PZgFTE+sLcitrJJBhsSR9mV5W6z2bVEDPfXSuh5G9FaI/ta0s1Mi4Z9Yg87SsIhWiKuPlgsIvRcT6tdSfY/g7lBcTrt8CRT4SBFIUG1nI7hlQeLRYTGmKfpQHO1ZiZiRx+kYRn5mVoRhoRLuySHvHLAhTY0hgK2fh14Zqw5Mw8vp4AdkmTqy8VODTQsHY28+mCxgNCzY6wXxWDSSNXMa3XpzRD2xcY0lSF32YPqd/ToxTJfvPpgAW7sJ9jAWG+E3Cn2KqJhAeCRBsTQ1Wa/2bnoGmLC7JLacpQ6ECw+TShig2G/sIcJPWhVM4hSQ8HdIVyfGc0UnkmEWuYAHAgWCwiRo2EzUSTDWcKFN0z47e3GsDC9nLXQdJAuIpRXHywW2VADI0YY17CrIbEP2dAYSZD0xSez45x1OlajVF59sFhAuAOpGOHoCkfEHF4B3OTmCdm5k9ztkB1iEZhsqF5Yp3FWD7iA8FoFOdZLbYCcqYcscVQIO0tI+y+/QKeDL+rg0pifuLOOhl0HCO0XK9eqlmO1RpIalSQ98sVzM4TVIu0yokLLM+gkbw2bWxsLOhEsFhGKcZ0wmtPikmf6rW+SmZBte2Xk/TFhvxFmvkYVrS3oTLCwJ4TBYk8nvIGEuej0W1rOTEj2E3K4CNeZdWTPotoN37GHRbs9sBPBYiHhYGrDHThkjQEublrwgA4Mh0X5olFVgdiEQxJOw57e/aZtrhgvXNdGKEWh5VgtDZrseqCfTkdfwZ6pleplszmddS/hYg1OQ9Z9e8JdB4LFAhtqcPaxHmhkfUM3G+KeRxuZWqk1+s0GFCmp3SY682Y2tyfsrZ5vkafRwFWOxUN1EH0d7F3Tza567RmYop0IBykSydDfVUHttjdd1NgSotiyRkLPAMYH3VLfchJciFJfU83tSFFjIzUSLMgZBNwC11HUv2U2tFzN4Pp3wAEt2LxLBg68yWJbYrjP8JjmIds34B27eItXbvILs6F1hmbXiYz+YkKEpOcKTYRxaWbjQdfdBEqdNZBtFtyBJM0yQpyDwS8yEUJq0ugsIT2QIVBq2GwgsWhHuOtEsFhCiDhGVVbNlpDu7AkUfTdKX7PVbAl7TgSLxYQ4qR8fsWosrQYNaiIU6TiUsW+hNtxl07BhGywcSNIsJUQrlyiyXJykaXCvURrDREiZaHxQi9M5iWT7JtHqj38/QYhtiKKghrPeZH9Y3ZlJcbBgAQkbKiPUHY19OHQkWCwhRCFfQ9FdxCdsnhtR1cCrNENIGdBeqKNSm023DbbvSjkTLJYQYt9yrekJthzQotivmggpQ7gD12tVyhvW/aQhwTiTq3IkWHyG8C1qJLzCaQETIU3S9PqgdjFNStXFKrxR019ZDO92Ly5ejDspR4LFZwivUN6e5IFz2ugGXxoJabIXDbp6Y0pYVJuXdH2D7NfrY9dTvdODR8+ZN0wXE3oQXHxPrye9xt+wOY2E6i6m6NVAVW4AlY3KotqpNRiO3NVxmizj4USSZjkhcqbijahn9ePxPQ1Z00R4V7+Vi8UGqHaKHUP4E+9U/e2TnppWWH26EncoWCyLh4hQ20OEOWLD1xt11oYIslprXnbqPbh/YjkL6Fkv9TRqsZGOHOi1Sepx9e8KfYoQ5dfwNnFEuUYWnoZJVGu1arPe7aFDbbkKGnocqYNMJKnXo97WmWABuy9ZSD97QbukKymuwUA+uL7euQJxSLgDr/bsmxSrte+XFzCc90GVHNUUG8lAIKVXqDoZLMBr1Er6mZtnb6SpmqapolrV4D+gQlatiq6WC+71693b3XB4F2T83tT0gZPBAsSsRM7SCGJuD4yP5pUAqaC9kljp9EEMqLVGs3ngd/l/AQUJ/VE8EW+dCRbgr5CFxlNCGDBiLWFOoSPwv8ByRfyZ51QyHfsRcLn8Eax9QHb9ziRpEKHgnpNgJJRuHuZruIUjEHF9Rn6/F4HqZS8i7CFP5ERG35ZwYniVLffqs6ryWcJZYcJGH0YWh4KFJaF7SE9BsQ3FyR8ndFSWhIJPH6a5KGj9m1G6oYTQiPRlNmnP5jfYdkJhAl4HOagrkLB6vv2EbuHwGFRHIxWMLR//Bwjdgvt97PMdDe0ebz8hhECyffhfIFwoTsgJOSEn5ISckBO6hdDkv0wohFqT8cN2EeLkzGdRhcMHoKR/JANbRPjuQxp/DrGVAOmP+0Dga4DrIRQO8VXiU4StY+U54F9OsrWEQgKcfNF6W0I4BMF/BbjxhDAMPv2LIbrphCjVPT64Z331+73+WVo/veM3PzEU1koI40Wr5WacqICK0/LwfTL8eUB7GnBlPh4/Ml4v7jaS3xW4Pzm5h4PY6898nLi8FClwf5+5v3dR97RewonvGDyQ/K8wHPuOY7HYceKoRRj/eiBfeA5go6TIgec+LPqf9tPp9P4vbxAduwT9gQ/0TEl5ccXHdFsBinLwg3iodRL6EvodNN90xYawyvBYL/8NmTLTA91kwP+BL1K078Fn+gT6JO9JGxhqrplQ19AECBFbQuvYUE4FXAeGYjBygj/1c3r94smbUYCxZmBDCBNCK2a+ESLExz/xfcX1CxdjSdx/JXNi0/aj4WSb1Fw3ITXUsXuCP33u0CG9gQfwQyhE0FO44weRgB8jPlLC9N/UYsm/yWfKT2z9EaEXj971Er4zU7nH+BPOv1CC3PChj58hWibaj7gCGDVICA8CkUf6IBLEF6kM/kGSsCKxemq9hImQ201GJzEZgA40hB0oJQTDkHCITrgPSfEj4n1GR9ofhDAd8D9hI0LfQ+6kiAuC04++prBuQnhFut4iEkLUmMyoYNwK4SNuWkxmIvgsWyfMzBD6M0iuQOCZjN/NIUTrl1DrMEEdznHrndaOjfFBxpB9O/mEDuhtCWGU98MfIMhc7yYRut8TU3963BJ+suvYEQqXY1ZUgnCBZk/oCmSChsiyOYRCi3kUjHkMkacu5ida4eiIIH3vXWDDFHWvmzZK6SdIDIkvRcP2SLcpSgYIE734I2JLSJ0rXMFthi+dEpJpFzsUQjqhW2iNKVRsiLzskb52ObG3IRmhSVeErOQ2h5DExXc9HpJXhkItOjYn0KOGJsAfJMgpW0JSTkdc3s0ghPGQrGoISQxZihJOYBT8ayiEyAL86BC/9hUJkAV40pZQdzibQfgAt4LkHnErMTg2Q8TTkIgPvaiA13MTYmq2VAnaEuoRny1y1rxqG1MPGnOT2JAQBHKDRnxfiMb6QzKKIwHS8cclNlROIsTRrJ2QyWfePE0jvu+QGneIi/uPP3DxyZbwXjE3tCmEh8LQfAP6Up+hOGa2JUouiBZpc0NoRq6RkAXxn2y6IZGLd2E4XeGgV4gMO+J9l5dMN6tocc+2+ME2qbKurP4D0vAddxsn94V3bLTEsIUfTQShRXa/4OEIZ21Y8SDogqu2A6Sk15/ZRxdBuMnAdx69/nuylUxFkuhG2r/esyfB/X40oXknwT08fG8Z84tCa/j+PtRzcdDnnDyfwH3Dkvxo4P7j15Oh1ppP10yvCM2nT01PxyAyny+1EEqrGopbcX7ICL+U3ueEG0UY8X9BAccJj31f1DHAjvO3pSzvExcXFxcXF9efVjubzdPLfDab1Y9sszQyZ+H9NlDyM1+aaUVvJI8aaOen19OWUC3DH3BMlUK5UCJ9KJXK5TPa0/Y/FXLxTxuUKuC8bPpS+cy8MimXymcEulTGDZG75/jjjEEphdMyveekKpCkTGhOIR1DqZQL5KKchR0D5o4ppZkyBKbIp5Cn/c8p+SqpVNAJS2tZsVUgUp7QnGYVhcKCUrtErHleyVdOlVPTKD0v028wnZbYUDw9rcAmbQgLlcoaGBFhmxIWSmzA5kvMmvlyJVs5N//6p9lpt7GU80KBjtJsSSlkN4sQGi1L5g20Ie0nKBdOS2SuKYWCkqUTi6p9Vjo9q8y0c05+pVK+UqrkTfNwA0ZplnmJPLwkfSlk8/kSuVsoQSQTDxykeVqRSCm3wXmJttE+U7Jmwjz9H9xKiV05qsrZGTMcmmzkGg8zOkzRzCyZogOelIX8TCNt9uwcmEdp6ezsDN9Q0JVpNHBxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcW2u/g/EuRHf4fhZPgAAAABJRU5ErkJggg==">
             </div>
         </div>
         <div class = "center-btn">
@@ -106,36 +115,39 @@
         </div>
     </section>
     <!---Opp section design-->
-    <section class = "opp" >
-        <div class = "opp-text">
+    <section class="opp">
+        <div class="opp-text">
             <h5>Women Violence</h5>
             <h2>Volunteer to help abuse surviors</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. <br> Ullamcorper a lacus vestibulum sed. Scelerisque eleifend donec pretium vulputate sapien. Eu lobortis elementum nibh tellus molestie.</p>
-            <a href = "#" class = "btn">Read more</a>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+                dolore magna aliqua. <br> Ullamcorper a lacus vestibulum sed. Scelerisque eleifend donec pretium
+                vulputate sapien. Eu lobortis elementum nibh tellus molestie.</p>
+            <a href="/Posts" class="btn">Read more</a>
         </div>
 
-        <div class = "opp-img">
-            <img src = "https://img.freepik.com/premium-photo/physical-violence-woman_669030-1140.jpg">
+        <div class="opp-img">
+            <img src="https://img.freepik.com/premium-photo/physical-violence-woman_669030-1140.jpg">
         </div>
     </section>
     <!---Footer section design-->
-    <section class = "footer">
-        <div class = "footer-box">
+    <section class="footer">
+        <div class="footer-box">
             <h3>Find Us</h3>
             <p>American University of Beirut, Bliss St.<br>Beirut, Lebanon</p>
             <p>customerservice@handinhand.com</p>
             <div class="social">
-                <a href = "/feedback"><i class="ri-star-line"></i></a>
-               <a href = "https://www.instagram.com/accounts/login/"><i class="ri-instagram-line"></i></a>
-               <a href = "https://www.facebook.com/login/"><i class="ri-facebook-line"></i></a>
-               <a href = "https://www.tiktok.com/login"><i class="ri-tiktok-fill"></i></a>
-               <a href = "https://twitter.com/login"><i class="ri-twitter-x-line"></i></a>
-        </div>
+                <a href="/feedback"><i class="ri-star-line"></i></a>
+                <a href="https://www.instagram.com/accounts/login/"><i class="ri-instagram-line"></i></a>
+                <a href="https://www.facebook.com/login/"><i class="ri-facebook-line"></i></a>
+                <a href="https://www.tiktok.com/login"><i class="ri-tiktok-fill"></i></a>
+                <a href="https://twitter.com/login"><i class="ri-twitter-x-line"></i></a>
+            </div>
 
         </div>
     </section>
     <!---custom js file link-->
-    {{!-- <script src = "js/script.js"></script> --}}
+    {{!--
+    <script src="js/script.js"></script> --}}
     <script>
         const header = document.querySelector("header");
 
@@ -187,4 +199,5 @@
         };
     </script>
 </body>
+
 </html>

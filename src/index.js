@@ -7,9 +7,12 @@ const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
 const app = express()
 const hbs = require("hbs")
+const bcrypt = require('bcrypt');
 const helpers = require("handlebars-helpers")();
 hbs.registerHelper(helpers);
-const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, FeedbackCollection } = require("./mongodb");
+const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, FeedbackCollection} = require("./mongodb");
+// connectDB();
+// connectDB in list
 const port = process.env.PORT || 3000
 app.use(express.json())
 
@@ -29,6 +32,16 @@ app.use(session({
     saveUninitialized: false
 }));
 
+
+function sessionChecker(req, res, next) {
+    if(req.session && req.session.user) {
+        next();
+    } else {
+        res.redirect('/login');
+    }
+}
+
+
 app.get('/signup', (req, res) => {
     res.render('signup')
 })
@@ -43,7 +56,6 @@ app.get('/', (req, res) => {
         if (signedIn) {
             const userRole = req.session.user.role;
             let profileLink;
-
             // if (userRole === 'volunteer') {
             profileLink = '/userprofile';
             // } else if (userRole === 'organization') {
@@ -76,7 +88,7 @@ const sendVerificationEmail = async (email, verificationToken) => {
         subject: 'Email Verification',
         html: `<p>Click <a href="http://localhost:3000/verify-email?token=${verificationToken}">here</a> to verify your email address.</p>` // Removed target="_blank"
     };
-
+// https://handinhand-o60q.onrender.com/
     try {
         await transporter.sendMail(mailOptions);
         console.log('Verification email sent');
@@ -145,7 +157,7 @@ app.post('/signup', async (req, res) => {
         const data = {
             name: req.body.name,
             email: req.body.email,
-            password: req.body.password,
+            password: await bcrypt.hash(req.body.password, 10),
             role: req.body.role,
             verified: false
         };
@@ -188,7 +200,6 @@ app.post('/signup', async (req, res) => {
         const newUser = await LogInCollection.find({ email: req.body.email });
 
         const description = req.session.user.role === 'volunteer' ? "I love helping others" : "Let's make the world better together";
-        const dateJoined = newUser.DateJoined || null;
         const profileData = {
             name: req.session.user.name,
             email: req.body.email,
@@ -197,7 +208,6 @@ app.post('/signup', async (req, res) => {
             PhoneNum: 0,
             Location: "Beirut",
             ProfilePic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR11lMafo-ZYohC2qYI1BJN80gzcC-7IpohIeUQT1RT0WgBttaZX7J1yEea92wMCcTXa9A&usqp=CAU",
-            DateJoined: dateJoined,
         };
         await userProfCollection.create(profileData);
 
@@ -221,36 +231,35 @@ app.get('/login', (req, res) => {
     res.render('login')
 })
 
+
 app.post('/login', async (req, res) => {
     try {
-        const check = await LogInCollection.findOne({ name: req.body.name })
+        const user = await LogInCollection.findOne({ name: req.body.name });
 
-        if (check && check.password === req.body.password) {
-            // Set user information in session
-            const user = await userProfCollection.findOne({ name: req.body.name });
-            if (user && user.reports >= 5) {
-                res.send("your account is temporarily banned");
+        if (user && (await bcrypt.compare(req.body.password, user.password))) { 
+            const userProfile = await userProfCollection.findOne({ name: req.body.name });
+            if (userProfile && userProfile.reports >= 5) {
+                res.send("Your account is temporarily banned");
                 return;
             }
             req.session.user = {
-                name: check.name,
-                role: check.role
+                name: user.name,
+                role: user.role
             };
-            // Redirect to the homepage after successful login
-            if (req.session.user.role == 'admin') {
-                res.redirect('/admin')
+            if (req.session.user.role === 'admin') {
+                res.redirect('/admin');
             } else {
-                res.redirect(302, '/');
+                res.redirect('/');
             }
         } else {
-            //if user is not found or passwords do not match 
             res.send("Incorrect username or password");
         }
-    } catch (e) {
-        console.error("Error during login:", e);
+    } catch (error) {
+        console.error("Error during login:", error);
         res.status(500).send("An error occurred during login");
     }
 });
+
 
 
 app.get('/logout', (req, res) => {
@@ -302,6 +311,8 @@ app.get('/checkout', async (req, res) => {
                 profileLink = '/orgprofile';
                 isOrganization = true;
             }
+        }else{
+            res.redirect('/signup');
         }
 
         res.render('checkout', { job, signedIn, userRole, profileLink, isOrganization });
@@ -383,19 +394,17 @@ app.get('/job_submission_form', (req, res) => {
 })
 
 
-app.post('/job_submission_form', async (req, res) => {
+app.post('/job_submission_form', sessionChecker, async (req, res) => {
     try {
         const { jobName, description, openPositions, location, startDate, requiredHours, requiredSkills, imageLink } = req.body;
 
-        if (!jobName || !description || !openPositions || !location || !startDate || !requiredHours || !requiredSkills) {
+        if(!jobName || !description || !openPositions || !location || !startDate || !requiredHours || !requiredSkills) {
             return res.status(400).send('All fields are required');
         }
-        const organizationName = req.session.user.name;
+       const organizationName = req.session.user.name;
+        
 
-        // let newImageLink = imageLink;
-        // if (imageLink == null) {
-        //     newImageLink = "https://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg";
-        // }
+        // Ensure that the session contains user information before proceeding
 
         const newJob = new JobCollection({
             title: jobName,
@@ -436,7 +445,8 @@ app.get('/userprofile', async (req, res) => {
                     res.redirect('/orgprofile');
                 }
                 else {
-                    res.render('userprofile', { userProf });
+                    const jobs = await JobCollection.find({ 'participants.email': userProf.email });
+                    res.render('userprofile', { userProf, jobs });
                 }
             } else {
                 // Handle the case where the user profile is not found
@@ -485,11 +495,26 @@ app.get('/home', (req, res) => {
 })
 
 
+const sendPasswordResetEmail = async (email, resetLink) => {
+    const mailOptions = {
+        from: process.env.EMAIL_ADDRESS, 
+        to: email, 
+        subject: 'Password Reset', 
+        html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>`
+    };
 
+    try {
+        await transporter.sendMail(mailOptions); 
+        console.log('Password reset email sent');
+    } catch (error) {
+        console.error('Error sending password reset email:', error);
+    }
+};
 
 app.get('/forgot-password', (req, res) => {
     res.render('forgot-password');
 });
+
 
 app.post('/forgot-password', async (req, res) => {
     const { email } = req.body;
@@ -501,12 +526,14 @@ app.post('/forgot-password', async (req, res) => {
             return res.send('User not registered');
         }
 
-        const resetToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '5m' });
+        const resetToken = jwt.sign({ userId: user._id, email }, process.env.JWT_SECRET, { expiresIn: '10m' });
 
         // change after hosting the website
-        const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
+        const resetLink = `http://localhost:3000/reset-password?token=${resetToken}&email=${email}`;
 
-        return res.send('Password reset link has been sent to your email');
+        await sendPasswordResetEmail(email, resetLink); 
+
+        res.redirect('/email_sent');
     } catch (error) {
         console.error('Error in forgot-password endpoint:', error);
         return res.status(500).send('Internal Server Error');
@@ -514,11 +541,17 @@ app.post('/forgot-password', async (req, res) => {
 });
 
 app.get('/reset-password', async (req, res) => {
-    const { token } = req.query;
+    const { token, email } = req.query;
+
+    console.log('Token:', token); // Add this line for debugging
+
+    if (!token) {
+        return res.status(400).send('Token is missing');
+    }
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        return res.render('reset-password', { token });
+        return res.render('reset-password', { token, email });
     } catch (error) {
         console.error('Error in reset-password route:', error);
         return res.status(400).send('Invalid or expired token');
@@ -526,24 +559,55 @@ app.get('/reset-password', async (req, res) => {
 });
 
 app.post('/reset-password', async (req, res) => {
-    const { token, newPassword } = req.body;
+    const { email, password, confirmPassword } = req.body;
+    console.log(req.body);
+
+
+    console.log(email);
+
+
+    if (password !== confirmPassword) {
+        return res.status(400).send('Passwords do not match');
+    }
+
+    const strongPasswordRequirements = [
+        { regex: /^(?=.*[a-z])/, message: "At least one lowercase letter (a-z)" },
+        { regex: /^(?=.*[A-Z])/, message: "At least one uppercase letter (A-Z)" },
+        { regex: /^(?=.*[0-9])/, message: "At least one digit (0-9)" },
+        { regex: /^(?=.*[!@#\$%\^&\*])/, message: "At least one special character" },
+        { regex: /^(?=.{8,})/, message: "At least 8 characters long" }
+    ];
+
+    const isValidPassword = strongPasswordRequirements.every(rule => rule.regex.test(password));
+
+    if (!isValidPassword) {
+        const errorMessage = strongPasswordRequirements
+            .filter(rule => !rule.regex.test(password))
+            .map(rule => rule.message)
+            .join(", ");
+
+        return res.status(400).send(errorMessage);
+    }
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await LogInCollection.findById(decoded.userId);
+        // Find the user by email again
+        const user = await LogInCollection.findOne({ email });
+
         if (!user) {
             return res.status(404).send('User not found');
         }
 
-        user.password = newPassword;
+        // Update user's password
+        user.password = password;
         await user.save();
 
-        return res.send('Password reset successful');
+        return res.redirect('/login');
     } catch (error) {
         console.error('Error in reset-password route:', error);
-        return res.status(400).send('Invalid or expired token');
+        return res.status(500).send('Internal Server Error');
     }
 });
+
 
 
 app.get('/editable', async (req, res) => {
@@ -574,8 +638,8 @@ app.post('/edituserprof', async (req, res) => {
             }
         };
 
-        // Check if the user is an organization
-        if (req.session.user.role === 'organization') {
+        // Check if the user is an organization and add photos not
+        if (req.session.user.role === 'organization' && req.body.AddPhotos) {
             // Add to the images array only if the user is an organization
             update.$addToSet = { images: req.body.AddPhotos };
         }
@@ -620,6 +684,7 @@ app.post('/deleteaccount', async (req, res) => {
         const jobs = await JobCollection.find({ 'participants.email': user.email });
         for (const job of jobs) {
             job.participants = job.participants.filter(participant => participant.email !== user.email);
+            job.openPositions += 1;
             await job.save();
         }
 
@@ -1020,8 +1085,22 @@ app.delete('/delete-image', async (req, res) => {
 
 app.get('/about', async (req, res) => {
     try {
+        const signedIn = !!req.session.user;
+        let userRole;
+        let profileLink;
+        let isOrganization;
+        if (signedIn) {
+            userRole = req.session.user.role;
+            if (userRole === 'volunteer') {
+                isOrganization = false;
+                profileLink = '/userprofile';
+            } else if (userRole === 'organization') {
+                profileLink = '/orgprofile';
+                isOrganization = true;
+            }
+        }
         const fb = await FeedbackCollection.find({}); // Fetch all feedback data
-        res.render('about', { fb }); // Pass feedbackData to the 'about' template
+        res.render('about', { fb, signedIn, profileLink, userRole, isOrganization }); // Pass feedbackData to the 'about' template
     } catch (error) {
         console.error('Error fetching feedback data:', error);
         res.status(500).send('Internal Server Error'); // Handle error gracefully
@@ -1090,28 +1169,54 @@ app.put('/completeopportunity', async (req, res) => {
 
 // Assuming you have a route handler set up for handling the report button click
 app.post('/reportParticipant', async (req, res) => {
-    const participantEmail = req.body.participantEmail; // Assuming you're sending the participant ID from the frontend
+    const participantEmail = req.body.email; // Assuming you're sending the participant email from the frontend
 
     try {
-
+        // Find the participant user by email
         const participantUser = await userProfCollection.findOne({ email: participantEmail });
+
         if (!participantUser) {
-            return res.status(404).json({ error: 'Participant user not found' });
+            return res.status(404).json({ error: ' user not found' });
         }
 
         // Increment the reports attribute by one for the participant
         participantUser.reports += 1;
 
-        // Save the updated job data back to the database
+        // Save the updated participant data back to the database
         await participantUser.save();
 
-        res.status(200).json({ message: 'Participant report incremented successfully', job });
+        // Send a success response
+        res.status(200).json({ message: 'report incremented successfully', participantUser });
     } catch (err) {
-        console.error(err);
+        console.error('Error reporting user:', err);
         res.status(500).json({ error: 'Server error' });
     }
 });
 
+app.post('/ignorereport', async (req, res) => {
+    const participantEmail = req.body.email; // Assuming you're sending the participant email from the frontend
+
+    try {
+        // Find the participant user by email
+        const participantUser = await userProfCollection.findOne({ email: participantEmail });
+
+        if (!participantUser) {
+            return res.status(404).json({ error: 'user not found' });
+        }
+
+        // Increment the reports attribute by one for the participant
+        participantUser.reports =0;
+
+        // Save the updated participant data back to the database
+        await participantUser.save();
+
+        // Send a success response
+        res.status(200).json({ message: 'report count reset', participantUser });
+    } catch (err) {
+        console.error('Error reseting report count:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
 
 // Assuming you have a route handler set up for handling participant deletion
 app.delete('/removeParticipant', async (req, res) => {
@@ -1195,6 +1300,26 @@ app.get('/org-list', async (req, res) => {
 });
 
 
-app.listen(port, () => {
-    console.log('port connected');
+
+app.get('/vieworgprofile', async (req, res) => {
+    const creatorName = req.query.creator; // Get the creator name from the query parameter
+
+    try {
+        // Find the user profile using the creator name
+        const userProf = await userProfCollection.findOne({ name: creatorName });
+        const jobs= await JobCollection.find({creator: req.query.creator});
+
+        // Render the view with the user profile data
+        res.render('vieworgprofile', { userProf, jobs });
+    } catch (error) {
+        console.error('Error fetching user profile:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
+// const PORT = process.env.PORT
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log('Server is running on port ' + PORT);
 })
