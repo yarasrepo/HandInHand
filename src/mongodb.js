@@ -11,7 +11,7 @@ const mongoose = require("mongoose")
 console.log('test');
     const connectDB = async () => {
         try {
-            await mongoose.connect(process.env.MONGODB_CONNECT_URI)
+            await mongoose.connect(MONGODB_CONNECT_URI = "mongodb+srv://Stale:rW9dLPcz90M7aio8@handinhandcluster.yqdkk26.mongodb.net/HandInHandCluster?retryWrites=true&w=majority&appName=HandInHandCluster");
             console.log("Connect to MongoDB successfully")
         } catch (error) {
             console.log("connect failed" + error.message)
