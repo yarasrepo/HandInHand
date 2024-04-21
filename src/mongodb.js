@@ -44,7 +44,8 @@ const LogInSchema = new mongoose.Schema({
     },
     DateJoined: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        required: true,
     },
     verified: {
         type: Boolean,
@@ -85,7 +86,8 @@ const userProfile = new mongoose.Schema({
     },
     DateJoined: {
         type: Date,
-        ref: 'LogInSchema',
+        default: Date.now(),
+        required: true,
     },
     HoursVolunteered: {
         type: Number,
@@ -157,7 +159,8 @@ const jobSchema = new mongoose.Schema({
     participants: [{
         email: String,
         firstName: String,
-        lastName: String
+        lastName: String,
+        PhoneNum: String
     }],
     completed: {
         type: Boolean,
@@ -179,6 +182,7 @@ const reqOrg = new mongoose.Schema({
     },
     PhoneNum: {
         type: Number,
+        unique:true
     },
     Location: {
         type: String,
@@ -281,7 +285,7 @@ const FbSchema = new mongoose.Schema({
 const FeedbackCollection = mongoose.model("FeedbackCollection", FbSchema)
 
 module.exports = {
-    connectDB,
+   // connectDB,
     collection,
     userProfCollection,
     JobCollection,
