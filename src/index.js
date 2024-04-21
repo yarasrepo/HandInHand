@@ -7,6 +7,7 @@ const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
 const app = express()
 const hbs = require("hbs")
+const bcrypt = require('bcrypt');
 const helpers = require("handlebars-helpers")();
 hbs.registerHelper(helpers);
 const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, FeedbackCollection} = require("./mongodb");
@@ -31,6 +32,16 @@ app.use(session({
     saveUninitialized: false
 }));
 
+
+function sessionChecker(req, res, next) {
+    if(req.session && req.session.user) {
+        next();
+    } else {
+        res.redirect('/login');
+    }
+}
+
+
 app.get('/signup', (req, res) => {
     res.render('signup')
 })
@@ -45,7 +56,6 @@ app.get('/', (req, res) => {
         if (signedIn) {
             const userRole = req.session.user.role;
             let profileLink;
-
             // if (userRole === 'volunteer') {
             profileLink = '/userprofile';
             // } else if (userRole === 'organization') {
@@ -76,9 +86,9 @@ const sendVerificationEmail = async (email, verificationToken) => {
         from: process.env.EMAIL_ADDRESS,
         to: email,
         subject: 'Email Verification',
-        html: `<p>Click <a href="https://handinhand-o60q.onrender.com/verify-email?token=${verificationToken}">here</a> to verify your email address.</p>` // Removed target="_blank"
+        html: `<p>Click <a href="http://localhost:3000/verify-email?token=${verificationToken}">here</a> to verify your email address.</p>` // Removed target="_blank"
     };
-
+// https://handinhand-o60q.onrender.com/
     try {
         await transporter.sendMail(mailOptions);
         console.log('Verification email sent');
@@ -147,7 +157,7 @@ app.post('/signup', async (req, res) => {
         const data = {
             name: req.body.name,
             email: req.body.email,
-            password: req.body.password,
+            password: await bcrypt.hash(req.body.password, 10),
             role: req.body.role,
             verified: false
         };
@@ -187,7 +197,7 @@ app.post('/signup', async (req, res) => {
             role: req.body.role
         };
 
-        const newUser = await LogInCollection.find({email: req.body.email});
+        const newUser = await LogInCollection.find({ email: req.body.email });
 
         const description = req.session.user.role === 'volunteer' ? "I love helping others" : "Let's make the world better together";
         const profileData = {
@@ -221,36 +231,36 @@ app.get('/login', (req, res) => {
     res.render('login')
 })
 
+
 app.post('/login', async (req, res) => {
     try {
-        const check = await LogInCollection.findOne({ name: req.body.name })
+        const user = await LogInCollection.findOne({ name: req.body.name });
 
-        if (check && check.password === req.body.password) {
-            // Set user information in session
-            const user= await userProfCollection.findOne({name: req.body.name});
-            if (user && user.reports >= 5){
-                res.send("your account is temporarily banned");
+        // if (user && (await bcrypt.compare(req.body.password, user.password))) { 
+            if (user && (req.body.password == user.password)){
+            const userProfile = await userProfCollection.findOne({ name: req.body.name });
+            if (userProfile && userProfile.reports >= 5) {
+                res.send("Your account is temporarily banned");
                 return;
             }
             req.session.user = {
-                name: check.name,
-                role: check.role
+                name: user.name,
+                role: user.role
             };
-            // Redirect to the homepage after successful login
-            if (req.session.user.role == 'admin') {
-                res.redirect('/admin')
+            if (req.session.user.role === 'admin') {
+                res.redirect('/admin');
             } else {
-                res.redirect(302, '/');
+                res.redirect('/');
             }
         } else {
-            //if user is not found or passwords do not match 
             res.send("Incorrect username or password");
         }
-    } catch (e) {
-        console.error("Error during login:", e);
+    } catch (error) {
+        console.error("Error during login:", error);
         res.status(500).send("An error occurred during login");
     }
 });
+
 
 
 app.get('/logout', (req, res) => {
@@ -385,19 +395,17 @@ app.get('/job_submission_form', (req, res) => {
 })
 
 
-app.post('/job_submission_form', async (req, res) => {
+app.post('/job_submission_form', sessionChecker, async (req, res) => {
     try {
         const { jobName, description, openPositions, location, startDate, requiredHours, requiredSkills, imageLink } = req.body;
 
-        if (!jobName || !description || !openPositions || !location || !startDate || !requiredHours || !requiredSkills) {
+        if(!jobName || !description || !openPositions || !location || !startDate || !requiredHours || !requiredSkills) {
             return res.status(400).send('All fields are required');
         }
-        const organizationName = req.session.user.name;
+       const organizationName = req.session.user.name;
+        
 
-        // let newImageLink = imageLink;
-        // if (imageLink == null) {
-        //     newImageLink = "https://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg";
-        // }
+        // Ensure that the session contains user information before proceeding
 
         const newJob = new JobCollection({
             title: jobName,
@@ -519,14 +527,14 @@ app.post('/forgot-password', async (req, res) => {
             return res.send('User not registered');
         }
 
-        const resetToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '10m' });
+        const resetToken = jwt.sign({ userId: user._id, email }, process.env.JWT_SECRET, { expiresIn: '10m' });
 
         // change after hosting the website
-        const resetLink = `https://handinhand-o60q.onrender.com/reset-password?token=${resetToken}`;
+        const resetLink = `http://localhost:3000/reset-password?token=${resetToken}&email=${email}`;
 
         await sendPasswordResetEmail(email, resetLink); 
 
-        return res.send('Password reset link has been sent to your email');
+        res.redirect('/email_sent');
     } catch (error) {
         console.error('Error in forgot-password endpoint:', error);
         return res.status(500).send('Internal Server Error');
@@ -534,7 +542,9 @@ app.post('/forgot-password', async (req, res) => {
 });
 
 app.get('/reset-password', async (req, res) => {
-    const { token } = req.query;
+    const { token, email } = req.query;
+
+    console.log('Token:', token); // Add this line for debugging
 
     if (!token) {
         return res.status(400).send('Token is missing');
@@ -542,7 +552,7 @@ app.get('/reset-password', async (req, res) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        return res.render('reset-password', { token });
+        return res.render('reset-password', { token, email });
     } catch (error) {
         console.error('Error in reset-password route:', error);
         return res.status(400).send('Invalid or expired token');
@@ -550,16 +560,39 @@ app.get('/reset-password', async (req, res) => {
 });
 
 app.post('/reset-password', async (req, res) => {
-    const { token, password } = req.body;
+    const { email, password, confirmPassword } = req.body;
+    console.log(req.body);
 
-    if (!token) {
-        return res.status(400).send('Token is missing');
+
+    console.log(email);
+
+
+    if (password !== confirmPassword) {
+        return res.status(400).send('Passwords do not match');
+    }
+
+    const strongPasswordRequirements = [
+        { regex: /^(?=.*[a-z])/, message: "At least one lowercase letter (a-z)" },
+        { regex: /^(?=.*[A-Z])/, message: "At least one uppercase letter (A-Z)" },
+        { regex: /^(?=.*[0-9])/, message: "At least one digit (0-9)" },
+        { regex: /^(?=.*[!@#\$%\^&\*])/, message: "At least one special character" },
+        { regex: /^(?=.{8,})/, message: "At least 8 characters long" }
+    ];
+
+    const isValidPassword = strongPasswordRequirements.every(rule => rule.regex.test(password));
+
+    if (!isValidPassword) {
+        const errorMessage = strongPasswordRequirements
+            .filter(rule => !rule.regex.test(password))
+            .map(rule => rule.message)
+            .join(", ");
+
+        return res.status(400).send(errorMessage);
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const userId = decoded.userId;
-        const user = await LogInCollection.findById(userId);
+        // Find the user by email again
+        const user = await LogInCollection.findOne({ email });
 
         if (!user) {
             return res.status(404).send('User not found');
@@ -569,10 +602,10 @@ app.post('/reset-password', async (req, res) => {
         user.password = password;
         await user.save();
 
-        return res.send('Password reset successful');
+        return res.redirect('/login');
     } catch (error) {
         console.error('Error in reset-password route:', error);
-        return res.status(400).send('Invalid or expired token');
+        return res.status(500).send('Internal Server Error');
     }
 });
 
@@ -652,6 +685,7 @@ app.post('/deleteaccount', async (req, res) => {
         const jobs = await JobCollection.find({ 'participants.email': user.email });
         for (const job of jobs) {
             job.participants = job.participants.filter(participant => participant.email !== user.email);
+            job.openPositions += 1;
             await job.save();
         }
 
@@ -1050,10 +1084,24 @@ app.delete('/delete-image', async (req, res) => {
     }
 });
 
-app.get('/about', async(req, res) => {
+app.get('/about', async (req, res) => {
     try {
+        const signedIn = !!req.session.user;
+        let userRole;
+        let profileLink;
+        let isOrganization;
+        if (signedIn) {
+            userRole = req.session.user.role;
+            if (userRole === 'volunteer') {
+                isOrganization = false;
+                profileLink = '/userprofile';
+            } else if (userRole === 'organization') {
+                profileLink = '/orgprofile';
+                isOrganization = true;
+            }
+        }
         const fb = await FeedbackCollection.find({}); // Fetch all feedback data
-        res.render('about', { fb }); // Pass feedbackData to the 'about' template
+        res.render('about', { fb, signedIn, profileLink, userRole, isOrganization }); // Pass feedbackData to the 'about' template
     } catch (error) {
         console.error('Error fetching feedback data:', error);
         res.status(500).send('Internal Server Error'); // Handle error gracefully
@@ -1204,7 +1252,7 @@ app.post('/highlightFeedback', async (req, res) => {
         // For example, using Mongoose:
         const updatedFeedback = await FeedbackCollection.findByIdAndUpdate(
             fbId,
-            { $set: {highlighted: isHighlight } },
+            { $set: { highlighted: isHighlight } },
             { new: true } // To return the updated document
         );
 
@@ -1241,8 +1289,22 @@ app.get('/reports_admin', async (req, res) => {
     }
 });
 
+app.get('/org-list', async (req, res) => {
+    try {
+        const orgs = await userProfCollection.find({ role: 'organization' });
+        res.render('org-list', { orgs }); // Corrected syntax
+    } catch (err) {
+        // Handle errors appropriately
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
+
 app.get('/vieworgprofile', async (req, res) => {
     const creatorName = req.query.creator; // Get the creator name from the query parameter
+    console.log(creatorName);
 
     try {
         // Find the user profile using the creator name
