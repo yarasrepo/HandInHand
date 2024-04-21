@@ -185,7 +185,7 @@ app.post('/signup', async (req, res) => {
             role: req.body.role
         };
 
-        const newUser = await LogInCollection.find({email: req.body.email});
+        const newUser = await LogInCollection.find({ email: req.body.email });
 
         const description = req.session.user.role === 'volunteer' ? "I love helping others" : "Let's make the world better together";
         const dateJoined = newUser.DateJoined || null;
@@ -227,8 +227,8 @@ app.post('/login', async (req, res) => {
 
         if (check && check.password === req.body.password) {
             // Set user information in session
-            const user= await userProfCollection.findOne({name: req.body.name});
-            if (user && user.reports >= 5){
+            const user = await userProfCollection.findOne({ name: req.body.name });
+            if (user && user.reports >= 5) {
                 res.send("your account is temporarily banned");
                 return;
             }
@@ -1018,7 +1018,7 @@ app.delete('/delete-image', async (req, res) => {
     }
 });
 
-app.get('/about', async(req, res) => {
+app.get('/about', async (req, res) => {
     try {
         const fb = await FeedbackCollection.find({}); // Fetch all feedback data
         res.render('about', { fb }); // Pass feedbackData to the 'about' template
@@ -1093,8 +1093,8 @@ app.post('/reportParticipant', async (req, res) => {
     const participantEmail = req.body.participantEmail; // Assuming you're sending the participant ID from the frontend
 
     try {
-  
-        const participantUser = await userProfCollection.findOne({ email: participantEmail});
+
+        const participantUser = await userProfCollection.findOne({ email: participantEmail });
         if (!participantUser) {
             return res.status(404).json({ error: 'Participant user not found' });
         }
@@ -1146,7 +1146,7 @@ app.post('/highlightFeedback', async (req, res) => {
         // For example, using Mongoose:
         const updatedFeedback = await FeedbackCollection.findByIdAndUpdate(
             fbId,
-            { $set: {highlighted: isHighlight } },
+            { $set: { highlighted: isHighlight } },
             { new: true } // To return the updated document
         );
 
@@ -1182,6 +1182,18 @@ app.get('/reports_admin', async (req, res) => {
         res.redirect('/login');
     }
 });
+
+app.get('/org-list', async (req, res) => {
+    try {
+        const orgs = await userProfCollection.find({ role: 'organization' });
+        res.render('org-list', { orgs }); // Corrected syntax
+    } catch (err) {
+        // Handle errors appropriately
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 
 app.listen(port, () => {
     console.log('port connected');
