@@ -236,8 +236,7 @@ app.post('/login', async (req, res) => {
     try {
         const user = await LogInCollection.findOne({ name: req.body.name });
 
-        // if (user && (await bcrypt.compare(req.body.password, user.password))) { 
-            if (user && (req.body.password == user.password)){
+        if (user && (await bcrypt.compare(req.body.password, user.password))) { 
             const userProfile = await userProfCollection.findOne({ name: req.body.name });
             if (userProfile && userProfile.reports >= 5) {
                 res.send("Your account is temporarily banned");
