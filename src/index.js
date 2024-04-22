@@ -89,7 +89,7 @@ const sendVerificationEmail = async (email, verificationToken) => {
         from: process.env.EMAIL_ADDRESS,
         to: email,
         subject: 'Email Verification',
-        html: `<p>Click <a href="http://localhost:3000/verify-email?token=${verificationToken}">here</a> to verify your email address.</p>` // Removed target="_blank"
+        html: `<p>Click <a href="https://handinhand-do3j.onrender.com/verify-email?token=${verificationToken}">here</a> to verify your email address.</p>` // Removed target="_blank"
     };
 // https://handinhand-o60q.onrender.com/
     try {
@@ -238,7 +238,7 @@ app.get('/login', (req, res) => {
 app.post('/login', async (req, res) => {
     try {
         const user = await LogInCollection.findOne({ name: req.body.name });
-
+// if (user && (req.body.password == user.password)){
         if (user && (await bcrypt.compare(req.body.password, user.password))) { 
             const userProfile = await userProfCollection.findOne({ name: req.body.name });
             if (userProfile && userProfile.reports >= 5) {
@@ -532,7 +532,7 @@ app.post('/forgot-password', async (req, res) => {
         const resetToken = jwt.sign({ userId: user._id, email }, process.env.JWT_SECRET, { expiresIn: '10m' });
 
         // change after hosting the website
-        const resetLink = `http://localhost:3000/reset-password?token=${resetToken}&email=${email}`;
+        const resetLink = `https://handinhand-do3j.onrender.com/reset-password?token=${resetToken}&email=${email}`;
 
         await sendPasswordResetEmail(email, resetLink); 
 
@@ -1322,8 +1322,8 @@ app.get('/vieworgprofile', async (req, res) => {
 });
 
 
-// const PORT = process.env.PORT
-const PORT = 3000;
+const PORT = process.env.PORT
+// const PORT = 3000;
 app.listen(PORT, () => {
     console.log('Server is running on port ' + PORT);
 })

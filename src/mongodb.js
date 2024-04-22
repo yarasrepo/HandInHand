@@ -145,7 +145,6 @@ const jobSchema = new mongoose.Schema({
     imageLink: {
         type: String,
         ref: 'userProfileCollection',
-        maxlength: 1000
     },
     creator: {
         type: String,
@@ -193,7 +192,6 @@ const reqOrg = new mongoose.Schema({
     },
     ProfilePic: {
         type: String, // Corrected to directly specify String as the type
-        maxlength: 1000 // Assuming you store the file path or URL
     },
     flag: {
         type: Boolean,
