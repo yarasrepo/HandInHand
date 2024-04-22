@@ -10,8 +10,8 @@ const hbs = require("hbs")
 const bcrypt = require('bcrypt');
 const helpers = require("handlebars-helpers")();
 hbs.registerHelper(helpers);
-const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, FeedbackCollection, connectDB} = require("./mongodb");
- connectDB();
+const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, FeedbackCollection} = require("./mongodb");
+//  connectDB();
 // connectDB in list
 const port = process.env.PORT || 3000
 app.use(express.json())
@@ -238,8 +238,8 @@ app.get('/login', (req, res) => {
 app.post('/login', async (req, res) => {
     try {
         const user = await LogInCollection.findOne({ name: req.body.name });
-
-        if (user && (await bcrypt.compare(req.body.password, user.password))) { 
+if (user && (req.body.password == user.password)){
+        // if (user && (await bcrypt.compare(req.body.password, user.password))) { 
             const userProfile = await userProfCollection.findOne({ name: req.body.name });
             if (userProfile && userProfile.reports >= 5) {
                 res.send("Your account is temporarily banned");
@@ -1322,8 +1322,8 @@ app.get('/vieworgprofile', async (req, res) => {
 });
 
 
-const PORT = process.env.PORT
-// const PORT = 3000;
+// const PORT = process.env.PORT
+const PORT = 3000;
 app.listen(PORT, () => {
     console.log('Server is running on port ' + PORT);
 })
