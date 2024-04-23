@@ -189,17 +189,32 @@ header.sticky{
     transform: translateX(-4px);
 }
 
-@media(max-width: 1050px){
-    .feature-content{
-        gap: 1.5rem;
+@media screen and (max-width: 1200px) {
+    header{
+        padding: 14px 5%;
     }
-    .opportunities{
-        gap: 3rem;
+    header.sticky{
+        padding: 7px 5%;
     }
-    .opp{
-        gap: 3rem
+    .organizations-content {
+        grid-template-columns: repeat(3, minmax(200px, auto));
+        gap: 2rem;
+        margin: 0 2rem; 
+        margin-top: 3rem;
     }
-
+    section{
+        padding: 45px 5% 35px;
+    }
+    :root{
+        --h1-font: 4.6rem;
+        --h2-font: 2.8rem;
+        --p-font: 15px;
+    }
+    .center-text{
+        height: 90vh;
+    }
+}
+@media screen and (max-width: 1050px){
     #menu-icon{
         display: block;
     }
@@ -230,21 +245,6 @@ header.sticky{
     }
 }
 
-@media screen and (max-width: 1200px) {
-    header{
-        padding: 14px 5%;
-    }
-    header.sticky{
-        padding: 7px 5%;
-    }
-    .organizations-content {
-        grid-template-columns: repeat(3, minmax(200px, auto));
-        gap: 2rem;
-        margin: 0 2rem; 
-        margin-top: 3rem;
-    }
-}
-
 @media screen and (max-width: 800px) {
     .organizations-content {
         grid-template-columns: repeat(2, minmax(200px, auto));
@@ -261,5 +261,18 @@ header.sticky{
         margin: 0.5rem; 
         margin-top: 3rem;
     }
+    .center-text{
+        height: 85vh;
+    }
 }
-
+@media(max-width: 450px){
+    header{
+        padding: 12px 3%;
+    }
+    header.sticky{
+        padding: 7px 3%;
+    }
+    section{
+        padding: 60px 3% 50px;
+    }
+}
