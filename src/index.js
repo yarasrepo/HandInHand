@@ -10,7 +10,7 @@ const hbs = require("hbs")
 const bcrypt = require('bcrypt');
 const helpers = require("handlebars-helpers")();
 hbs.registerHelper(helpers);
-const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, FeedbackCollection} = require("./mongodb");
+const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, FeedbackCollection } = require("./mongodb");
 //  connectDB();
 // connectDB in list
 const port = process.env.PORT || 3000
@@ -241,6 +241,14 @@ app.get('/userdetailsexist', (req, res) => {
     res.render('userdetailsexist');
 })
 
+app.get('/acctempbanned', (req, res) => {
+    res.render('acctempbanned');
+})
+
+app.get('/incorrectuserorpass', (req, res) => {
+    res.render('incorrectuserorpass');
+})
+
 app.get('/login', (req, res) => {
     res.render('login')
 })
@@ -253,7 +261,7 @@ app.post('/login', async (req, res) => {
         if (user && (await bcrypt.compare(req.body.password, user.password))) {
             const userProfile = await userProfCollection.findOne({ name: req.body.name });
             if (userProfile && userProfile.reports >= 5) {
-                res.send("Your account is temporarily banned");
+                res.redirect('/acctempbanned');
                 return;
             }
             req.session.user = {
@@ -266,7 +274,7 @@ app.post('/login', async (req, res) => {
                 res.redirect('/');
             }
         } else {
-            res.send("Incorrect username or password");
+            res.redirect('/incorrectuserorpass');
         }
     } catch (error) {
         console.error("Error during login:", error);
@@ -529,6 +537,9 @@ app.get('/forgot-password', (req, res) => {
     res.render('forgot-password');
 });
 
+app.get('/usernotreg', (req,res)=>{
+    res.render('usernotreg');
+})
 
 app.post('/forgot-password', async (req, res) => {
     const { email } = req.body;
@@ -537,7 +548,7 @@ app.post('/forgot-password', async (req, res) => {
         const user = await LogInCollection.findOne({ email });
 
         if (!user) {
-            return res.send('User not registered');
+            return res.redirect('/usernotreg');
         }
 
         const resetToken = jwt.sign({ userId: user._id, email }, process.env.JWT_SECRET, { expiresIn: '10m' });
