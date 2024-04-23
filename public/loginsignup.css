@@ -142,7 +142,7 @@ form p a{
 @media screen and (max-width: 768px) {
     .input-field input[type="radio"] {
         display: block; /* Display radio buttons as block elements */
-        /* margin-bottom: 10px; Add vertical space between radio buttons */
+        margin-bottom: 10px;
     }
 }
 
