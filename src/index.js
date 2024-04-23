@@ -600,8 +600,9 @@ app.post('/reset-password', async (req, res) => {
             return res.status(404).send('User not found');
         }
 
+        const hashedPassword = await bcrypt.hash(password, 10);
         // Update user's password
-        user.password = password;
+        user.password = hashedPassword;
         await user.save();
 
         return res.redirect('/login');
@@ -1293,8 +1294,22 @@ app.get('/reports_admin', async (req, res) => {
 
 app.get('/org-list', async (req, res) => {
     try {
+        const signedIn = !!req.session.user;
+        let userRole;
+        let profileLink;
+        let isOrganization;
+        if (signedIn) {
+            userRole = req.session.user.role;
+            if (userRole === 'volunteer') {
+                isOrganization = false;
+                profileLink = '/userprofile';
+            } else if (userRole === 'organization') {
+                profileLink = '/orgprofile';
+                isOrganization = true;
+            }
+        }
         const orgs = await userProfCollection.find({ role: 'organization' });
-        res.render('org-list', { orgs }); // Corrected syntax
+        res.render('org-list', { orgs, profileLink, isOrganization, userRole, signedIn }); // Corrected syntax
     } catch (err) {
         // Handle errors appropriately
         console.error(err);
