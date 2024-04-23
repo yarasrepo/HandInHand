@@ -25,7 +25,35 @@ body {
     justify-content: center;
     align-items: center;
 }
+.container .btn-field{
+    width: 100%;
+    display: flex;
+    flex-direction:row;
+    justify-content:center;
+    align-items:flex-end;
+    margin-top: 30px;
+}
 
+.container .btn-field button{
+    flex-basis: 48%;
+    background: #005cce;
+    color: #fff;
+    height: 40px;
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 10px;
+    border-radius: 500px;
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    transition: background 1s;
+    margin-right: 10px;
+}
+
+.container .form-box .btn-field button:hover {
+    background-color: #5190dd;
+
+}
 .form-box {
     width: 90%;
     max-width: 450px;
