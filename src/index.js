@@ -1308,7 +1308,7 @@ app.get('/org-list', async (req, res) => {
             }
         }
         const orgs = await userProfCollection.find({ role: 'organization' });
-        res.render('org-list', { orgs, profileLink, isOrganization, userRole }); // Corrected syntax
+        res.render('org-list', { orgs, profileLink, isOrganization, userRole, signedIn }); // Corrected syntax
     } catch (err) {
         // Handle errors appropriately
         console.error(err);
