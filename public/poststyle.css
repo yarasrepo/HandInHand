@@ -71,9 +71,9 @@
 }
 
 .main-content {
-    margin-left: 150px; 
+    margin-left: 17%; 
     margin-top: 60px;
-    margin-right: 150px;
+    margin-right: 17%;
     padding: 20px; 
 }
 
@@ -87,33 +87,26 @@ body {
 
 
 header {
-    background-color: var(--bg-color); 
-    padding: 10px 0;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    background-color: transparent; 
+    padding: 27px 17%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: sticky;
-    top: 0;
     z-index: 1000;
 }
-
-
 
 .logo {
     height: 50px;
     cursor: pointer;
-    margin-left: 100px;
 }
 
 .navbar {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px; 
-}
-
-.navbar li {
-    list-style-type: none;
 }
 
 .navbar a {
@@ -123,6 +116,9 @@ header {
     font-weight: 500;
     margin-right: 20px;
     transition: all .50s ease;
+}
+.navbar a:hover{
+    color: #2686f5;
 }
 
 .h-right {
@@ -339,7 +335,7 @@ header {
     backdrop-filter: blur(35px);
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (max-width: 768px) {
     .navbar {
         display: flex;
         justify-content: space-between;
@@ -435,10 +431,14 @@ header {
         bottom: 0;
         left: 100%;
         right: 0;
-        display: flex;
+        display: none;
         flex-direction: column;
         background: var(--bg-color);
         transition: all 0.50s ease;
+    }
+    .navbar.open{
+        display: block;
+        left: 0;
     }
     .navbar a{
         display: block;
@@ -448,17 +448,6 @@ header {
         font-size: 2.2rem;
         font-weight: 400;
     }
-    .navbar.open{
-        left: 0;
-    }
 }
 
-@media screen and (max-width: 767px) {
-    .navbar {
-        display: none;
-    }
 
-    #menu-icon {
-        display: block;
-    }
-}
