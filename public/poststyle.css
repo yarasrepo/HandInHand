@@ -1,3 +1,13 @@
+:root{
+    --text-color: #000;
+    --bg-color: #fff;
+    --main-color: #2686f5;
+
+    --h1-font: 6rem;
+    --h2-font: 3rem;
+    --p-font: 1rem;
+}
+
 .sidebar {
     width: 300px;
     background-color: #ffffff;
@@ -108,17 +118,28 @@ header {
 .navbar {
     display: flex;
 }
-
 .navbar a {
+    display: block;
+    text-decoration: none;
+    color: #dbdada; 
+    padding: 0;
+    margin: 0px 0px 40px 0px;
+    font-size: 2.2rem;
+    font-weight: 400;
+}
+.navbar.open {
+    left: 0; 
+}
+/*.navbar a {
     text-decoration: none;
     color: var(--text-color);
     font-size: var(--p-font);
     font-weight: 500;
     margin-right: 20px;
     transition: all .50s ease;
-}
+}*/
 .navbar a:hover{
-    color: #2686f5;
+    color: var(--main-color);
 }
 
 .h-right {
