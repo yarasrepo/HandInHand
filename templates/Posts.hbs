@@ -23,7 +23,9 @@
         </ul>
         <div class="h-right">
             {{#if isOrganization }}
-            <a href="/job_submission_form" class="post-button">Post an Opportunity</a>
+            <a href="/job_submission_form">
+                <button class="post-button">Post an Opportunity</button>
+            </a>
             {{/if}}
             {{#if signedIn}}
             <a href="/logout">Logout</a>
@@ -39,7 +41,6 @@
         <button class="search-button">Search</button>
     </div>
 
-    <div class="container">
         <main class="main-content">
             <section class="opportunities-page" id="opportunitiesPage">
 
@@ -61,7 +62,6 @@
                         <p>{{this.description}}</p>
                         <p>{{this.startDate}}</p>
 
-
                         {{#if this.openPositions}}
                         <span class="seats-left">Seats Left: {{this.openPositions}}</span>
                         {{#unless ../isOrganization }}
@@ -70,7 +70,6 @@
                         {{else}}
                         <p class="seats-left">No seats left</p>
                         {{/if}}
-
 
                         <div class="more-details" style="display: none;">
                             <p><strong>Location:</strong> {{this.location}}</p>
@@ -85,50 +84,171 @@
             </section>
         </main>
     </div>
-
     <script>
-        const header = document.querySelector("header");
-        window.addEventListener("scroll", function () {
-            header.classList.toggle("sticky", window.scrollY > 60)
-        });
+            const header = document.querySelector("header");
+            window.addEventListener("scroll", function () {
+                header.classList.toggle("sticky", window.scrollY > 60)
+            });
 
-        let menu = document.querySelector('#menu-icon');
-        let navbar = document.querySelector('.navbar');
+            let menu = document.querySelector('#menu-icon');
+            let navbar = document.querySelector('.navbar');
 
-        menu.onclick = () => {
-            menu.classList.toggle('bx-x');
-            navbar.classList.toggle('open');
-        };
+            menu.onclick = () => {
+                menu.classList.toggle('bx-x');
+                navbar.classList.toggle('open');
+            };
 
-        document.addEventListener("DOMContentLoaded", function () {
-            const opportunityCards = document.querySelectorAll(".opportunity-card");
-            opportunityCards.forEach(card => {
-                card.addEventListener("click", function (event) {
-                    if (!event.target.classList.contains("book-button")) {
-                        const moreDetails = this.querySelector(".more-details");
-                        moreDetails.style.display = moreDetails.style.display === "none" ? "block" : "none";
+            document.addEventListener("DOMContentLoaded", function () {
+                const opportunityCards = document.querySelectorAll(".opportunity-card");
+                opportunityCards.forEach(card => {
+                    card.addEventListener("click", function (event) {
+                        if (!event.target.classList.contains("book-button")) {
+                            const moreDetails = this.querySelector(".more-details");
+                            moreDetails.style.display = moreDetails.style.display === "none" ? "block" : "none";
+                        }
+                    });
+                });
+            });
+
+
+            const searchInput = document.getElementById("searchInput");
+            searchInput.addEventListener("input", function () {
+                const searchText = searchInput.value.toLowerCase();
+                const opportunityCards = document.querySelectorAll(".opportunity-card");
+                opportunityCards.forEach(card => {
+                    const title = card.querySelector("h3").textContent.toLowerCase();
+                    const description = card.querySelector("p").textContent.toLowerCase();
+                    const moreDetailsContent = card.querySelector(".more-details").textContent.toLowerCase();
+                    if (title.includes(searchText) || description.includes(searchText) || moreDetailsContent.includes(searchText)) {
+                        card.style.display = "block";
+                    } else {
+                        card.style.display = "none";
                     }
                 });
             });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const sortByStartDateClosestBtn = document.getElementById("sortByStartDateClosest");
+            const sortByStartDateFarthestBtn = document.getElementById("sortByStartDateFarthest");
+            const sortByStartTimeIncreasingBtn = document.getElementById("sortByStartTimeIncreasing");
+            const sortByStartTimeDecreasingBtn = document.getElementById("sortByStartTimeDecreasing");
+
+            sortByStartDateClosestBtn.addEventListener("click", function () {
+                sortOpportunitiesByStartDateClosest();
+            });
+
+            sortByStartDateFarthestBtn.addEventListener("click", function () {
+                sortOpportunitiesByStartDateFarthest();
+            });
+
+            sortByStartTimeIncreasingBtn.addEventListener("click", function () {
+                sortOpportunitiesByStartTimeIncreasing();
+            });
+
+            sortByStartTimeDecreasingBtn.addEventListener("click", function () {
+                sortOpportunitiesByStartTimeDecreasing();
+            });
         });
 
+        function sortOpportunitiesByStartDateClosest() {
+            const opportunityCardsContainer = document.querySelector(".opportunities-page");
+            const opportunityCards = Array.from(opportunityCardsContainer.querySelectorAll(".opportunity-card"));
 
-        const searchInput = document.getElementById("searchInput");
-        searchInput.addEventListener("input", function () {
-            const searchText = searchInput.value.toLowerCase();
-            const opportunityCards = document.querySelectorAll(".opportunity-card");
+            opportunityCards.sort((a, b) => {
+                const startDateA = new Date(a.querySelector("p").textContent);
+                const startDateB = new Date(b.querySelector("p").textContent);
+                return startDateA - startDateB;
+            });
+
             opportunityCards.forEach(card => {
-                const title = card.querySelector("h3").textContent.toLowerCase();
-                const description = card.querySelector("p").textContent.toLowerCase();
-                const moreDetailsContent = card.querySelector(".more-details").textContent.toLowerCase();
-                if (title.includes(searchText) || description.includes(searchText) || moreDetailsContent.includes(searchText)) {
+                opportunityCardsContainer.appendChild(card);
+            });
+        }
+
+        function sortOpportunitiesByStartDateFarthest() {
+            const opportunityCardsContainer = document.querySelector(".opportunities-page");
+            const opportunityCards = Array.from(opportunityCardsContainer.querySelectorAll(".opportunity-card"));
+
+            opportunityCards.sort((a, b) => {
+                const startDateA = new Date(a.querySelector("p").textContent);
+                const startDateB = new Date(b.querySelector("p").textContent);
+                return startDateB - startDateA;
+            });
+
+            opportunityCards.forEach(card => {
+                opportunityCardsContainer.appendChild(card);
+            });
+        }
+
+        function sortOpportunitiesByStartTimeIncreasing() {
+            const opportunityCardsContainer = document.querySelector(".opportunities-page");
+            const opportunityCards = Array.from(opportunityCardsContainer.querySelectorAll(".opportunity-card"));
+
+            opportunityCards.sort((a, b) => {
+                const startTimeA = parseInt(a.querySelector("span.seats-left").textContent.split(": ")[1]);
+                const startTimeB = parseInt(b.querySelector("span.seats-left").textContent.split(": ")[1]);
+                return startTimeA - startTimeB;
+            });
+
+            opportunityCards.forEach(card => {
+                opportunityCardsContainer.appendChild(card);
+            });
+        }
+
+        function sortOpportunitiesByStartTimeDecreasing() {
+            const opportunityCardsContainer = document.querySelector(".opportunities-page");
+            const opportunityCards = Array.from(opportunityCardsContainer.querySelectorAll(".opportunity-card"));
+
+            opportunityCards.sort((a, b) => {
+                const startTimeA = parseInt(a.querySelector("span.seats-left").textContent.split(": ")[1]);
+                const startTimeB = parseInt(b.querySelector("span.seats-left").textContent.split(": ")[1]);
+                return startTimeB - startTimeA;
+            });
+
+            opportunityCards.forEach(card => {
+                opportunityCardsContainer.appendChild(card);
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const filterCheckboxes = document.querySelectorAll('.filter-category input[type="checkbox"]');
+            filterCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', applyFilters);
+            });
+        });
+
+        function applyFilters() {
+            const selectedFilters = getSelectedFilters();
+            const opportunityCards = document.querySelectorAll(".opportunity-card");
+
+            opportunityCards.forEach(card => {
+                const filtersMatched = selectedFilters.every(filter => {
+                    return cardMatchesFilter(card, filter);
+                });
+
+                if (filtersMatched) {
                     card.style.display = "block";
                 } else {
                     card.style.display = "none";
                 }
             });
-        });
+        }
+
+        function getSelectedFilters() {
+            const filterCheckboxes = document.querySelectorAll('.filter-category input[type="checkbox"]:checked');
+            const selectedFilters = Array.from(filterCheckboxes).map(checkbox => checkbox.id);
+            return selectedFilters;
+        }
+
+        function cardMatchesFilter(card, filter) {
+            // Check if any part of the card content matches the filter
+            const title = card.querySelector("h3").textContent.toLowerCase();
+            const description = card.querySelector("p").textContent.toLowerCase();
+            const moreDetailsContent = card.querySelector(".more-details").textContent.toLowerCase();
+
+            return title.includes(filter) || description.includes(filter) || moreDetailsContent.includes(filter);
+        }
+
     </script>
 </body>
-
 </html>

@@ -364,3 +364,33 @@ header {
         display: block;
     }
 }
+
+/* Add this media query for smaller screens */
+@media screen and (max-width: 480px) {
+    .opportunity-card {
+        flex-direction: column;
+    }
+
+    .opportunity-image {
+        width: 100%; 
+        margin-right: 0; 
+        margin-bottom: 10px; /* Add some space between image and details */
+    }
+
+    .opportunity-details {
+        width: 100%; /* Take full width */
+    }
+
+    .book-button {
+        position: relative; /* Remove absolute positioning */
+        bottom: auto; 
+        right: auto;
+        width: 100%; /* Take full width */
+        text-align: center; /* Center align the button */
+        margin-top: 10px; /* Add some space between button and other elements */
+    }
+
+    .search-bar {
+        background-color: #f0f0f0; /* Fix typo in color value */
+    }
+}
