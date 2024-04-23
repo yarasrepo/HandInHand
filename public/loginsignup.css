@@ -141,9 +141,10 @@
     /* CSS Styles for radio buttons */
     .input-field label {
         margin-right: 10px;
-        display: inline-block;
+        display: block;
         font-size: 16px;
         color: #333; /* Example label color */
+        margin-bottom: 5px;
     }
 
     .input-field input[type="radio"] {
