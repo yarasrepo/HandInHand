@@ -150,10 +150,23 @@ form p a {
 }
 
 @media screen and (max-width: 768px) {
-    .input-field input[type="radio"] {
-        display: block;
-        /* Display radio buttons as block elements */
-        /* margin-bottom: 10px; Add vertical space between radio buttons */
+    /* Specific styles for radio buttons on mobile */
+    .input-field {
+        display: block; /* Display input field as block on mobile */
+    }
+
+    /* Target the "Volunteer" and "Organization" radio buttons */
+    .input-field input[type="radio"]#volunteer,
+    .input-field input[type="radio"]#organization {
+        display: block; /* Display radio buttons as block on mobile */
+        margin: 5px 0; /* Add space above and below radio buttons on mobile */
+    }
+
+    /* Additional styles for labels */
+    .input-field label#volunteer,
+    .input-field label#organization {
+        margin-bottom: 5px; /* Add space below labels on mobile */
+        display: block; /* Display labels as block on mobile */
     }
 }
 
