@@ -150,20 +150,10 @@ form p a {
 }
 
 @media screen and (max-width: 768px) {
-    /* Specific styles for radio buttons on mobile */
-    .input-field {
-        display: block; /* Display input field as block on mobile */
-    }
-
-    .input-field label {
-        margin-bottom: 5px; /* Add space below labels on mobile */
-        display: block; /* Display labels as block on mobile */
-    }
-
     .input-field input[type="radio"] {
-        display: block; /* Display radio buttons as block on mobile */
-        margin-top: 5px; /* Add space above radio buttons on mobile */
-        margin-bottom: 10px; /* Add space below radio buttons on mobile */
+        display: block;
+        /* Display radio buttons as block elements */
+        /* margin-bottom: 10px; Add vertical space between radio buttons */
     }
 }
 
