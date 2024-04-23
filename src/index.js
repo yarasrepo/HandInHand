@@ -10,8 +10,8 @@ const hbs = require("hbs")
 const bcrypt = require('bcrypt');
 const helpers = require("handlebars-helpers")();
 hbs.registerHelper(helpers);
-const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, FeedbackCollection } = require("./mongodb");
-//  connectDB();
+const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, FeedbackCollection, connectDB } = require("./mongodb");
+ connectDB();
 // connectDB in list
 const port = process.env.PORT || 3000
 app.use(express.json())
@@ -1359,8 +1359,8 @@ app.get('/vieworgprofile', async (req, res) => {
 });
 
 
-// const PORT = process.env.PORT
-const PORT = 3000;
+const PORT = process.env.PORT
+// const PORT = 3000;
 app.listen(PORT, () => {
     console.log('Server is running on port ' + PORT);
 })
