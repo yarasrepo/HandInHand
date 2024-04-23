@@ -10,8 +10,8 @@ const hbs = require("hbs")
 const bcrypt = require('bcrypt');
 const helpers = require("handlebars-helpers")();
 hbs.registerHelper(helpers);
-const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, FeedbackCollection, connectDB} = require("./mongodb");
- connectDB();
+const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, FeedbackCollection } = require("./mongodb");
+//  connectDB();
 // connectDB in list
 const port = process.env.PORT || 3000
 app.use(express.json())
@@ -34,7 +34,7 @@ app.use(session({
 
 
 function sessionChecker(req, res, next) {
-    if(req.session && req.session.user) {
+    if (req.session && req.session.user) {
         next();
     } else {
         res.redirect('/login');
@@ -91,7 +91,7 @@ const sendVerificationEmail = async (email, verificationToken) => {
         subject: 'Email Verification',
         html: `<p>Click <a href="https://handinhand-do3j.onrender.com/verify-email?token=${verificationToken}">here</a> to verify your email address.</p>` // Removed target="_blank"
     };
-// https://handinhand-o60q.onrender.com/
+    // https://handinhand-o60q.onrender.com/
     try {
         await transporter.sendMail(mailOptions);
         console.log('Verification email sent');
@@ -153,7 +153,7 @@ app.post('/signup', async (req, res) => {
     try {
         const existingUser = await LogInCollection.findOne({ email: req.body.email });
         if (existingUser) {
-            res.send("User details already exist");
+            res.redirect('/userdetailsexist');
             return;
         }
 
@@ -171,22 +171,22 @@ app.post('/signup', async (req, res) => {
             const org = await ReqCollection.findOne({ email: req.body.email });
             if (org && org.flag === false) {
                 if (org.deniedCount == 3) {
-                    res.send("Your application request has been denied three times! You cannot create an account with this email.");
+                    res.redirect('/orgrequest-denied');
                     return;
                 }
                 else if (org.reqCount == org.deniedCount) {
-                    res.send("Request pending approval");
+                    res.redirect('/orgrequest-pending');
                     return;
                 } else {
                     org.reqCount += 1;
                     await org.save();
-                    res.send("Request submitted successfully");
+                    res.redirect('/orgrequest-sent');
                     return;
                 }
             }
             else if (!org) {
                 await ReqCollection.create(data);
-                res.send("Request submitted successfully");
+                res.redirect('/orgrequest-sent');
                 return;
             }
         }
@@ -225,10 +225,29 @@ app.post('/signup', async (req, res) => {
 });
 
 
+app.get('/orgrequest-sent', (req, res) => {
+    res.render('orgrequest-sent');
+})
 
+app.get('/orgrequest-pending', (req, res) => {
+    res.render('orgrequest-pending');
+})
 
+app.get('/orgrequest-denied', (req, res) => {
+    res.render('orgrequest-denied');
+})
 
+app.get('/userdetailsexist', (req, res) => {
+    res.render('userdetailsexist');
+})
 
+app.get('/acctempbanned', (req, res) => {
+    res.render('acctempbanned');
+})
+
+app.get('/incorrectuserorpass', (req, res) => {
+    res.render('incorrectuserorpass');
+})
 
 app.get('/login', (req, res) => {
     res.render('login')
@@ -238,11 +257,11 @@ app.get('/login', (req, res) => {
 app.post('/login', async (req, res) => {
     try {
         const user = await LogInCollection.findOne({ name: req.body.name });
-// if (user && (req.body.password == user.password)){
-        if (user && (await bcrypt.compare(req.body.password, user.password))) { 
+        // if (user && (req.body.password == user.password)){
+        if (user && (await bcrypt.compare(req.body.password, user.password))) {
             const userProfile = await userProfCollection.findOne({ name: req.body.name });
             if (userProfile && userProfile.reports >= 5) {
-                res.send("Your account is temporarily banned");
+                res.redirect('/acctempbanned');
                 return;
             }
             req.session.user = {
@@ -255,7 +274,7 @@ app.post('/login', async (req, res) => {
                 res.redirect('/');
             }
         } else {
-            res.send("Incorrect username or password");
+            res.redirect('/incorrectuserorpass');
         }
     } catch (error) {
         console.error("Error during login:", error);
@@ -300,7 +319,7 @@ app.get('/checkout', async (req, res) => {
     try {
         const jobId = req.query.jobId;
         const job = await JobCollection.findById(jobId);
-
+        console.log(job);
         const signedIn = !!req.session.user;
         let userRole;
         let profileLink;
@@ -314,7 +333,7 @@ app.get('/checkout', async (req, res) => {
                 profileLink = '/orgprofile';
                 isOrganization = true;
             }
-        }else{
+        } else {
             res.redirect('/signup');
         }
 
@@ -401,11 +420,11 @@ app.post('/job_submission_form', sessionChecker, async (req, res) => {
     try {
         const { jobName, description, openPositions, location, startDate, requiredHours, requiredSkills, imageLink } = req.body;
 
-        if(!jobName || !description || !openPositions || !location || !startDate || !requiredHours || !requiredSkills) {
+        if (!jobName || !description || !openPositions || !location || !startDate || !requiredHours || !requiredSkills) {
             return res.status(400).send('All fields are required');
         }
-       const organizationName = req.session.user.name;
-        
+        const organizationName = req.session.user.name;
+
 
         // Ensure that the session contains user information before proceeding
 
@@ -500,14 +519,14 @@ app.get('/home', (req, res) => {
 
 const sendPasswordResetEmail = async (email, resetLink) => {
     const mailOptions = {
-        from: process.env.EMAIL_ADDRESS, 
-        to: email, 
-        subject: 'Password Reset', 
+        from: process.env.EMAIL_ADDRESS,
+        to: email,
+        subject: 'Password Reset',
         html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>`
     };
 
     try {
-        await transporter.sendMail(mailOptions); 
+        await transporter.sendMail(mailOptions);
         console.log('Password reset email sent');
     } catch (error) {
         console.error('Error sending password reset email:', error);
@@ -518,6 +537,9 @@ app.get('/forgot-password', (req, res) => {
     res.render('forgot-password');
 });
 
+app.get('/usernotreg', (req,res)=>{
+    res.render('usernotreg');
+})
 
 app.post('/forgot-password', async (req, res) => {
     const { email } = req.body;
@@ -526,7 +548,7 @@ app.post('/forgot-password', async (req, res) => {
         const user = await LogInCollection.findOne({ email });
 
         if (!user) {
-            return res.send('User not registered');
+            return res.redirect('/usernotreg');
         }
 
         const resetToken = jwt.sign({ userId: user._id, email }, process.env.JWT_SECRET, { expiresIn: '10m' });
@@ -534,7 +556,7 @@ app.post('/forgot-password', async (req, res) => {
         // change after hosting the website
         const resetLink = `https://handinhand-do3j.onrender.com/reset-password?token=${resetToken}&email=${email}`;
 
-        await sendPasswordResetEmail(email, resetLink); 
+        await sendPasswordResetEmail(email, resetLink);
 
         res.redirect('/email_sent');
     } catch (error) {
@@ -1209,7 +1231,7 @@ app.post('/ignorereport', async (req, res) => {
         }
 
         // Increment the reports attribute by one for the participant
-        participantUser.reports =0;
+        participantUser.reports = 0;
 
         // Save the updated participant data back to the database
         await participantUser.save();
@@ -1326,7 +1348,7 @@ app.get('/vieworgprofile', async (req, res) => {
     try {
         // Find the user profile using the creator name
         const userProf = await userProfCollection.findOne({ name: creatorName });
-        const jobs= await JobCollection.find({creator: req.query.creator});
+        const jobs = await JobCollection.find({ creator: req.query.creator });
 
         // Render the view with the user profile data
         res.render('vieworgprofile', { userProf, jobs });
@@ -1337,8 +1359,8 @@ app.get('/vieworgprofile', async (req, res) => {
 });
 
 
-const PORT = process.env.PORT
-// const PORT = 3000;
+// const PORT = process.env.PORT
+const PORT = 3000;
 app.listen(PORT, () => {
     console.log('Server is running on port ' + PORT);
 })

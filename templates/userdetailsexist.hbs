@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email Sent Successfully</title>
+    <title>User Details Exist</title>
     <link rel="stylesheet" href="Reset-Pass.css">
     <link rel="icon" type="image/png" href="https://i.imgur.com/MoSHBZX.png">
 </head>
@@ -19,8 +19,12 @@
             <img src="https://i.imgur.com/MoSHBZX.png" class="logo" alt="HandinHand">
         </a>
         <div class="form-box">
-            <h1>Email Sent Successfully</h1>
-            <p>Your request has been processed successfully. Please check your email for further instructions.</p>
+            <h1>User Details Exist</h1>
+            <p>An account with these user details already exists. Please log in or sign up with another account.</p>
+            <div class="btn-field">
+                <button type="button" id="signupBtn" onclick="window.location.href='/signup'">Sign up</button>
+                <button type="button" id="loginBtn" onclick="window.location.href='/login'">Log in</button>
+            </div>
         </div>
     </div>
 </body>

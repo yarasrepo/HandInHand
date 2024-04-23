@@ -141,7 +141,6 @@ header {
 .navbar a:hover{
     color: var(--main-color);
 }
-
 .h-right {
     display: flex;
     align-items: center;
@@ -379,6 +378,11 @@ header {
 
     .navbar li {
         list-style-type: none;
+    }
+    
+    
+    .navbar.open{
+        left: 0;
     }
 
     .navbar a {
