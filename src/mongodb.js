@@ -1,37 +1,29 @@
 const mongoose = require("mongoose")
 
-mongoose.connect("mongodb://localhost:27017/HandInHand")
-    .then(() => {
-        console.log("mongodb connected");
-    })
-    .catch(() => {
-        console.log("failed to connect");
-    })
+// mongoose.connect("mongodb://localhost:27017/HandInHand")
+//     .then(() => {
+//         console.log("mongodb connected");
+//     })
+//     .catch(() => {
+//         console.log("failed to connect");
+//     })
 
-// console.log('test');
-//     const connectDB = async () => {
-//         try {
-//             await mongoose.connect(MONGODB_CONNECT_URI = "mongodb+srv://Stale:rW9dLPcz90M7aio8@handinhandcluster.yqdkk26.mongodb.net/HandInHandCluster?retryWrites=true&w=majority&appName=HandInHandCluster")
-//             console.log("Connect to MongoDB successfully")
-//         } catch (error) {
-//             console.log("connect failed" + error.message)
-//         }
-//     }
-// console.log('test');
-//     const connectDB = async () => {
-//         try {
-//             await mongoose.connect(MONGODB_CONNECT_URI = "mongodb+srv://Stale:rW9dLPcz90M7aio8@handinhandcluster.yqdkk26.mongodb.net/HandInHandCluster?retryWrites=true&w=majority&appName=HandInHandCluster")
-//             console.log("Connect to MongoDB successfully")
-//         } catch (error) {
-//             console.log("connect failed" + error.message)
-//         }
-//     }
+console.log('test');
+    const connectDB = async () => {
+        try {
+            await mongoose.connect(MONGODB_CONNECT_URI = "mongodb+srv://Stale:rW9dLPcz90M7aio8@handinhandcluster.yqdkk26.mongodb.net/HandInHandCluster?retryWrites=true&w=majority&appName=HandInHandCluster");
+            console.log("Connect to MongoDB successfully")
+        } catch (error) {
+            console.log("connect failed" + error.message)
+        }
+    }
 
 const LogInSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        maxlength: 15,
     },
     firstName: {
         type: String
@@ -82,12 +74,14 @@ const userProfile = new mongoose.Schema({
     },
     Description: {
         type: String,
+        maxlength: 500,
     },
     PhoneNum: {
         type: Number,
     },
     Location: {
         type: String,
+        maxlength: 100,
     },
     ProfilePic: {
         type: String, // Corrected to directly specify String as the type
@@ -113,6 +107,7 @@ const userProfile = new mongoose.Schema({
     images:
     {
         type: [String],
+        maxlength: 1000
     },
     reports: {
         type: Number,
@@ -125,11 +120,13 @@ const userProfCollection = mongoose.model("userProfCollection", userProfile)
 const jobSchema = new mongoose.Schema({
     title: {
         type: String,
-        required: true
+        required: true,
+        maxlength: 100,
     },
     description: {
         type: String,
-        required: true
+        required: true,
+        maxlength: 500,
     },
     openPositions: {
         type: Number,
@@ -137,7 +134,8 @@ const jobSchema = new mongoose.Schema({
     },
     location: {
         type: String,
-        required: true
+        required: true,
+        maxlength: 100,
     },
     startDate: {
         type: String,
@@ -154,7 +152,7 @@ const jobSchema = new mongoose.Schema({
     imageLink: {
         type: String,
         ref: 'userProfileCollection',
-        maxlength: 1000
+        maxlength: 1000,
     },
     creator: {
         type: String,
@@ -183,7 +181,8 @@ const JobCollection = mongoose.model("JobCollection", jobSchema)
 const reqOrg = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        maxlength: 15,
     },
     email: {
         type: String,
@@ -195,6 +194,7 @@ const reqOrg = new mongoose.Schema({
     },
     Location: {
         type: String,
+        maxlength: 1000,
     },
     DateReq: {
         type: Date,
@@ -202,7 +202,7 @@ const reqOrg = new mongoose.Schema({
     },
     ProfilePic: {
         type: String, // Corrected to directly specify String as the type
-        maxlength: 1000 // Assuming you store the file path or URL
+        maxlength: 1000,
     },
     flag: {
         type: Boolean,
@@ -247,6 +247,7 @@ const reqBook = new mongoose.Schema({
     },
     Location: {
         type: String,
+        maxlength: 1000,
     },
     DateReq: {
         type: Date,
@@ -268,7 +269,8 @@ const ReqBookCollection = mongoose.model("ReqBookCollection", reqBook)
 const FbSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        maxlength: 15,
     },
     email: {
         type: String,
@@ -280,6 +282,7 @@ const FbSchema = new mongoose.Schema({
     },
     feedbackMessage: {
         type: String,
+        maxlength: 250,
     },
     feedbackEmoji: {
         type: Number,
@@ -294,7 +297,7 @@ const FbSchema = new mongoose.Schema({
 const FeedbackCollection = mongoose.model("FeedbackCollection", FbSchema)
 
 module.exports = {
-   // connectDB,
+    connectDB,
     collection,
     userProfCollection,
     JobCollection,
