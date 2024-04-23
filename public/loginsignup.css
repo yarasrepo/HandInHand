@@ -136,12 +136,14 @@ form p a{
 .input-field label {
     margin-right: 10px;
     display: inline-block;
-    font-size: 16px; /* Add space between labels and radio buttons */
+    font-size: 16px; 
 }
 
-.input-field input[type="radio"] {
-    vertical-align: middle; /* Align radio buttons vertically */
-    margin-right: 5px; /* Add space between radio buttons */
+@media screen and (max-width: 768px) {
+    .input-field input[type="radio"] {
+        display: block; /* Display radio buttons as block elements */
+        /* margin-bottom: 10px; Add vertical space between radio buttons */
+    }
 }
 
 /* Example styling for labels */
