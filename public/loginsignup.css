@@ -143,13 +143,14 @@
         margin-right: 10px;
         display: inline-block;
         font-size: 16px;
-        /* Add space between labels and radio buttons */
+        color: #333; /* Example label color */
     }
 
     .input-field input[type="radio"] {
-        display: block;
-        /* Display radio buttons as block elements */
-        /* margin-bottom: 10px; Add vertical space between radio buttons */
+        /* Styles for radio buttons */
+        display: inline-block; /* Display radio buttons inline */
+        margin-right: 5px; /* Add space between radio buttons and labels */
+        vertical-align: middle; /* Align radio buttons vertically with labels */
     }
 
 
