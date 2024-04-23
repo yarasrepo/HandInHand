@@ -10,8 +10,8 @@ const hbs = require("hbs")
 const bcrypt = require('bcrypt');
 const helpers = require("handlebars-helpers")();
 hbs.registerHelper(helpers);
-const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, FeedbackCollection} = require("./mongodb");
-// connectDB();
+const { collection: LogInCollection, userProfCollection, JobCollection, ReqCollection, FeedbackCollection, connectDB} = require("./mongodb");
+ connectDB();
 // connectDB in list
 const port = process.env.PORT || 3000
 app.use(express.json())
@@ -40,6 +40,9 @@ function sessionChecker(req, res, next) {
         res.redirect('/login');
     }
 }
+
+
+
 
 
 app.get('/signup', (req, res) => {
@@ -86,7 +89,7 @@ const sendVerificationEmail = async (email, verificationToken) => {
         from: process.env.EMAIL_ADDRESS,
         to: email,
         subject: 'Email Verification',
-        html: `<p>Click <a href="http://localhost:3000/verify-email?token=${verificationToken}">here</a> to verify your email address.</p>` // Removed target="_blank"
+        html: `<p>Click <a href="https://handinhand-do3j.onrender.com/verify-email?token=${verificationToken}">here</a> to verify your email address.</p>` // Removed target="_blank"
     };
 // https://handinhand-o60q.onrender.com/
     try {
@@ -235,7 +238,7 @@ app.get('/login', (req, res) => {
 app.post('/login', async (req, res) => {
     try {
         const user = await LogInCollection.findOne({ name: req.body.name });
-
+// if (user && (req.body.password == user.password)){
         if (user && (await bcrypt.compare(req.body.password, user.password))) { 
             const userProfile = await userProfCollection.findOne({ name: req.body.name });
             if (userProfile && userProfile.reports >= 5) {
@@ -529,7 +532,7 @@ app.post('/forgot-password', async (req, res) => {
         const resetToken = jwt.sign({ userId: user._id, email }, process.env.JWT_SECRET, { expiresIn: '10m' });
 
         // change after hosting the website
-        const resetLink = `http://localhost:3000/reset-password?token=${resetToken}&email=${email}`;
+        const resetLink = `https://handinhand-do3j.onrender.com/reset-password?token=${resetToken}&email=${email}`;
 
         await sendPasswordResetEmail(email, resetLink); 
 
@@ -597,8 +600,9 @@ app.post('/reset-password', async (req, res) => {
             return res.status(404).send('User not found');
         }
 
+        const hashedPassword = await bcrypt.hash(password, 10);
         // Update user's password
-        user.password = password;
+        user.password = hashedPassword;
         await user.save();
 
         return res.redirect('/login');
@@ -1290,8 +1294,22 @@ app.get('/reports_admin', async (req, res) => {
 
 app.get('/org-list', async (req, res) => {
     try {
+        const signedIn = !!req.session.user;
+        let userRole;
+        let profileLink;
+        let isOrganization;
+        if (signedIn) {
+            userRole = req.session.user.role;
+            if (userRole === 'volunteer') {
+                isOrganization = false;
+                profileLink = '/userprofile';
+            } else if (userRole === 'organization') {
+                profileLink = '/orgprofile';
+                isOrganization = true;
+            }
+        }
         const orgs = await userProfCollection.find({ role: 'organization' });
-        res.render('org-list', { orgs }); // Corrected syntax
+        res.render('org-list', { orgs, profileLink, isOrganization, userRole, signedIn }); // Corrected syntax
     } catch (err) {
         // Handle errors appropriately
         console.error(err);
@@ -1319,8 +1337,8 @@ app.get('/vieworgprofile', async (req, res) => {
 });
 
 
-// const PORT = process.env.PORT
-const PORT = 3000;
+const PORT = process.env.PORT
+// const PORT = 3000;
 app.listen(PORT, () => {
     console.log('Server is running on port ' + PORT);
 })
