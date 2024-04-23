@@ -5,6 +5,7 @@
     <meta charset="UFT-8">
     <meta name="viewport" content="width=device-width" , initial-scale="1.0">
     <link rel="shortcut icon" type="x-icon" href="logonowords.png">
+     <link rel="shortcut icon" type="x-icon" href="https://i.imgur.com/MoSHBZX.png">
     <title>user profile</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -23,8 +24,8 @@
         </div>
 
         <div class="user">
-        {{!-- <img src="http://localhost:3000{{userProf.ProfilePic}}" id="profilePic" alt="Profile Picture"> --}}
-        <img src="{{userProf.ProfilePic}}" id="profilePic" alt="Profile Picture">
+            {{!-- <img src="http://localhost:3000{{userProf.ProfilePic}}" id="profilePic" alt="Profile Picture"> --}}
+            <img src="{{userProf.ProfilePic}}" id="profilePic" alt="Profile Picture">
 
 
             <h3 class="name">{{ userProf.name }}</h3>
@@ -34,9 +35,12 @@
         <nav class="navbar">
             <ul>
                 <li><a href="#About">About</a></li>
+                <li><a href="#current">Current Opportunities</a></li>
                 <li><a href="#prevvolunteer">Previous Volunteering Experience</a></li>
                 <li><a href="#contact">Contact</a></li>
                 <li><a href="/editable">Edit</a></li>
+                <li><a href="#" onclick="window.history.back();" class="back-button">Back</a></li>
+
 
             </ul>
         </nav>
@@ -51,7 +55,7 @@
         <h1>I'm <span>{{userProf.name}}</span></h1>
         <p>{{userProf.Description}}</p>
         <p>I have completed {{userProf.HoursVolunteered}} volunteering hours</p>
-        <a href="#prevvolunteer"><button class="btn">Previous Volunteering Experience <i
+        <a href="#current"><button class="btn">Current Volunteering Opportunities <i
                     class="fa-solid fa-hand-holding-hand"></i></button></a>
 
     </section>
@@ -59,10 +63,43 @@
     <!-- abt section ends -->
 
     <!-- prev vol exps starts -->
+    <section class="current" id="current">
+        <h1 class="heading"><span>Current</span> Opportunities</h1>
+        <div id="currentOpps"></div>
+        <div class="box-container">
+            {{#each jobs}}
+            {{#if (eq this.completed false)}}
+            <div class="box">
+                <i class="fa-solid fa-calendar-week"></i>
+                <span>{{this.startDate}}</span>
+                <h3>{{this.title}}</h3>
+                <p>{{this.description}}</p>
+            </div>
+            {{/if}}
+            {{/each}}
+        </div>
+    </section>
 
-    <section class="prevvolunteer" id="prevvolunteer">
+    <section class="current" id="prevvolunteer">
+        <h1 class="heading"><span>Previous</span> Opportunities</h1>
+        <div id="currentOpps"></div>
+        <div class="box-container">
+            {{#each jobs}}
+            {{#if (eq this.completed true)}}
+            <div class="box">
+                <i class="fa-solid fa-calendar-week"></i>
+                <span>{{this.startDate}}</span>
+                <h3>{{this.title}}</h3>
+                <p>{{this.description}}</p>
+            </div>
+            {{/if}}
+            {{/each}}
+        </div>
+    </section>
+
+    {{!-- <section class="prevvolunteer" id="prevvolunteer">
         <h1 class="heading"><span>Previous </span>Volunteering Experience</h1>
-        <div id="userPrevVolExp"></div>
+        <div id="userPrevVolExp"></div> --}}
 
         <!--     <div class="box-container">
 
@@ -74,99 +111,76 @@
             <p>20 hours</p>
         </div>
 
-        <div class="box">
-            <i class="fa-solid fa-person-cane"></i>
-            <span>Jul 2023 - Aug 2023</span>
-            <h3>Retirement Home</h3>
-            <p>Helped elderly people perform day-to-day activities</p>
-            <p>60 hours</p>
-        </div>
-
-        <div class="box">
-            <i class="fa-solid fa-tree"></i>
-            <span>Jun 2022 - Jul 2022</span>
-            <h3>Community Tree Planting</h3>
-            <p>Planted multiple trees around the neighborhood</p>
-            <p>10 hours</p>
-        </div>
-
-        <div class="box">
-            <i class="fa-solid fa-socks"></i>
-            <span>Jan 2022 - Feb 2022</span>
-            <h3>Clothing Drive</h3>
-            <p>Collected clothing donations for the poor and homeless</p>
-            <p>25 hours</p>
-        </div> -->
-        <!--     </div> -->
 
     </section>
 
     <!-- prev vol exps ends -->
 
-    <!-- contact start -->
+        <!-- contact start -->
 
-    <section class="contact" id="contact">
+        <section class="contact" id="contact">
 
-        <h1 class="heading"> my <span>contact</span> info </h1>
-        <div id="userContactInfo"></div>
-        <div class="row">
-            <div class="content">
-                <h3 class="title">contact info</h3>
-                <div class="info">
-                    <h3> <i class="fas fa-envelope"></i> {{userProf.email}}</h3>
-                    <h3><i class="fas fa-phone"></i> {{userProf.PhoneNum}}</h3>
-                    <h3><i class="fas fa-map-marker-alt"></i> {{userProf.Location}} </h3>
+            <h1 class="heading"> my <span>contact</span> info </h1>
+            <div id="userContactInfo"></div>
+            <div class="row">
+                <div class="content">
+                    <h3 class="title">contact info</h3>
+                    <div class="info">
+                        <h3> <i class="fas fa-envelope"></i> {{userProf.email}}</h3>
+                        <h3><i class="fas fa-phone"></i> {{userProf.PhoneNum}}</h3>
+                        <h3><i class="fas fa-map-marker-alt"></i> {{userProf.Location}} </h3>
 
+                    </div>
                 </div>
             </div>
-        </div>
 
-    </section>
+        </section>
 
-    <!-- contact end -->
+        <!-- contact end -->
 
-    <!-- scroll top -->
-    <a href="About" class="top"></a>
+        <!-- scroll top -->
+        <a href="About" class="top"></a>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-    <script>
-        $(document).ready(function () {
-            $('#menu').click(function () {
-                $(this).toggleClass('fa-times');
-                $('header').toggleClass('toggle');
+        <script>
+            $(document).ready(function () {
+                $('#menu').click(function () {
+                    $(this).toggleClass('fa-times');
+                    $('header').toggleClass('toggle');
+                });
+
+                $(window).on('scroll load', function () {
+                    $('#menu').removeClass('fa-times');
+                    $('header').removeClass('toggle');
+
+                    if ($(window).scrollTop() > 0) {
+                        $('.top').show();
+                    } else {
+                        $('.top').hide();
+
+                    }
+                });
+
+                // smooth scrolling
+
+                $('a[href*="#"]').on('click', function (e) {
+
+                    e.preventDefault();
+
+                    $('html, body').animate({
+                        scrollTop: $($(this).attr('href')).offset().top,
+                    },
+                        500,
+                        'linear'
+
+                    );
+
+                });
+
             });
 
-            $(window).on('scroll load', function () {
-                $('#menu').removeClass('fa-times');
-                $('header').removeClass('toggle');
-
-                if ($(window).scrollTop() > 0) {
-                    $('.top').show();
-                } else {
-                    $('.top').hide();
-
-                }
-            });
-
-            // smooth scrolling
-
-            $('a[href*="#"]').on('click', function (e) {
-
-                e.preventDefault();
-
-                $('html, body').animate({
-                    scrollTop: $($(this).attr('href')).offset().top,
-                },
-                    500,
-                    'linear'
-
-                );
-
-            });
-
-        });
-    </script>
+        </script>
 
 </body>
 
