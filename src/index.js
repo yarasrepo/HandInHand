@@ -600,8 +600,9 @@ app.post('/reset-password', async (req, res) => {
             return res.status(404).send('User not found');
         }
 
+        const hashedPassword = await bcrypt.hash(password, 10);
         // Update user's password
-        user.password = password;
+        user.password = hashedPassword;
         await user.save();
 
         return res.redirect('/login');
