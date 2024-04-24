@@ -386,12 +386,24 @@ header.sticky{
     }
     .checkout-form-container {
         order: 2; 
-        margin-right: 0; 
+        flex-basis: 100%; 
+        width: 100%; 
+
     }
 
     .job-details-container {
         order: 1; 
         margin-bottom: 20px;
+        flex-basis: 100%; 
+        width: 100%;   
+    }
+
+    .checkout-button {
+        margin-left: 0;
+        margin-right: 0;
+        width: 100%;
+        max-width: 300px; 
+        margin: 20px auto;
     }
 
 }
@@ -404,5 +416,28 @@ header.sticky{
     }
     section{
         padding: 60px 3% 50px;
+    }
+
+    .checkout-form-container {
+        order: 2; 
+        margin-right: 0; 
+        flex-basis: 100%; 
+        max-width: 100%; 
+    }
+
+    .job-details-container {
+        order: 1; 
+        margin-bottom: 20px;
+        margin-left: 0;
+        flex-basis: 100%; 
+        max-width: 100%;   
+    }
+
+    .checkout-button {
+        margin-left: 0;
+        margin-right: 0;
+        width: 100%;
+        max-width: 300px; 
+        margin: 20px auto;
     }
 }
