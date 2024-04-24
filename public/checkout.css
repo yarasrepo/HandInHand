@@ -387,24 +387,11 @@ header.sticky{
     .checkout-form-container {
         order: 2; 
         margin-right: 0; 
-        flex-basis: 100%; 
-        width: 550px; 
     }
 
     .job-details-container {
         order: 1; 
         margin-bottom: 20px;
-        margin-left: 0;
-        flex-basis: 100%; 
-        width: 550px;   
-    }
-
-    .checkout-button {
-        margin-left: 0;
-        margin-right: 0;
-        width: 100%;
-        max-width: 300px; 
-        margin: 20px auto;
     }
 
 }
