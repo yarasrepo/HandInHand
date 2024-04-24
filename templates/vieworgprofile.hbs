@@ -72,18 +72,17 @@
     </section>
 
     <!--Previous Opportunities design-->
-    <section class="previous" id="previous">
+    <section class="current" id="previous">
         <h1 class="heading"><span>Previous</span> Opportunities</h1>
         <div id="PreviousOpps"></div>
         <div class="box-container">
             {{#each jobs}}
             {{#if (eq this.completed true)}}
             <div class="box">
-                {{#if (eq this.imageLink null)}}
-                <img src="https://www.fivebranches.edu/wp-content/uploads/2021/08/default-image.jpg" alt="">
-                {{else}}
-                <img src="{{this.imageLink}}" alt="">
-                {{/if}}
+                <i class="fa-solid fa-calendar-week"></i>
+                <span>{{this.startDate}}</span>
+                <h3>{{this.title}}</h3>
+                <p>{{this.description}}</p>
             </div>
             {{/if}}
             {{/each}}
