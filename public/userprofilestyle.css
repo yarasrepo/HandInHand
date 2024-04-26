@@ -35,7 +35,7 @@ html{
     overflow-x: hidden;
 }
 
-html::-webkit-scrollbar{
+/*html::-webkit-scrollbar{
     width:1.4rem;
 }
 
@@ -45,7 +45,7 @@ html::-webkit-scrollbar-track{
 
 html::-webkit-scrollbar-track{
     background: var(--blue);
-}
+} */
 
 body{
     background: #fff;
