@@ -96,7 +96,7 @@ section{
     width: 100%;
     /* background-color: #bec0c2; */
     /*background-image: url(https://img.freepik.com/fotos-premium/dando-mano-amiga-manos-hombre-mujer-sobre-fondo-cielo-azul-prestando-mano-amiga-manos-hombre-mujer-acercandose-mutuamente-apoyo-compasion-solidaria-rescate-caritativo_293990-3793.jpg); */
-    background-image: url(https://cdn.poz.com/75560_hands.jpg_514a52b3-627e-4a22-90af-fa505edd64b0.jpeg);
+    background-image: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.3) 50%), url(https://cdn.poz.com/75560_hands.jpg_514a52b3-627e-4a22-90af-fa505edd64b0.jpeg);
     background-size: cover;
     background-position: bottom center;
     display: flex;
@@ -107,21 +107,21 @@ section{
     font-size: var(--h1-font);
     font-weight: 800;
     line-height: 1.2;
-    color:#000000;
-    margin-bottom: 15px;
+    color: #000000;
+    margin-bottom: 20px;
 }
 .home-text p{
     font-size: var(--p-font);
-    font-weight: 400;
+    font-weight: 200;
     line-height: 30px;
-    color: #000;
+    color: #000000;
     margin-bottom: 30px; 
 }
 .btn{
     display: inline-block;
     padding: 13px 40px;
     background: var(--main-color);
-    color: var(--text-color);
+    color: #fff;
     font-size: 15px;
     font-weight: 600;
     border: 2px solid transparent;
