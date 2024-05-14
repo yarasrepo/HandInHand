@@ -1078,6 +1078,15 @@ app.post('/adminacceptrequest', async (req, res) => {
         existingReq.flag = true;
         await existingReq.save(); // Save the updated request
 
+        // Send an email to the user
+        const userEmail = existingReq.email;
+        await transporter.sendMail({
+            from: process.env.EMAIL_ADDRESS,
+            to: userEmail, 
+            subject: 'Your request has been accepted',
+            text: 'Your request has been accepted by the administrator.' 
+        });
+
         res.send('Request accepted successfully'); // Send a success response
     } catch (error) {
         console.error('Error accepting request:', error);
