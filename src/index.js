@@ -1052,6 +1052,14 @@ app.post('/admindenyrequest', async (req, res) => {
         org.deniedCount += 1;
         await org.save(); // Wait for the save operation to complete
 
+        const userEmail = org.email; 
+        await transporter.sendMail({
+            from: process.env.EMAIL_ADDRESS, 
+            to: userEmail, 
+            subject: 'Request Denied', 
+            text: 'Your request has been denied by the administrator.' 
+        });
+
 
         return res.json({ success: true });
 
@@ -1077,6 +1085,15 @@ app.post('/adminacceptrequest', async (req, res) => {
         // Update the flag to 'true'
         existingReq.flag = true;
         await existingReq.save(); // Save the updated request
+
+        // Send an email to the user
+        const userEmail = existingReq.email;
+        await transporter.sendMail({
+            from: process.env.EMAIL_ADDRESS,
+            to: userEmail, 
+            subject: 'Request Accepted',
+            text: 'Your request has been accepted by the administrator. You can now Signup with the same credentials.' 
+        });
 
         res.send('Request accepted successfully'); // Send a success response
     } catch (error) {
