@@ -1,6 +1,6 @@
-![HandInHand Logo](https://github.com/yarasrepo/HandInHand/raw/auth/images/logo2.png)
 
-# HandInHand - Volunteering Website
+# HandInHand - Volunteering Website        ![HandInHand Logo](https://github.com/yarasrepo/HandInHand/raw/auth/images/logo2.png)
+
 ---
 
 ### Description
