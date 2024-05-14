@@ -1043,21 +1043,28 @@ app.get('/opp_profile', async (req, res) => {
 app.post('/admindenyrequest', async (req, res) => {
     try {
         const objectId = req.body.objectId;
-        const org = await ReqCollection.findById(objectId);
+        const request = await ReqCollection.findById(objectId);
 
-        if (!org) {
-            return res.status(404).send('Organization not found');
+        if (!request) {
+            return res.status(404).send('Request not found');
         }
 
-        org.deniedCount += 1;
-        await org.save(); // Wait for the save operation to complete
+        // Increment the denied count
+        request.deniedCount += 1;
+        await request.save(); 
 
+        const userEmail = request.email; 
+        await transporter.sendMail({
+            from: process.env.EMAIL_ADDRESS, 
+            to: userEmail, 
+            subject: 'Your request has been denied', 
+            text: 'Your request has been denied by the administrator.' 
+        });
 
-        return res.json({ success: true });
-
+        return res.json({ success: true }); // Send a success response
     } catch (error) {
-        console.error('Error deleting object:', error);
-        res.status(500).send('Internal Server Error');
+        console.error('Error denying request:', error);
+        res.status(500).send('Internal Server Error'); // Send a generic error response for internal server errors
     }
 });
 
